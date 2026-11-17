@@ -1,0 +1,1195 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Jouer avec un modèle </title>
+      <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h1>Entrainez le réseau de neurones des feux tricolores</h1>
+
+      <div class="info"  style = "font-size: 1.0em;">
+
+   
+        <b>Objectif :</b> Ajustez (+/-) les poids ou les biais 
+        pour orienter la frontière de chaque neurone vers son objectif unique. <br>
+
+        <b>Tests :</b> changer x1 ou x2 ou appuyez sur un des tests pré-établis: le feu correspondant doit s'allumer <b>seul</b>.
+        <br><b>Bloqué ?</b> Cliquez sur « Solution aléatoire » pour voir des modèles de poids qui satisfont la demande.
+        <br><b>Laisser faire ?</b> Lancez la résolution automatique et observez.Vous pouvez changez les poids et recommencer. 
+      </div>
+
+
+    <br>
+      <div class="top-row">
+        <!-- Boutons compacts - ordre inversé -->
+        <div class="buttons-section">
+          <div class="section-label">Tester</div>
+          <div class="btn-wrapper">
+            <div class="satisfied-indicator" id="satisfied-3">✗</div>
+            <div class="btn" id="btn-3" onclick="setConfig(1, 1, 3)">
+              <span class="btn-label">3 rouge</span>
+              <div class="btn-bits">
+                <span>x1 1</span>
+                <span>x2 1</span>
+              </div>
+            </div>
+          </div>
+          <div class="btn-wrapper">
+            <div class="satisfied-indicator" id="satisfied-2">✗</div>
+            <div class="btn" id="btn-2" onclick="setConfig(0, 1, 2)">
+              <span class="btn-label">2 orange</span>
+              <div class="btn-bits">
+                <span>x1 0</span>
+                <span>x2 1</span>
+              </div>
+            </div>
+          </div>
+          <div class="btn-wrapper">
+            <div class="satisfied-indicator" id="satisfied-1">✗</div>
+            <div class="btn" id="btn-1" onclick="setConfig(1, 0, 1)">
+              <span class="btn-label">1 vert</span>
+              <div class="btn-bits">
+                <span>x1 1</span>
+                <span>x2 0</span>
+              </div>
+            </div>
+          </div>
+          <div class="btn-wrapper">
+            <div class="satisfied-indicator" id="satisfied-0">✗</div>
+            <div class="btn" id="btn-0" onclick="setConfig(0, 0, 0)">
+              <span class="btn-label">0 éteint</span>
+              <div class="btn-bits">
+                <span>x1 0</span>
+                <span>x2 0</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Message de succès -->
+        <div class="success-message" id="success-message">
+          <div class="success-title" id="success-title">Succès à <span id="success-percentage">0%</span></div>
+          <div class="note"> <span id="satisfied-count">0</span> cas sur 4 </div>
+        </div>
+
+        <!-- Matrice et sorties -->
+        <div class="matrix-output-section">
+          <div class="model-header">
+            <div class="section-label">Ajuster les paramètres </div>
+          </div>
+          <div class="matrix-and-learning-row">
+            <div class="matrix-section">
+              <!-- En-têtes des colonnes avec x1 et x2 -->
+              <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 5px; padding: 0 10px;">
+                <div class="neuron-params" style="border: none; background: transparent;">
+                  <div class="param-cell" style="width: 89px; border: none; background: transparent;">
+                    <div class="bit-label" style="text-align: center; font-weight: bold; margin-bottom: 2px;">x₁</div>
+                    <div class="bit-box" id="b1" onclick="toggleBit('b1')" style="width: 89px; height: 35px; font-size: 14px; font-weight: bold;">0</div>
+                    <div style="text-align: center; font-size: 20px; font-weight: bold; color: #3A8EBA; margin-top: 2px;">×</div>
+                  </div>
+                  <div class="plus-symbol" style="visibility: hidden;">+</div>
+                  <div class="param-cell" style="width: 89px; border: none; background: transparent;">
+                    <div class="bit-label" style="text-align: center; font-weight: bold; margin-bottom: 2px;">x₂</div>
+                    <div class="bit-box" id="b0" onclick="toggleBit('b0')" style="width: 89px; height: 35px; font-size: 14px; font-weight: bold;">0</div>
+                    <div style="text-align: center; font-size: 20px; font-weight: bold; color: #3A8EBA; margin-top: 2px;">×</div>
+                  </div>
+                  <div class="plus-symbol" style="visibility: hidden;">-</div>
+                  <div class="param-cell" style="width: 89px; border: none; background: transparent;">
+                    <div class="coeff-label" style="font-weight: bold; color: #333; font-size: 14px;">bⱼ</div>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Neurones horizontaux -->
+              <div class="neurons-container">
+                <!-- Neurone Rouge (s3) -->
+                <div class="neuron-row" style="border-color: red;">
+                  <div class="neuron-params">
+                    <div class="param-cell">
+                      <div class="cell" id="cell-0-2">
+                        <div class="cell-value" id="cell-value-0-2">0.3</div>
+                        <button class="cell-btn up" onclick="adjustCell(0, 2, 0.1)">+</button>
+                        <button class="cell-btn down" onclick="adjustCell(0, 2, -0.1)">-</button>
+                      </div>
+                      <div class="coeff-label">w₁₃</div>
+                    </div>
+                    <div class="plus-symbol">+</div>
+                    <div class="param-cell">
+                      <div class="cell" id="cell-1-2">
+                        <div class="cell-value" id="cell-value-1-2">0.1</div>
+                        <button class="cell-btn up" onclick="adjustCell(1, 2, 0.1)">+</button>
+                        <button class="cell-btn down" onclick="adjustCell(1, 2, -0.1)">-</button>
+                      </div>
+                      <div class="coeff-label">w₂₃</div>
+                    </div>
+                    <div class="plus-symbol">-</div>
+                    <div class="param-cell">
+                      <div class="cell" id="seuil-cell-2">
+                        <div class="cell-value" id="seuil-value-2">0.5</div>
+                        <button class="cell-btn up" onclick="adjustSeuil(2, 0.1)">+</button>
+                        <button class="cell-btn down" onclick="adjustSeuil(2, -0.1)">-</button>
+                      </div>
+                      <div class="coeff-label">b₃</div>
+                    </div>
+                  </div>
+                  <div class="equal-symbol-horizontal">=</div>
+                  <div class="neuron-output">
+                    <div class="neuron-result" id="result-2">0.0</div>
+                    <div class="feu-container">
+                      <div class="feu rouge off" id="feu-2"></div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Neurone Orange (s2) -->
+                <div class="neuron-row" style="border-color: orange;">
+                  <div class="neuron-params">
+                    <div class="param-cell">
+                      <div class="cell" id="cell-0-1">
+                        <div class="cell-value" id="cell-value-0-1">0.1</div>
+                        <button class="cell-btn up" onclick="adjustCell(0, 1, 0.1)">+</button>
+                        <button class="cell-btn down" onclick="adjustCell(0, 1, -0.1)">-</button>
+                      </div>
+                      <div class="coeff-label">w₁₂</div>
+                    </div>
+                    <div class="plus-symbol">+</div>
+                    <div class="param-cell">
+                      <div class="cell" id="cell-1-1">
+                        <div class="cell-value" id="cell-value-1-1">-0.3</div>
+                        <button class="cell-btn up" onclick="adjustCell(1, 1, 0.1)">+</button>
+                        <button class="cell-btn down" onclick="adjustCell(1, 1, -0.1)">-</button>
+                      </div>
+                      <div class="coeff-label">w₂₂</div>
+                    </div>
+                    <div class="plus-symbol">-</div>
+                    <div class="param-cell">
+                      <div class="cell" id="seuil-cell-1">
+                        <div class="cell-value" id="seuil-value-1">0.1</div>
+                        <button class="cell-btn up" onclick="adjustSeuil(1, 0.1)">+</button>
+                        <button class="cell-btn down" onclick="adjustSeuil(1, -0.1)">-</button>
+                      </div>
+                      <div class="coeff-label">b₂</div>
+                    </div>
+                  </div>
+                  <div class="equal-symbol-horizontal">=</div>
+                  <div class="neuron-output">
+                    <div class="neuron-result" id="result-1">0.0</div>
+                    <div class="feu-container">
+                      <div class="feu orange off" id="feu-1"></div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Neurone Vert (s1) -->
+                <div class="neuron-row" style="border-color: #4caf50;">
+                  <div class="neuron-params">
+                    <div class="param-cell">
+                      <div class="cell" id="cell-0-0">
+                        <div class="cell-value" id="cell-value-0-0">0.4</div>
+                        <button class="cell-btn up" onclick="adjustCell(0, 0, 0.1)">+</button>
+                        <button class="cell-btn down" onclick="adjustCell(0, 0, -0.1)">-</button>
+                      </div>
+                      <div class="coeff-label">w₁₁</div>
+                    </div>
+                    <div class="plus-symbol">+</div>
+                    <div class="param-cell">
+                      <div class="cell" id="cell-1-0">
+                        <div class="cell-value" id="cell-value-1-0">0.3</div>
+                        <button class="cell-btn up" onclick="adjustCell(1, 0, 0.1)">+</button>
+                        <button class="cell-btn down" onclick="adjustCell(1, 0, -0.1)">-</button>
+                      </div>
+                      <div class="coeff-label">w₂₁</div>
+                    </div>
+                    <div class="plus-symbol">-</div>
+                    <div class="param-cell">
+                      <div class="cell" id="seuil-cell-0">
+                        <div class="cell-value" id="seuil-value-0">0.8</div>
+                        <button class="cell-btn up" onclick="adjustSeuil(0, 0.1)">+</button>
+                        <button class="cell-btn down" onclick="adjustSeuil(0, -0.1)">-</button>
+                      </div>
+                      <div class="coeff-label">b₁</div>
+                    </div>
+                  </div>
+                  <div class="equal-symbol-horizontal">=</div>
+                  <div class="neuron-output">
+                    <div class="neuron-result" id="result-0">0.0</div>
+                    <div class="feu-container">
+                      <div class="feu vert off" id="feu-0"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+            <!-- Info sur le fonctionnement -->
+            <div class="seuil-control">
+
+               feu allumé si w₁ⱼ×x₁ + w₂ⱼ×x₂ - bⱼ &gt;= 0
+
+            </div>
+          </div>
+          
+          <!-- Résolution automatique et Solution aléatoire -->
+          <div class="learning-controls-section">
+            <div class="auto-learning-section">
+              <button class="learning-btn" onclick="fillSolution()" id="start-learning-btn">Solution aléatoire</button>
+              <div class="auto-learning-controls">
+                <button class="learning-btn" onclick="window.location.reload()">nouveaux poids</button>
+              </div>
+              <div class="auto-learning-controls">
+                <button class="learning-btn" onclick="startAutoLearning()" id="start-learning-btn">Résolution<br> automatique</button>
+                <button class="learning-btn" onclick="stopAutoLearning()" id="stop-learning-btn" disabled>Arrêter</button>
+                <span class="learning-status" id="learning-status"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+          <!-- Visualisation graphique -->
+          <div class="visualization-section" id="visualization-section">
+
+            <canvas id="visualization-canvas" width="500" height="400"></canvas>
+            <div class="visualization-info">
+                <p> 
+             C'est un réseau <b>Classifieur</b> : Les feux doivent s'allumer individuellement et indépendamment. <br/>
+            </p>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+      <hr>
+    <h4>L'algorithme de résolution automatique de Rosenblatt </h4>
+    <p>
+    Cet algorithme, ancêtre des techniques d'apprentissage automatique, effectue des corrections par petits étapes.
+    <br> 
+    En étant réduit à (O,1), on n'a que deux cas d'erreur à traiter : Une prédiction trop haute ou une prédiction trop basse:
+    <table class="perceptron" style="align:center">
+        <thead>
+            <tr>
+                <th>objectif</th><th>prédiction</th><th>erreur e</th><th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>0</td><td>0</td><td>0</td><td>rien</td></tr>
+            <tr><td>1</td><td>1</td><td>0</td><td>rien</td></tr>
+            <tr><td>0</td><td>1</td><td>−1</td><td><code>w ← w − η·x</code>, <code>b ← b − η</code> <br>(pour baisser le score brut)</td></tr>
+            <tr><td>1</td><td>0</td><td>+1</td><td><code>w ← w + η·x</code>, <code>b ← b + η</code> <<br>(pour monter le score brut )</td></tr>
+        </tbody>
+    </table>
+    Le pas η  
+    (êta) est petit nombre positif qui contrôle l'amplitude de la correction à chaque erreur.
+
+    <br>Les poids convergent ainsi progressivement ( le plus souvent ) vers une séparation correcte.
+
+    <br>Pour accélérer l'apprentissage, les corrections commencent par de grands pas puis, au fil des itérations, ce pas est réduit.
+    <br><br> Un pas trop grand et l'algorithme oscille entre plusieurs configurations sans jamais se stabiliser ; 
+    <br>Un pas trop petit fait progresser si lentement qu'il peut nécessiter un nombre prohibitif d'itérations.
+    <br><br>Un apprentissage n'aboutit pas toujours : l'algorithme du perceptron ne converge que si les données sont linéairement séparables 
+    <br>(c'est à dire par des droites en deux dimensions, par des plans en 3D, par des hyperplans en N dimensions)
+    </p>
+
+
+
+
+    <script>
+      let matrix = [
+        [0.4, 0.1, 0.3],
+        [0.3, -0.3, 0.1],
+      ];
+      let x1 = 0;
+      let x2 = 0;
+      let seuils = [0.8, 0.1, 0.5]; // Un biais par neurone (index 0=vert/s1, 1=orange/s2, 2=rouge/s3)
+      let activeButton = null;
+      let learningInterval = null;
+      let learningTimeout = null;
+      let learningStepCount = 0;
+      let showVisualization = true;
+
+      const x1El = document.getElementById("b1");
+      const x2El = document.getElementById("b0");
+      const learningStatus = document.getElementById("learning-status");
+      const startLearningBtn = document.getElementById("start-learning-btn");
+      const stopLearningBtn = document.getElementById("stop-learning-btn");
+      let vizSection;
+      
+
+  
+
+      function adjustCell(row, col, delta, skipRecalc) {
+        matrix[row][col] = parseFloat((matrix[row][col] + delta).toFixed(2));
+        if (matrix[row][col] < -5) matrix[row][col] = -5;
+        if (matrix[row][col] > 5) matrix[row][col] = 5;
+
+        document.getElementById(`cell-value-${row}-${col}`).textContent =
+          matrix[row][col] === 0 ? "0.0" : matrix[row][col].toFixed(1);
+
+        const cell = document.getElementById(`cell-${row}-${col}`);
+        cell.classList.toggle("filled", matrix[row][col] !== 0);
+
+        if (!skipRecalc) {
+          computeProducts();
+        }
+      }
+
+      function adjustSeuil(index, delta) {
+        seuils[index] = parseFloat((seuils[index] + delta).toFixed(2));
+        if (seuils[index] < -5) seuils[index] = -5;
+        if (seuils[index] > 5) seuils[index] = 5;
+        
+        document.getElementById(`seuil-value-${index}`).textContent = seuils[index].toFixed(1);
+        computeProducts();
+        drawVisualization();
+      }
+
+      function updateSeuil(index, value) {
+        if (value !== undefined) {
+          seuils[index] = parseFloat(value);
+        }
+        const seuilValue = document.getElementById(`seuil-value-${index}`);
+        if (seuilValue) {
+          seuilValue.textContent = seuils[index].toFixed(1);
+        }
+        computeProducts();
+        drawVisualization();
+      }
+
+      function setConfig(newX1, newX2, btnNum) {
+        // Retirer la classe active du bouton précédent
+        if (activeButton !== null) {
+          document.getElementById(`btn-${activeButton}`).classList.remove("active");
+        }
+        
+        // Ajouter la classe active au nouveau bouton
+        if (btnNum !== undefined) {
+          document.getElementById(`btn-${btnNum}`).classList.add("active");
+          activeButton = btnNum;
+        }
+        
+        x1 = newX1;
+        x2 = newX2;
+        x1El.textContent = x1;
+        x2El.textContent = x2;
+        computeProducts();
+      }
+
+      function toggleBit(bit) {
+        if (bit === "b1") x1 = x1 === 0 ? 1 : 0;
+        if (bit === "b0") x2 = x2 === 0 ? 1 : 0;
+        x1El.textContent = x1;
+        x2El.textContent = x2;
+        computeProducts();
+      }
+
+      function computeProducts() {
+        x1El.textContent = x1;
+        x2El.textContent = x2;
+
+        const results = [0, 0, 0];
+        for (let j = 0; j < 3; j++) {
+          results[j] = x1 * matrix[0][j] + x2 * matrix[1][j];
+        }
+
+        for (let j = 0; j < 3; j++) {
+          document.getElementById(`result-${j}`).textContent =
+            results[j].toFixed(1);
+        }
+
+        for (let j = 0; j < 3; j++) {
+          const feu = document.getElementById(`feu-${j}`);
+          feu.classList.remove("active");
+          feu.classList.add("off");
+
+          if (results[j] > seuils[j]) {
+            feu.classList.remove("off");
+            feu.classList.add("active");
+          }
+        }
+
+        updateSatisfactionIndicators();
+        drawVisualization();
+      }
+
+      function updateSatisfactionIndicators() {
+        // Teste chaque bouton avec sa configuration spécifique
+        // Bouton 0 éteint: x1=0, x2=0 -> tous les feux doivent être éteints (<= leur biais)
+        const r0_vert = 0 * matrix[0][0] + 0 * matrix[1][0];
+        const r0_orange = 0 * matrix[0][1] + 0 * matrix[1][1];
+        const r0_rouge = 0 * matrix[0][2] + 0 * matrix[1][2];
+        const satisfied0 = r0_vert <= seuils[0] && r0_orange <= seuils[1] && r0_rouge <= seuils[2];
+        updateIndicator(0, satisfied0);
+
+        // Bouton 1 vert: x1=1, x2=0 -> SEUL vert > biais[0], orange <= biais[1], rouge <= biais[2]
+        const r1_vert = 1 * matrix[0][0] + 0 * matrix[1][0];
+        const r1_orange = 1 * matrix[0][1] + 0 * matrix[1][1];
+        const r1_rouge = 1 * matrix[0][2] + 0 * matrix[1][2];
+        const satisfied1 = r1_vert > seuils[0] && r1_orange <= seuils[1] && r1_rouge <= seuils[2];
+        updateIndicator(1, satisfied1);
+
+        // Bouton 2 orange: x1=0, x2=1 -> SEUL orange > biais[1], vert <= biais[0], rouge <= biais[2]
+        const r2_vert = 0 * matrix[0][0] + 1 * matrix[1][0];
+        const r2_orange = 0 * matrix[0][1] + 1 * matrix[1][1];
+        const r2_rouge = 0 * matrix[0][2] + 1 * matrix[1][2];
+        const satisfied2 = r2_vert <= seuils[0] && r2_orange > seuils[1] && r2_rouge <= seuils[2];
+        updateIndicator(2, satisfied2);
+
+        // Bouton 3 rouge: x1=1, x2=1 -> SEUL rouge > biais[2], vert <= biais[0], orange <= biais[1]
+        const r3_vert = 1 * matrix[0][0] + 1 * matrix[1][0];
+        const r3_orange = 1 * matrix[0][1] + 1 * matrix[1][1];
+        const r3_rouge = 1 * matrix[0][2] + 1 * matrix[1][2];
+        const satisfied3 = r3_vert <= seuils[0] && r3_orange <= seuils[1] && r3_rouge > seuils[2];
+        updateIndicator(3, satisfied3);
+
+        // Vérifier si tous les cas sont satisfaits
+        return updateSuccessMessage();
+      }
+
+      function updateSuccessMessage() {
+        const satisfied = getSatisfactionStatus();
+        const satisfiedCount = satisfied.filter(s => s).length;
+        const percentage = Math.round((satisfiedCount / 4) * 100);
+        
+        // Arrondir aux paliers de 25%
+        const displayPercentage = Math.round(percentage / 25) * 25;
+
+        const percentageEl = document.getElementById('success-percentage');
+        const countEl = document.getElementById('satisfied-count');
+        const titleEl = document.getElementById('success-title');
+
+        if (percentageEl) percentageEl.textContent = displayPercentage + '%';
+        if (countEl) countEl.textContent = satisfiedCount;
+
+        // À 100%, afficher "Succès !" comme demandé
+        if (displayPercentage === 100) {
+          if (titleEl) titleEl.textContent = 'Succès !';
+          if (titleEl) titleEl.classList.add('full');
+        } else {
+          if (titleEl) titleEl.textContent = 'Succès à ' + displayPercentage + '%';
+          if (titleEl) titleEl.classList.remove('full');
+        }
+
+        updateBravoMessage(displayPercentage === 100);
+        return satisfiedCount === 4;
+      }
+
+      function updateBravoMessage(show) {
+        const bravoEl = document.getElementById('bravo-message');
+        if (bravoEl) {
+          bravoEl.style.display = show ? 'block' : 'none';
+        }
+      }
+
+      function updateIndicator(btnNum, satisfied) {
+        const el = document.getElementById(`satisfied-${btnNum}`);
+        el.textContent = satisfied ? "✓" : "✗";
+        el.className = "satisfied-indicator " + (satisfied ? "yes" : "no");
+      }
+
+      function fillSolution() {
+        // Essayer jusqu'à trouver une solution valide
+        let attempts = 0;
+        const maxAttempts = 100;
+        
+        while (attempts < maxAttempts) {
+          attempts++;
+          
+          // Générer un seuil aléatoire entre 0.1 et 2
+          const randomSeuil = 0.1 + Math.random() * (2.0 - 0.1);
+          
+          // w11 doit être > randomBiais (pour que vert s'allume dans cas 1: x1=1,x2=0)
+          const w11 = randomSeuil + 0.1 + Math.random() * (2.0 - randomSeuil - 0.1);
+          
+          // w12 doit être négatif
+          const w12 = -(0.1 + Math.random() * 0.8);
+          
+          // w13 doit être <= randomBiais (pour que rouge ne s'allume pas dans cas 1)
+          const w13 = 0.1 + Math.random() * (randomSeuil - 0.1);
+          
+          // w21 doit être négatif et tel que w11 + w21 <= randomBiais
+          const w21_positive = w11 - randomSeuil + 0.1 + Math.random() * 0.5;
+          const w21 = -w21_positive;
+          
+          // w22 doit être > randomBiais (pour que orange s'allume dans cas 2)
+          // et w22 <= randomBiais - w12 (pour que orange ne s'allume pas dans cas 3)
+          const w22_min = randomSeuil + 0.01;
+          const w22_max = randomSeuil - w12;
+          
+          // Si la plage n'est pas valide, on passe à l'attempt suivant
+          if (w22_max <= w22_min) continue;
+          
+          const w22 = w22_min + Math.random() * (w22_max - w22_min);
+          
+          // w23 doit être <= randomBiais (pour que rouge ne s'allume pas dans cas 2)
+          // et w23 > randomBiais - w13 (pour que rouge s'allume dans cas 3)
+          const w23_min = randomSeuil - w13 + 0.01;
+          const w23_max_val = randomSeuil;
+          
+          // Si la plage n'est pas valide, on passe à l'attempt suivant
+          if (w23_max_val <= w23_min) continue;
+          
+          const w23 = w23_min + Math.random() * (w23_max_val - w23_min);
+          
+          // Tester toutes les contraintes avant d'accepter
+          // Cas 1: x1=1, x2=0 -> s1 > randomBiais, s2 <= randomBiais, s3 <= randomBiais
+          // Cas 2: x1=0, x2=1 -> s1 <= randomBiais, s2 > randomBiais, s3 <= randomBiais
+          // Cas 3: x1=1, x2=1 -> s1 <= randomBiais, s2 <= randomBiais, s3 > randomBiais
+          
+          // Pour simplifier, on utilise le même seuil pour les 3 neurones dans la génération aléatoire
+          const s1_c1 = w11;
+          const s2_c1 = w12;
+          const s3_c1 = w13;
+          const s1_c2 = w21;
+          const s2_c2 = w22;
+          const s3_c2 = w23;
+          const s1_c3 = w11 + w21;
+          const s2_c3 = w12 + w22;
+          const s3_c3 = w13 + w23;
+          
+          // Vérifier toutes les contraintes
+          if (s1_c1 > randomSeuil && s2_c1 <= randomSeuil && s3_c1 <= randomSeuil &&
+              s1_c2 <= randomSeuil && s2_c2 > randomSeuil && s3_c2 <= randomSeuil &&
+              s1_c3 <= randomSeuil && s2_c3 <= randomSeuil && s3_c3 > randomSeuil) {
+            
+            // Solution valide trouvée
+            matrix[0][0] = w11;
+            matrix[0][1] = w12;
+            matrix[0][2] = w13;
+            matrix[1][0] = w21;
+            matrix[1][1] = w22;
+            matrix[1][2] = w23;
+            
+            // Utiliser le même seuil pour les 3 neurones (simplification)
+            seuils = [randomSeuil, randomSeuil, randomSeuil];
+            
+            // Mettre à jour l'affichage des seuils
+            for (let j = 0; j < 3; j++) {
+              const seuilValue = document.getElementById(`seuil-value-${j}`);
+              if (seuilValue) {
+                seuilValue.textContent = randomSeuil.toFixed(1);
+              }
+            }
+            
+            // Mettre à jour l'affichage des cellules
+            for (let row = 0; row < 2; row++) {
+              for (let col = 0; col < 3; col++) {
+                const value = matrix[row][col];
+                document.getElementById(`cell-value-${row}-${col}`).textContent =
+                  value === 0 ? "0.0" : value.toFixed(1);
+                const cell = document.getElementById(`cell-${row}-${col}`);
+                cell.classList.toggle("filled", value !== 0);
+              }
+            }
+            
+            // Recalculer et vérifier
+            computeProducts();
+            return;
+          }
+        }
+        
+        // Si on arrive ici, aucune solution n'a été trouvée après maxAttempts
+        // On utilise une solution par défaut qui fonctionne
+        const defaultSeuil = 0.8;
+        matrix[0][0] = 1.5; matrix[0][1] = -0.3; matrix[0][2] = 0.4;
+        matrix[1][0] = -1.0; matrix[1][1] = 1.0; matrix[1][2] = 0.5;
+        
+        // Utiliser le même seuil pour les 3 neurones
+        seuils = [defaultSeuil, defaultSeuil, defaultSeuil];
+        
+        // Mettre à jour l'affichage des seuils
+        for (let j = 0; j < 3; j++) {
+          const seuilValue = document.getElementById(`seuil-value-${j}`);
+          if (seuilValue) {
+            seuilValue.textContent = defaultSeuil.toFixed(1);
+          }
+        }
+        
+        // Mettre à jour l'affichage des cellules
+        for (let row = 0; row < 2; row++) {
+          for (let col = 0; col < 3; col++) {
+            const value = matrix[row][col];
+            document.getElementById(`cell-value-${row}-${col}`).textContent =
+              value === 0 ? "0.0" : value.toFixed(1);
+            const cell = document.getElementById(`cell-${row}-${col}`);
+            cell.classList.toggle("filled", value !== 0);
+          }
+        }
+        
+        computeProducts();
+      }
+
+      function checkAllSatisfied() {
+        // Vérifie si tous les cas sont satisfaits
+        const indicators = [];
+        for (let i = 0; i < 4; i++) {
+          const el = document.getElementById(`satisfied-${i}`);
+          indicators.push(el.textContent === "✓");
+        }
+        return indicators.every(x => x);
+      }
+
+      function getSatisfactionStatus() {
+        // Retourne un tableau avec le statut de chaque cas
+        return [
+          document.getElementById("satisfied-0").textContent === "✓",
+          document.getElementById("satisfied-1").textContent === "✓",
+          document.getElementById("satisfied-2").textContent === "✓",
+          document.getElementById("satisfied-3").textContent === "✓"
+        ];
+      }
+
+      let currentTestCase = 0;
+      
+      function startAutoLearning() {
+        if (learningInterval) return;
+        
+        // Conserver les poids et biais actuels, réinitialiser seulement le statut
+        learningStepCount = 0;
+        currentTestCase = 0;
+        learningStatus.textContent = "Apprentissage en cours... (0)";
+        learningStatus.classList.add("learning-active");
+        startLearningBtn.disabled = true;
+        stopLearningBtn.disabled = false;
+        
+        computeProducts();
+        
+        // Utiliser setTimeout pour pouvoir changer le délai après 50 étapes
+        function runLearningStep() {
+          learningStepCount++;
+          learningStatus.textContent = `Apprentissage... (${learningStepCount})`;
+          
+          const satisfied = getSatisfactionStatus();
+          if (satisfied.every(s => s)) {
+            learningStatus.textContent = `✓ Solution trouvée en ${learningStepCount} étapes !`;
+            learningStatus.classList.remove("learning-active");
+            stopAutoLearning();
+            updateBravoMessage(true);
+            return;
+          }
+          
+          // Taille de pas adaptative - plus grande au début, décroissance plus lente
+          const stepSize = Math.max(0.05, 1.0 / Math.sqrt(learningStepCount + 1));
+          
+          // Calculer tous les scores pour chaque cas
+          const scores = {
+            c0: { s1: 0, s2: 0, s3: 0 }, // (0,0) - toujours 0, donc toujours satisfait
+            c1: { s1: matrix[0][0], s2: matrix[0][1], s3: matrix[0][2] }, // (1,0)
+            c2: { s1: matrix[1][0], s2: matrix[1][1], s3: matrix[1][2] }, // (0,1)
+            c3: { s1: matrix[0][0] + matrix[1][0], 
+                  s2: matrix[0][1] + matrix[1][1], 
+                  s3: matrix[0][2] + matrix[1][2] }  // (1,1)
+          };
+          
+          // Fonction pour ajuster les poids et vérifier
+          const wasSatisfiedCount = satisfied.filter(s => s).length;
+          const tryAdjustWeight = (row, col, delta) => {
+            const oldValue = matrix[row][col];
+            matrix[row][col] = parseFloat((matrix[row][col] + delta).toFixed(2));
+            if (matrix[row][col] < -5) matrix[row][col] = -5;
+            if (matrix[row][col] > 5) matrix[row][col] = 5;
+
+            computeProducts();
+            const newSatisfied = getSatisfactionStatus();
+            const newSatisfiedCount = newSatisfied.filter(s => s).length;
+
+            // Accepter si cela n'empire pas la situation
+            if (newSatisfiedCount < wasSatisfiedCount) {
+                matrix[row][col] = oldValue;
+                computeProducts();
+                return false;
+            }
+            return true;
+          };
+          
+          // Fonction pour ajuster les seuils et vérifier
+          const tryAdjustSeuil = (seuilIndex, delta) => {
+            const oldValue = seuils[seuilIndex];
+            seuils[seuilIndex] = parseFloat((seuils[seuilIndex] + delta).toFixed(2));
+            if (seuils[seuilIndex] < 0.1) seuils[seuilIndex] = 0.1;
+            if (seuils[seuilIndex] > 2.5) seuils[seuilIndex] = 2.5;
+
+            // Mettre à jour l'affichage du seuil
+            document.getElementById(`seuil-value-${seuilIndex}`).textContent = seuils[seuilIndex].toFixed(1);
+
+            computeProducts();
+            const newSatisfied = getSatisfactionStatus();
+            const newSatisfiedCount = newSatisfied.filter(s => s).length;
+
+            // Accepter si cela n'empire pas la situation
+            if (newSatisfiedCount < wasSatisfiedCount) {
+                seuils[seuilIndex] = oldValue;
+                document.getElementById(`seuil-value-${seuilIndex}`).textContent = oldValue.toFixed(1);
+                computeProducts();
+                return false;
+            }
+            return true;
+          };
+          
+          // Correction par priorité - toutes les corrections ont la même priorité
+          const errors = [];
+          
+          // Cas 1: x1=1, x2=0 -> s1 > biais[0], s2 <= biais[1], s3 <= biais[2]
+          if (scores.c1.s1 <= seuils[0]) {
+            errors.push({ type: 'inc', row: 0, col: 0, priority: 1 });
+            errors.push({ type: 'dec_seuil', seuilIndex: 0, priority: 1 });
+          }
+          if (scores.c1.s2 > seuils[1]) {
+            errors.push({ type: 'dec', row: 0, col: 1, priority: 1 });
+            errors.push({ type: 'inc_seuil', seuilIndex: 1, priority: 1 });
+          }
+          if (scores.c1.s3 > seuils[2]) {
+            errors.push({ type: 'dec', row: 0, col: 2, priority: 1 });
+            errors.push({ type: 'inc_seuil', seuilIndex: 2, priority: 1 });
+          }
+          
+          // Cas 2: x1=0, x2=1 -> s1 <= biais[0], s2 > biais[1], s3 <= biais[2]
+          if (scores.c2.s2 <= seuils[1]) {
+            errors.push({ type: 'inc', row: 1, col: 1, priority: 1 });
+            errors.push({ type: 'dec_seuil', seuilIndex: 1, priority: 1 });
+          }
+          if (scores.c2.s1 > seuils[0]) {
+            errors.push({ type: 'dec', row: 1, col: 0, priority: 1 });
+            errors.push({ type: 'inc_seuil', seuilIndex: 0, priority: 1 });
+          }
+          if (scores.c2.s3 > seuils[2]) {
+            errors.push({ type: 'dec', row: 1, col: 2, priority: 1 });
+            errors.push({ type: 'inc_seuil', seuilIndex: 2, priority: 1 });
+          }
+          
+          // Cas 3: x1=1, x2=1 -> s1 <= biais[0], s2 <= biais[1], s3 > biais[2]
+          if (scores.c3.s3 <= seuils[2]) {
+            errors.push({ type: 'inc', row: 0, col: 2, priority: 1 });
+            errors.push({ type: 'inc', row: 1, col: 2, priority: 1 });
+            errors.push({ type: 'dec_seuil', seuilIndex: 2, priority: 1 });
+          }
+          if (scores.c3.s1 > seuils[0]) {
+            errors.push({ type: 'dec', row: 0, col: 0, priority: 1 });
+            errors.push({ type: 'dec', row: 1, col: 0, priority: 1 });
+            errors.push({ type: 'inc_seuil', seuilIndex: 0, priority: 1 });
+          }
+          if (scores.c3.s2 > seuils[1]) {
+            errors.push({ type: 'dec', row: 0, col: 1, priority: 1 });
+            errors.push({ type: 'dec', row: 1, col: 1, priority: 1 });
+            errors.push({ type: 'inc_seuil', seuilIndex: 1, priority: 1 });
+          }
+          
+          // Trier par priorité (toutes ont la même priorité, donc l'ordre est aléatoire)
+          errors.sort((a, b) => a.priority - b.priority);
+          
+          // Essayer une correction à la fois
+          let adjusted = false;
+          for (const error of errors) {
+            const delta = error.type === 'inc' || error.type === 'dec_seuil' ? stepSize : -stepSize;
+            
+            if (error.type === 'inc' || error.type === 'dec') {
+              if (tryAdjustWeight(error.row, error.col, delta)) {
+                  adjusted = true;
+                  break;
+              }
+            } else if (error.type === 'inc_seuil' || error.type === 'dec_seuil') {
+              if (tryAdjustSeuil(error.seuilIndex, delta)) {
+                  adjusted = true;
+                  break;
+              }
+            }
+          }
+          
+          // Si aucune correction n'a été acceptée, essayer des ajustements aléatoires
+          // pour éviter de rester bloqué
+          if (!adjusted) {
+            // Essayer d'abord un ajustement aléatoire sur les poids
+            const row = Math.floor(Math.random() * 2);
+            const col = Math.floor(Math.random() * 3);
+            const delta = Math.random() < 0.5 ? stepSize : -stepSize;
+            if (!tryAdjustWeight(row, col, delta)) {
+              // Si ça ne marche pas, essayer un ajustement aléatoire sur les seuils
+              const seuilIndex = Math.floor(Math.random() * 3);
+              const seuilDelta = Math.random() < 0.5 ? stepSize : -stepSize;
+              tryAdjustSeuil(seuilIndex, seuilDelta);
+            }
+          }
+          
+          // Mise à jour visuelle
+          for (let row = 0; row < 2; row++) {
+            for (let col = 0; col < 3; col++) {
+                document.getElementById(`cell-value-${row}-${col}`).textContent =
+                    matrix[row][col] === 0 ? "0.0" : matrix[row][col].toFixed(1);
+                document.getElementById(`cell-${row}-${col}`).classList.toggle(
+                    "filled", matrix[row][col] !== 0);
+            }
+          }
+          
+          // Arrêt après 500 itérations (augmenté de 200)
+          if (learningStepCount >= 500) {
+            learningStatus.textContent = "Arrêt après 500 itérations";
+            stopAutoLearning();
+            return;
+          }
+          
+          // Délai de 500ms pour les 50 premières étapes, puis 200ms
+          const delay = learningStepCount <= 50 ? 500 : 200;
+          learningTimeout = setTimeout(runLearningStep, delay);
+        }
+        
+        // Démarrer la première itération
+        runLearningStep();
+        
+      }
+
+      function stopAutoLearning() {
+        if (learningTimeout) {
+          clearTimeout(learningTimeout);
+          learningTimeout = null;
+        }
+        if (learningInterval) {
+          clearInterval(learningInterval);
+          learningInterval = null;
+        }
+        currentTestCase = 0;
+        startLearningBtn.disabled = false;
+        stopLearningBtn.disabled = true;
+        learningStatus.classList.remove("learning-active");
+      }
+
+      // Fonction pour basculer l'affichage de la visualisation
+      function toggleVisualization() {
+        showVisualization = !showVisualization;
+        vizSection = vizSection || document.getElementById("visualization-section");
+        if (vizSection) {
+          vizSection.style.display = showVisualization ? "block" : "none";
+        }
+        document.getElementById("toggle-vis-btn").textContent = showVisualization ? "Masquer" : "Afficher";
+        if (showVisualization) {
+          drawVisualization();
+        }
+      }
+
+      // Fonction pour dessiner la visualisation des droites de séparation
+      function drawVisualization() {
+        if (!showVisualization) return;
+        
+        const canvasEl = document.getElementById("visualization-canvas");
+        if (!canvasEl) {
+          console.error("Canvas not found in drawVisualization");
+          return;
+        }
+        const ctx = canvasEl.getContext("2d");
+        if (!ctx) {
+          console.error("Context not available");
+          return;
+        }
+        
+        // Utiliser les dimensions du canvas
+        const width = canvasEl.width;
+        const height = canvasEl.height;
+        const margin = 40;
+        const graphWidth = width - 2 * margin;
+        const graphHeight = height - 2 * margin;
+        
+        // Échelle : b1 et b0 de -0.5 à 1.5
+        const b1Min = -0.5, b1Max = 1.5;
+        const b0Min = -0.5, b0Max = 1.5;
+        
+        // Fonction pour convertir b1 en x
+        const b1ToX = (b1) => margin + (b1 - b1Min) * graphWidth / (b1Max - b1Min);
+        // Fonction pour convertir b0 en y (inversé car le canvas a y vers le bas)
+        const b0ToY = (b0) => height - margin - (b0 - b0Min) * graphHeight / (b0Max - b0Min);
+        
+        // Effacer le canvas
+        ctx.fillStyle = "#fafafa";
+        ctx.fillRect(0, 0, width, height);
+        
+        // Dessiner le cadre
+        ctx.strokeStyle = "#333";
+        ctx.lineWidth = 2;
+        ctx.strokeRect(margin, margin, graphWidth, graphHeight);
+        
+        // Dessiner les axes
+        ctx.strokeStyle = "#666";
+        ctx.lineWidth = 1;
+        
+        // Axe b1 (horizontal)
+        ctx.beginPath();
+        ctx.moveTo(margin, b0ToY(0));
+        ctx.lineTo(width - margin, b0ToY(0));
+        ctx.stroke();
+        
+        // Axe b0 (vertical)
+        ctx.beginPath();
+        ctx.moveTo(b1ToX(0), margin);
+        ctx.lineTo(b1ToX(0), height - margin);
+        ctx.stroke();
+        
+        // Etiquettes des axes
+        ctx.fillStyle = "#333";
+        ctx.font = "12px Arial";
+        ctx.textAlign = "center";
+        ctx.fillText("x1", width - margin + 10, b0ToY(0) + 4);
+        ctx.save();
+        ctx.translate(b1ToX(0) - 20, height - margin - 10);
+        ctx.rotate(-Math.PI / 2);
+        ctx.fillText("x2", 0, 0);
+        ctx.restore();
+        
+        // Dessiner les graduations
+        for (let x1 = 0; x1 <= 1; x1 += 0.5) {
+          const x = b1ToX(x1);
+          ctx.beginPath();
+          ctx.moveTo(x, b0ToY(0) - 5);
+          ctx.lineTo(x, b0ToY(0) + 5);
+          ctx.stroke();
+          ctx.fillText(x1.toFixed(1), x, b0ToY(0) + 20);
+        }
+        
+        for (let x2 = 0; x2 <= 1; x2 += 0.5) {
+          const y = b0ToY(x2);
+          ctx.beginPath();
+          ctx.moveTo(b1ToX(0) - 5, y);
+          ctx.lineTo(b1ToX(0) + 5, y);
+          ctx.stroke();
+          ctx.textAlign = "right";
+          ctx.fillText(x2.toFixed(1), b1ToX(0) - 8, y + 4);
+          ctx.textAlign = "center";
+        }
+        
+        // Colorier les régions selon le feu actif
+        // On divise l'espace [0,1]x[0,1] en petites cellules
+        const cellSize = 0.05;
+        const colors = ["#4caf50", "#ff9800", "#f44336"];
+        
+        for (let x1_val = 0; x1_val <= 1; x1_val += cellSize) {
+          for (let x2_val = 0; x2_val <= 1; x2_val += cellSize) {
+            // Calculer quels feux sont actifs à ce point
+            let activeFeu = null;
+            for (let j = 0; j < 3; j++) {
+              const score = x1_val * matrix[0][j] + x2_val * matrix[1][j];
+              if (score > seuils[j]) {
+                activeFeu = j;
+                break; // On prend le premier feu actif (par convention)
+              }
+            }
+            
+            // Colorier la cellule
+            if (activeFeu !== null) {
+              const x = b1ToX(x1_val);
+              const y = b0ToY(x2_val + cellSize); // Inversé car y augmente vers le bas
+              const w = b1ToX(x1_val + cellSize) - x;
+              const h = b0ToY(x2_val) - y;
+              
+              ctx.fillStyle = colors[activeFeu] + "40"; // 40 = 25% d'opacité
+              ctx.fillRect(x, y, w, h);
+            }
+          }
+        }
+        
+        // Dessiner le rectangle [0,1]x[0,1] avec une bordure
+        ctx.strokeStyle = "#999";
+        ctx.lineWidth = 2;
+        ctx.strokeRect(
+          b1ToX(0), b0ToY(1),
+          b1ToX(1) - b1ToX(0), b0ToY(0) - b0ToY(1)
+        );
+        
+        // Dessiner les 4 points d'entrée
+        const pointLabels = ["(0,0) éteint", "(1,0) vert", "(0,1) orange", "(1,1) rouge"];
+        
+        for (let idx = 0; idx < 4; idx++) {
+          const x1_val = idx === 1 || idx === 3 ? 1 : 0;
+          const x2_val = idx === 2 || idx === 3 ? 1 : 0;
+          const x = b1ToX(x1_val);
+          const y = b0ToY(x2_val);
+          
+          // Calculer quel feu est actif à ce point
+          let activeFeu = null;
+          for (let j = 0; j < 3; j++) {
+            const score = x1_val * matrix[0][j] + x2_val * matrix[1][j];
+            if (score > seuils[j]) {
+              activeFeu = j;
+              break;
+            }
+          }
+          
+          // Dessiner un cercle de la couleur du feu actif (ou gris si aucun)
+          const pointColor = activeFeu !== null ? colors[activeFeu] : "#666";
+          
+          // Cercle autour du point
+          ctx.strokeStyle = "#000";
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          ctx.arc(x, y, 8, 0, Math.PI * 2);
+          ctx.stroke();
+          
+          // Remplir le cercle avec la couleur du feu
+          ctx.fillStyle = pointColor;
+          ctx.beginPath();
+          ctx.arc(x, y, 6, 0, Math.PI * 2);
+          ctx.fill();
+          
+          // Label
+          ctx.fillStyle = "#333";
+          ctx.font = "11px Arial";
+          ctx.textAlign = "center";
+          ctx.fillText(pointLabels[idx], x, y - 15);
+        }
+        
+        // Dessiner les 3 droites de séparation
+        const feuNames = ["Vert", "Orange", "Rouge"];
+        
+        // Générer les labels avec les valeurs actuelles
+        const labels = [];
+        for (let j = 0; j < 3; j++) {
+          const w1 = matrix[0][j].toFixed(2);
+          const w2 = matrix[1][j].toFixed(2);
+          labels.push(`${feuNames[j]}: ${w1}·x1 + ${w2}·x2 > ${seuils[j].toFixed(2)}`);
+        }
+        
+        for (let j = 0; j < 3; j++) {
+          const w1 = matrix[0][j];
+          const w2 = matrix[1][j];
+          
+          // Calculer 2 points pour la droite : w1 * b1 + w2 * b0 = seuils[j]
+          let x1, y1, x2, y2;
+          
+          // Cas 1 : droite verticale (w2 = 0)
+          if (Math.abs(w2) < 1e-10) {
+            if (Math.abs(w1) < 1e-10) continue; // pas de droite
+            const b1_val = seuils[j] / w1;
+            x1 = b1ToX(b1_val);
+            x2 = x1;
+            y1 = margin;
+            y2 = height - margin;
+          }
+          // Cas 2 : droite horizontale (w1 = 0)
+          else if (Math.abs(w1) < 1e-10) {
+            const b0_val = seuils[j] / w2;
+            y1 = b0ToY(b0_val);
+            y2 = y1;
+            x1 = margin;
+            x2 = width - margin;
+          }
+          // Cas 3 : droite générale
+          else {
+            // Point 1 : b1 = b1Min
+            const b0_1 = (seuils[j] - w1 * b1Min) / w2;
+            x1 = b1ToX(b1Min);
+            y1 = b0ToY(b0_1);
+            
+            // Point 2 : b1 = b1Max
+            const b0_2 = (seuils[j] - w1 * b1Max) / w2;
+            x2 = b1ToX(b1Max);
+            y2 = b0ToY(b0_2);
+          }
+          
+          // Dessiner la droite
+          ctx.strokeStyle = colors[j];
+          ctx.lineWidth = 3;
+          ctx.beginPath();
+          ctx.moveTo(x1, y1);
+          ctx.lineTo(x2, y2);
+          ctx.stroke();
+        }
+        
+        // Dessiner les légendes en bas à gauche
+        ctx.textAlign = "left";
+        ctx.font = "bold 12px Arial";
+        const legendX = margin + 10;
+        const legendYStart = height - margin - 10;
+        
+        for (let j = 0; j < 3; j++) {
+          ctx.fillStyle = colors[j];
+          ctx.fillText(labels[j], legendX, legendYStart - j * 25);
+        }
+        
+        // Ajouter un titre explicatif
+        ctx.fillStyle = "#333";
+        ctx.font = "bold 13px Arial";
+        ctx.textAlign = "center";
+        ctx.fillText("Visualisation des séparations linéaires du Perceptron", width / 2, margin - 25);
+        
+        ctx.fillStyle = "#666";
+        ctx.font = "11px Arial";
+        ctx.fillText("Les zones colorées montrent quel feu s'allume. Les droites sont les limites de décision.", width / 2, margin - 10);
+      }
+
+      function initializeRandomMatrix() {
+        // Fonction pour générer une droite qui traverse le carré [0,1]x[0,1]
+        function generateValidLine() {
+          // Générer des poids aléatoires
+          const w1 = (Math.random() * 4 - 2).toFixed(1); // entre -2 et 2
+          const w2 = (Math.random() * 4 - 2).toFixed(1); // entre -2 et 2
+
+          // Calculer les valeurs aux coins du carré
+          const cornerValues = [
+            0,                     // (0,0)
+            parseFloat(w2),        // (0,1)
+            parseFloat(w1),        // (1,0)
+            parseFloat(w1) + parseFloat(w2)  // (1,1)
+          ];
+
+          const minVal = Math.min(...cornerValues);
+          const maxVal = Math.max(...cornerValues);
+
+          // Choisir un biais entre min et max pour garantir que la droite traverse le carré
+          const b = (minVal + Math.random() * (maxVal - minVal)).toFixed(1);
+
+          return {
+            w1: parseFloat(w1),
+            w2: parseFloat(w2),
+            b: parseFloat(b)
+          };
+        }
+
+        // Générer 3 droites valides
+        const lines = [];
+        for (let j = 0; j < 3; j++) {
+          lines.push(generateValidLine());
+        }
+
+        // Appliquer à la matrice et aux seuils
+        matrix = [
+          [lines[0].w1, lines[1].w1, lines[2].w1],
+          [lines[0].w2, lines[1].w2, lines[2].w2]
+        ];
+
+        seuils = [lines[0].b, lines[1].b, lines[2].b];
+
+        // Mettre à jour l'affichage
+        for (let row = 0; row < 2; row++) {
+          for (let col = 0; col < 3; col++) {
+            const value = matrix[row][col];
+            document.getElementById(`cell-value-${row}-${col}`).textContent =
+              value === 0 ? "0" : value.toFixed(1);
+            document.getElementById(`cell-${row}-${col}`).classList.toggle("filled", value !== 0);
+          }
+        }
+
+        for (let j = 0; j < 3; j++) {
+          document.getElementById(`seuil-value-${j}`).textContent = seuils[j].toFixed(1);
+        }
+
+        computeProducts();
+        drawVisualization();
+      }
+
+      window.addEventListener("load", function() {
+        vizSection = document.getElementById("visualization-section");
+        initializeRandomMatrix();
+      });
+    </script>
+    <hr>
+    <div style="margin-top: 20px; text-align: center;">
+    <h4 id="bravo-message" style="display: none;"> Bravo ! Vous avez entrainé un réseau de neurones perceptron et obtenu un modèle réutilisable. </h4>
+
+      <a href="./chapitre2.html">
+                <h4>Aller au chapitre 2</h4>
+                      <p>
+                 comment composer des transformations simples
+                    </p>
+                </a>
+    
+    </div>
+  </body>
+</html>
