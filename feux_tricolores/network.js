@@ -27,6 +27,7 @@ let trainingResults = null;
 let trainingChart = null;
 let isTraining = false;
 let trainingTimeout = null;
+let stopTrainingFlag = false;
 
 // Fonction utilitaire pour brasser un tableau (Fisher-Yates)
 function shuffleArray(array) {
@@ -56,8 +57,8 @@ function generateDataset() {
     const totalTraining = trainSizeInput ? parseInt(trainSizeInput.value) || 1200 : 1200;
     const validationSize = validationSizeInput ? parseInt(validationSizeInput.value) || 240 : 240;
     
-    // Répartition : 75% dans les cercles, 25% à l'extérieur (comme l'original)
-    const pointsPerCircle = Math.floor(totalTraining * 0.75 / 3);
+    // Répartition : 50% dans les cercles, 50% à l'extérieur (meilleur équilibre)
+    const pointsPerCircle = Math.floor(totalTraining * 0.5 / 3);
     const pointsOutside = totalTraining - pointsPerCircle * 3;
     
     // Training set : points dans les cercles
@@ -93,6 +94,11 @@ function generateDataset() {
     document.getElementById('previewBtn').disabled = false;
     document.getElementById('visualizeBtn').disabled = false;
     document.getElementById('trainBtn').disabled = false;
+    
+    // Rafraîchir automatiquement la visualisation si elle est ouverte
+    if (!document.getElementById('datasetVisualization').classList.contains('hidden')) {
+        visualizeDataset();
+    }
 }
 
 /**
@@ -464,16 +470,17 @@ class NeuralNetwork {
     }
     
     /**
-     * Entraîne le réseau sur les données
+     * Entraîne le réseau sur les données (version asynchrone)
      * @param {Array} data - Données d'entraînement
      * @param {number} batchSize - Taille des batches
      * @param {number} learningRate - Taux d'apprentissage
      * @param {number} epochs - Nombre d'époques
      * @param {Array} validationData - Données de validation
      * @param {Function} onEpoch - Callback après chaque époque
+     * @param {Function} onComplete - Callback à la fin de l'entraînement
      * @returns {Object} Résultats de l'entraînement
      */
-    train(data, batchSize, learningRate, epochs, validationData, onEpoch) {
+    train(data, batchSize, learningRate, epochs, validationData, onEpoch, onComplete) {
         const beta1 = 0.9;
         const beta2 = 0.999;
         const epsilon = 1e-8;
@@ -486,7 +493,17 @@ class NeuralNetwork {
             times: [] 
         };
         
-        for (let epoch = 0; epoch < epochs; epoch++) {
+        let currentEpoch = 0;
+        // Utiliser la variable globale pour l'arrêt
+        stopTrainingFlag = false;
+        
+        // Définir la fonction de traitement d'une époque
+        const processEpoch = () => {
+            if (currentEpoch >= epochs || stopTrainingFlag) {
+                if (onComplete) onComplete(results);
+                return results;
+            }
+            
             shuffleArray(data);
             
             let epochTrainLoss = 0;
@@ -511,7 +528,7 @@ class NeuralNetwork {
                 }
                 
                 // Mise à jour des poids après le batch
-                this.updateWeights(dW1, db1, dW2, db2, learningRate, epoch + 1, beta1, beta2, epsilon);
+                this.updateWeights(dW1, db1, dW2, db2, learningRate, currentEpoch + 1, beta1, beta2, epsilon);
             }
             
             epochTrainLoss /= data.length;
@@ -525,17 +542,32 @@ class NeuralNetwork {
             results.times.push(Date.now());
             
             if (onEpoch) {
-                onEpoch(epoch, epochs, epochTrainLoss, valLoss, trainAccuracy, valAccuracy);
+                onEpoch(currentEpoch, epochs, epochTrainLoss, valLoss, trainAccuracy, valAccuracy);
             }
             
-            // Arrêt anticipé si la perte de validation augmente
-            if (epoch > 50 && results.valLoss.length > 1 && valLoss > results.valLoss[epoch - 1] * 1.01) {
-                console.log(`Arrêt anticipé à l'époque ${epoch}`);
-                break;
-            }
-        }
+            // Arrêt anticipé désactivé temporairement pour permettre l'entraînement complet
+            // if (currentEpoch > 50 && results.valLoss.length > 1 && valLoss > results.valLoss[currentEpoch - 1] * 1.01) {
+            //     console.log(`Arrêt anticipé à l'époque ${currentEpoch}`);
+            //     stopTraining = true;
+            // }
+            
+            currentEpoch++;
+            
+            // Passer à l'époque suivante de manière asynchrone pour libérer l'UI
+            setTimeout(processEpoch, 0);
+        };
+        
+        // Démarrer l'entraînement
+        processEpoch();
         
         return results;
+    }
+    
+    /**
+     * Arrête l'entraînement en cours
+     */
+    stopTraining() {
+        this._stopTraining = true;
     }
     
     /**
@@ -575,9 +607,9 @@ class NeuralNetwork {
             }
         }
         
-        // Si la valeur maximale est faible (< 0.3), c'est Noir (classe 3)
+        // Si la valeur maximale est faible (< 0.25), c'est Noir (classe 3)
         // Ce seuil permet de mieux distinguer les points à l'extérieur des cercles
-        if (maxValue < 0.3) return 3;
+        if (maxValue < 0.25) return 3;
         return maxIndex;
     }
     
@@ -666,7 +698,9 @@ function trainNetwork() {
     const learningRate = parseFloat(document.getElementById('learningRate').value) || 0.01;
     const hiddenSize = parseInt(document.getElementById('hiddenSize').value) || 12;
     
-    showStatus('trainingStatus', `Entraînement: ${epochs} epochs, batch ${batchSize}, lr ${learningRate}, hidden ${hiddenSize}`, 'info');
+    showStatus('trainingStatus', `Initialisation... Entraînement: ${epochs} epochs, batch ${batchSize}, lr ${learningRate}, hidden ${hiddenSize}`, 'info');
+    document.getElementById('metricsContainer').classList.remove('hidden');
+    document.getElementById('currentEpoch').textContent = '0/' + epochs;
     
     // Créer le réseau avec la taille de couche cachée sélectionnée
     network = new NeuralNetwork(2, hiddenSize, 3);
@@ -710,7 +744,16 @@ function trainNetwork() {
     });
     
     document.getElementById('metricsContainer').classList.add('hidden');
+    document.getElementById('trainingProgress').style.width = '0%';
     const startTime = Date.now();
+    
+    // Réinitialiser le graphique
+    trainingChart.data.labels = [];
+    trainingChart.data.datasets[0].data = [];
+    trainingChart.data.datasets[1].data = [];
+    trainingChart.data.datasets[2].data = [];
+    trainingChart.data.datasets[3].data = [];
+    trainingChart.update('none');
     
     trainingResults = network.train(
         trainingData, 
@@ -739,28 +782,32 @@ function trainNetwork() {
             trainingChart.data.datasets[2].data.push(trainAccuracy);
             trainingChart.data.datasets[3].data.push(valAccuracy);
             trainingChart.update('none');
+        },
+        (results) => {
+            // Callback de fin d'entraînement
+            isTraining = false;
+            document.getElementById('trainBtn').disabled = false;
+            document.getElementById('stopBtn').disabled = true;
+            const finalAccuracy = results.trainAccuracy.length > 0 ? 
+                (results.trainAccuracy[results.trainAccuracy.length-1]*100).toFixed(2) : 0;
+            showStatus('trainingStatus', `Entraînement terminé! Accuracy: ${finalAccuracy}%`, 'success');
+            
+            document.getElementById('predictBtn').disabled = false;
+            document.getElementById('testBtn').disabled = false;
+            document.getElementById('confusionBtn').disabled = false;
         }
     );
-    
-    isTraining = false;
-    document.getElementById('trainBtn').disabled = false;
-    document.getElementById('stopBtn').disabled = true;
-    showStatus('trainingStatus', `Entraînement terminé! Accuracy: ${(trainingResults.trainAccuracy[trainingResults.trainAccuracy.length-1]*100).toFixed(2)}%`, 'success');
-    
-    document.getElementById('predictBtn').disabled = false;
-    document.getElementById('testBtn').disabled = false;
-    document.getElementById('confusionBtn').disabled = false;
 }
 
 /**
  * Arrête l'entraînement
  */
 function stopTraining() {
-    if (trainingTimeout) clearTimeout(trainingTimeout);
+    stopTrainingFlag = true;
     isTraining = false;
     document.getElementById('trainBtn').disabled = false;
     document.getElementById('stopBtn').disabled = true;
-    showStatus('trainingStatus', 'Entraînement arrêté.', 'error');
+    showStatus('trainingStatus', 'Arrêt en cours...', 'error');
 }
 
 // ========================================================================
