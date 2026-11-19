@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MindMap Complète avec Zoom</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        
+        .tree-container {
+            width: 100%;
+            height: 85vh;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            overflow: auto;
+            position: relative;
+        }
+        
+        .node circle {
+            fill: #fff;
+            stroke: steelblue;
+            stroke-width: 2px;
+        }
+        
+        .node text {
+            font: 12px sans-serif;
+            text-anchor: middle;
+        }
+        
+        .link {
+            fill: none;
+            stroke: #ccc;
+            stroke-width: 1.5px;
+        }
+        
+        .category {
+            font-weight: bold;
+            font-size: 14px;
+        }
+        
+        .root {
+            font-weight: bold;
+            font-size: 16px;
+            fill: #2c3e50;
+        }
+        
+        .maturite-1 { color: #ff6b6b; }
+        .maturite-2 { color: #feca57; }
+        .maturite-3 { color: #48dbfb; }
+        .maturite-4 { color: #5f27cd; }
+        
+        .tooltip {
+            position: absolute;
+            padding: 12px;
+            background: rgba(0,0,0,0.85);
+            color: white;
+            border-radius: 6px;
+            pointer-events: none;
+            max-width: 500px;
+            font-size: 13px;
+            line-height: 1.5;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            word-wrap: break-word;
+            white-space: pre-wrap;
+        }
+        
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+        }
+        
+        .controls {
+            text-align: center;
+            margin: 10px 0;
+        }
+        
+        button {
+            padding: 8px 16px;
+            background: #2c3e50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 0 5px;
+        }
+        
+        button:hover {
+            background: #1a252f;
+        }
+        
+        .zoom-controls {
+            margin: 10px 0;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h1>Cartographie des Technologies IA avec Zoom</h1>
+    <div class="controls">
+        <button id="expand-all">Tout déployer</button>
+        <button id="collapse-all">Tout replier</button>
+        <button id="fit-view">Ajuster à l'écran</button>
+    </div>
+    <div class="zoom-controls">
+        <button id="zoom-in">+ Zoom</button>
+        <button id="zoom-out">- Zoom</button>
+        <button id="zoom-reset">Réinitialiser</button>
+    </div>
+    <div class="tree-container" id="tree"></div>
+    <div class="tooltip" id="tooltip"></div>
+    
+    <script>
+        // Counter for node IDs
+        let i = 0;
+        let svg, root, treemap, zoom;
+        
+        // Mapping maturité to level
+        const maturiteMap = {
+            'Développement': 1,
+            'Industrialisation': 2,
+            'Déployée': 3,
+            'Déployée et en évolution': 4
+        };
+                
+        const technologies = [
+        // Complete data set with full definitions and justifications
+        
+            {"Catégorie": "Algorithme", "Nom EN": "Support Vector Machine", "Nom FR": "Machine à vecteurs de support", "Acronyme": "SVM", "Définition": "Trouve un hyperplan séparant les classes avec le plus grand rayon, optimisant ainsi la marge de classification dans l'espace des caractéristiques.", "Maturité": "Déployée", "Justification": "Méthode classique, stable, bien maîtrisée, encore utilisée dans des cas d'usage spécifiques. Mature depuis les années 1990-2000, largement utilisée en classification et régression. Peu d'évolutions majeures, supplantée par le deep learning sur les grands corpus. Crédit scoring, détection de spam"},
+            {"Catégorie": "Algorithme", "Nom EN": "Decision tree", "Nom FR": "Arbre de décision", "Acronyme": null, "Définition": "Un arbre de décision construit un modèle hiérarchique où chaque nœud teste une caractéristique, guidant l'évaluation vers des feuilles représentant les décisions ou prédictions finales.", "Maturité": "Déployée", "Justification": "Technologie classique et omniprésente. Évolue par intégration : pipelines AutoML, hybridation avec des méthodes d'explicabilité. Très mature, largement intégrée dans les outils analytiques et industriels. Outils d'évaluation de risque bancaire"},
+            {"Catégorie": "Algorithme", "Nom EN": "Linear regression", "Nom FR": "Régression linéaire", "Acronyme": null, "Définition": "Modélise la relation entre une variable dépendante et des variables indépendantes via un plan linéaire, minimisant l'erreur quadratique moyenne.", "Maturité": "Déployée", "Justification": "Méthode statistique fondamentale établie depuis le XIXe siècle, totalement éprouvée. Massivement déployée. Pas d'évolution significative en tant que telle. Prévisions financières, analyse marketing, …"},
+            {"Catégorie": "Algorithme", "Nom EN": "Logistic regression", "Nom FR": "Régression logistique", "Acronyme": null, "Définition": "Modélise la probabilité d'appartenance à une classe binaire via une fonction sigmoïde, optimisant les paramètres pour maximiser la vraisemblance des observations.", "Maturité": "Déployée", "Justification": "Standard établi pour la classification binaire, déployé dans d'innombrables systèmes de production. Technologie stable, peu d'évolutions intrinsèques majeures. Modèles de risque médical, scoring bancaire, …"},
+            {"Catégorie": "Algorithme", "Nom EN": "Random forest", "Nom FR": "Forêt aléatoire", "Acronyme": null, "Définition": "Ensemble d'arbres décisionnels, chacun entraîné sur des sous‑échantillons aléatoires, qui agrègent leurs résultats pour réduire la variance et améliorer la généralisation, renforçant ainsi la robustesse de la décision.", "Maturité": "Déployée", "Justification": "Méthode de référence, très robuste, très largement utilisée. Évolue par intégration : pipelines AutoML, hybridation avec des méthodes d'explicabilité. Standard industriel en ML classique, omniprésent en data science. Scoring de crédit, détection de fraude, ..."},
+            {"Catégorie": "Algorithme (cadre théorique)", "Nom EN": "Pearl causality - do‑calculus", "Nom FR": "Causalité de Pearl - do‑calculus", "Acronyme": null, "Définition": "La théorie du calcul d'action de Pearl utilise des graphes causaux et le « do‑calculus » pour inférer l'impact d'interventions (le choix d'une valeur d'une variable), différenciant corrélation et causalité. Le do-calculus est l'ensemble de règles mathématiques qui permet de transformer des questions d'intervention en expressions calculables à partir de données observées, quand cela est identifiable.", "Maturité": "Développement", "Justification": "Cadre théorique développé par Judea Pearl dans les années 1990, solide et reconnu (Prix Turing 2011). Mais déploiement opérationnel encore plus limité que son influence académique. Des outils existent (DoWhy, CausalML) toutefois."},
+            {"Catégorie": "Algorithme statistique", "Nom EN": "Probabilistic programming", "Nom FR": "Programmation probabiliste", "Acronyme": null, "Définition": "Paradigme de modélisation où les variables et leurs relations sont exprimées sous forme d'équations probabilistes, permettant l'inférence bayésienne, la gestion explicite de l'incertitude et la prise de décision.", "Maturité": "Déployée", "Justification": "Très solide conceptuellement, outils matures, évolue par intégration avec le deep learning et l'accélération computationnelle. Frameworks matures (Stan, PyMC, Pyro, Bean Machine), mais usage industriel encore relativement spécialisé. Déployés en finance, épidémiologie, industrie."},
+            {"Catégorie": "Algorithme statistique", "Nom EN": "Structural equation modeling", "Nom FR": "Modélisation par équations structurelles", "Acronyme": "SEM", "Définition": "Classe de méthodologies qui cherche à représenter des hypothèses concernant les moyennes, variances et covariances de données observées en termes d'un nombre réduit de paramètres « structurels » définis par un modèle conceptuel ou théorique sous‑jacent hypothétique.", "Maturité": "Déployée", "Justification": "Méthodologie ancienne, très mature, largement utilisée dans plusieurs disciplines, évolue par intégration avec l'inférence causale (Pearl) et les approches bayésiennes. Applications en sciences sociales, psychologie, économétrie, analyse marketing (AMOS)."},
+            {"Catégorie": "Algorithme symbolique", "Nom EN": "Rule based system", "Nom FR": "Système basé sur des règles", "Acronyme": null, "Définition": "Utilisent des ensembles de conditions et d'instructions prédéfinies pour prendre des décisions logiques, sans apprentissage automatique ni adaptation dynamique.", "Maturité": "Déployée", "Justification": "Très ancienne (années 70), extrêmement éprouvée, évolue par hybridation avec le ML et l'IA symbolique. Encore utilisée dans de nombreux systèmes experts, moteurs de décision, conformité, automatisation. Systèmes industriels, juridiques, bancaires."},
+            {"Catégorie": "Algorithme symbolique", "Nom EN": "Clustering algorithm", "Nom FR": "Algorithme de clustering", "Acronyme": null, "Définition": "Partitionnent les données d'entrée en groupes homogènes sans supervision, utilisant des mesures d'agrégation ou de densité pour identifier les structures.", "Maturité": "Déployée", "Justification": "Famille d'algorithmes ancienne et largement utilisée dans tous les secteurs analytiques. Segmentation marketing, profilage client. K-means, clustering hiérarchique, etc."},
+            {"Catégorie": "Algorithme symbolique", "Nom EN": "Density-Based Spatial Clustering", "Nom FR": "Clustering basé sur la densité", "Acronyme": "DBSCAN", "Définition": "Regroupe les points proches selon un rayon et une densité minimale, détectant des clusters de forme arbitraire tout en identifiant les outliers.", "Maturité": "Déployée", "Justification": "Algorithme établi (1996), stable, peu d'évolutions majeures propres à DBSCAN (variantes HDBSCAN plus récentes). Largement disponible dans toutes les bibliothèques ML. Couramment utilisé pour clustering spatial et détection d'anomalies"},
+            {"Catégorie": "Algorithme symbolique", "Nom EN": "K-Nearest Neighbors", "Nom FR": "K-plus proches voisins", "Acronyme": "KNN", "Définition": "Prédit la classe d'un point en examinant les k plus proches voisins, pondérant souvent par la distance.", "Maturité": "Déployée", "Justification": "Algorithme fondamental, stable, utilisé notamment dans les moteurs de recherche vectorielle en complément des LLM. Mature, simple, éprouvé, déployé depuis des décennies. Recommandation, classification dans de nombreux produits"},
+            {"Catégorie": "Algorithme symbolique", "Nom EN": "Collaborative filtering", "Nom FR": "Filtrage collaboratif", "Acronyme": null, "Définition": "Recommande des items en se basant sur les préférences similaires d'utilisateurs ou la similarité entre éléments, sans analyse de contenu explicite.", "Maturité": "Déployée", "Justification": "Historique, utilisée depuis les années 2000, évolue par hybridation avec les LLM et les graphes de connaissances. Cœur de systèmes de recommandation (Netflix, Spotify, Amazon)"},
+            {"Catégorie": "Algorithme symbolique", "Nom EN": "Isolation Forest", "Nom FR": "Forêt d'isolation", "Acronyme": null, "Définition": "Détecte les points anormaux (i.e. isolé) dans un jeu de données, en procédant à des partitionnements récursifs d'isolation des points. Le score d'anomalie est d'autant plus élevé que la profondeur de récursivité est faible.", "Maturité": "Déployée", "Justification": "Algorithme de détection d'anomalies bien établi, stable. Disponible dans les bibliothèques standard (scikit-learn). Applications en cybersécurité (Splunk, Sumo Logic), finance, industrie, …"},
+            {"Catégorie": "Algorithme symbolique", "Nom EN": "Planning algorithms", "Nom FR": "Algorithmes de planification", "Acronyme": null, "Définition": "Classe d'algorithmes de recherche de séquence d'actions optimales pour évoluer d'un état initial en un objectif d'état final. Typiquement fondé sur un langage formel décrivant les états, les opérations, et les prédicats logiques associés.", "Maturité": "Déployée", "Justification": "Très mature, évolue fortement par hybridation avec le reinforcement learning et les LLM pour la planification en langage naturel. Algorithme (A*) et langages formels (STRIPS, PDDL) utilisés de longue date. Planification pour jeux, logistique, véhicules autonomes, robots opérant en environnement réel"},
+            {"Catégorie": "Combinaison (agents + outils)", "Nom EN": "Tool using agent", "Nom FR": "Agent utilisant des outils", "Acronyme": null, "Définition": "Intègrent des appels à des logiciels externes, permettant au modèle de langage d'exécuter des actions concrètes comme la recherche web ou le calcul.", "Maturité": "Industrialisation", "Justification": "Patterns encore en consolidation mais usage concret croissant. Standardisation des interfaces (MCP) en cours. Déjà implémenté dans des produits réels, notamment pour collecte et compilation automatique de données. Systèmes comme ChatGPT Plugins, Claude avec outils, Gemini Function Calling déployés commercialement."},
+            {"Catégorie": "Combinaison (graphique + génération)", "Nom EN": "Graph Augmented Generation", "Nom FR": "Génération augmentée par graphe", "Acronyme": "GAG", "Définition": "Intègre des graphes de connaissances dans le processus génératif, permettant d'incorporer relations et entités structurées pour des réponses plus cohérentes.", "Maturité": "Développement", "Justification": "Approche combinant graphes de connaissances et LLM. Prometteur, mais encore largement au stade de la recherche et des preuves de concept avancées, démonstrateurs nombreux, mais déploiement encore limité et non standardisé. Génération basée sur GNN pour découverte de médicaments ou complétion d'un graphe des connaissances (prototypes)"},
+            {"Catégorie": "Combinaison (neural + contraintes physiques)", "Nom EN": "Physic-Informed Neural Network", "Nom FR": "Réseau neuronal informé par la physique", "Acronyme": "PINN", "Définition": "Intègre des modèles physiques (équations, contraintes) lors de l'évaluation de résultats lors de l'apprentissage, forçant ainsi le réseau à respecter les lois physique.", "Maturité": "Développement", "Justification": "PINNs pour simulation de dynamique des fluides. Fort potentiel dans ingénierie/sciences, mais adoption encore ciblée. Validés en simulation numérique, mécanique des fluides, thermique. Des déploiements industriels existent (énergie, aérospatial) mais la généralisation et la robustesse sont encore en cours de qualification. TRL 6-8."},
+            {"Catégorie": "Combinaison (neural + symbolique)", "Nom EN": "Neuro-symbolic AI", "Nom FR": "IA neuro-symbolique", "Acronyme": null, "Définition": "L'IA neuro-symbolique combine réseaux neuronaux et méthodes symboliques, apprenant des représentations latentes tout en appliquant des règles explicites pour améliorer interprétabilité et robustesse.", "Maturité": "Développement", "Justification": "Domaine de recherche actif avec des preuves de concept convaincantes, mais peu de systèmes industriels déployés à grande échelle. Systèmes hybrides neurones-symboliques pour diagnostic médical"},
+            {"Catégorie": "Combinaison (planification + apprentissage autonome)", "Nom EN": "Agentic AI", "Nom FR": "IA agentique", "Acronyme": null, "Définition": "Confère à un système la capacité d'agir de façon semi supervisée, voire autonome, en planifiant et adaptant ses actions en fonction des objectifs définis.", "Maturité": "Industrialisation", "Justification": "Autonomie, robustesse, sûreté et gouvernance encore immatures. Déjà implémenté dans des produits réels et usage concret rapidement croissant porté par des framework tels Open Claw."},
+            {"Catégorie": "Combinaison (retrieval + génération)", "Nom EN": "Retrieval Augmented Generation", "Nom FR": "Génération augmentée par recherche", "Acronyme": "RAG", "Définition": "Combine un modèle génératif avec une base de données externe propre à l'utilisateur (individu, collectivité), récupérant des documents pertinents avant la génération d'une réponse enrichie par l'information externe pour en améliorer précision et contextualisation.", "Maturité": "Déployée", "Justification": "Technologie mature, offre logicielle diversifiée : propriétaire, open source, en système complet ou briques de construction. Nombreux systèmes en production, pour personnalisation « bas coût » des IAs génératives génériques."},
+            {"Catégorie": "IA neuronale", "Nom EN": "Hierarchical Reasoning Model", "Nom FR": "Modèle hiérarchique de raisonnement", "Acronyme": "HRM", "Définition": "Approche est inspirée par le fonctionnement cérébral humain. Elle structure le raisonnement en une hiérarchie de boucles récurrentes opérant à différents niveaux et fréquences. Typiquement une boucle basse et rapide d'opérations simples, et d'une boucle haute lente d'opérations qui fait itérer la boucle basse pour améliorer le résultat. Cette approche est inspirée par le fonctionnement cérébral humain.", "Maturité": "Développement", "Justification": "Prototypes de planification hiérarchique en robotique. Très exploratoire, encore loin d'un usage industriel large. Approche inspirée des neurosciences, encore principalement au stade de la recherche académique et des preuves de concept. TRL 3-4."},
+            {"Catégorie": "IA neuronale", "Nom EN": "Convolutional Neural Network", "Nom FR": "Réseau neuronal convolutif", "Acronyme": "CNN", "Définition": "Appliquent des filtres glissants sur les données spatiales, extrayant automatiquement des caractéristiques d'images ou de séquences pour leur classification ou la détection de motifs en leur sein.", "Maturité": "Déployée et en évolution", "Justification": "Déployée massivement depuis AlexNet (2012), continue d'évoluer (architectures efficientes, EfficientNet, ConvNeXt, hybridation avec les Transformers). Classification d'images dans véhicules autonomes, reconnaissance faciale, vision industrielle, médecine"},
+            {"Catégorie": "IA neuronale", "Nom EN": "Recurrent Neural Network", "Nom FR": "Réseau neuronal récurrent", "Acronyme": "RNN", "Définition": "Traite des séquences en conservant un état interne, permettant la modélisation de dépendances temporelles dans des données séquentielles.", "Maturité": "Déployée", "Justification": "Très mature. Peu d'évolutions architecturales majeures propres aux RNN purs. Largement déployée mais en recul progressif au profit des LSTM et Transformers dans beaucoup de cas. Speech-to-text, modèles de langage"},
+            {"Catégorie": "IA neuronale", "Nom EN": "Long Short Term Memory Network", "Nom FR": "Réseau de mémoire à long terme", "Acronyme": "LSTM", "Définition": "Améliore le RNN en introduisant des portes mémoire pour retenir ou oublier l'information, résolvant ainsi le problème de «gradient évanescent» qui obère la capture des dépendances longues.", "Maturité": "Déployée", "Justification": "Mature et robuste. Continue d'évoluer par hybridation (LSTM + Attention, LSTM + Transformers) même si concurrencés. Très utilisé historiquement en séries temporelles et séquences (NLP, séries temporelles). Traduction Google Translate, reconnaissance vocale, finance, IoT."},
+            {"Catégorie": "IA neuronale", "Nom EN": "Generative Adversarial Network", "Nom FR": "Réseau antagoniste génératif", "Acronyme": "GAN", "Définition": "Oppose un générateur et un discriminateur, entraînant le premier à produire des échantillons réalistes tandis que l'autre apprend à les distinguer.", "Maturité": "Déployée", "Justification": "Technologie qui a marqué une rupture qualitative, globalement dépassée par les modèles de diffusion, mais reste utile par plus grande frugalité en ressources. Déployée en production pour génération d'images, vidéos, ..."},
+            {"Catégorie": "IA neuronale", "Nom EN": "Large Language Model", "Nom FR": "Grand modèle de langage", "Acronyme": "LLM", "Définition": "Par apprentissage, sur des corpus très volumineux de textes, de la probabilité d'occurence d'un « token » comme élément suivant d'une séquence, acquiert la capacité de générer du texte cohérent et de répondre à des requêtes variées.", "Maturité": "Déployée et en évolution", "Justification": "Technologie en évolution extrêmement rapide sur les performances, l'efficience et les usages. Très fortement déployée, mais la maîtrise des impacts et la gouvernance restent encore en structuration. Offre fournisseur très abondante GPT, Gemini, Claude, Qwen, Mistral, etc, etc."},
+            {"Catégorie": "IA neuronale", "Nom EN": "Large Reasoning Model", "Nom FR": "Grand modèle de raisonnement", "Acronyme": "LRM", "Définition": "Exécutent des chaînes d'inférences complexes, combinant apprentissage statistique et logique symbolique pour simuler le déduction, l'inférence et la planification.", "Maturité": "Industrialisation", "Justification": "Domaine encore émergent ; forte activité de recherche pour généralisation des capacités de raisonnement. Offre abondante : Claude 4.5, Magistral , OpenAI o3, 04-min & gpt-oss, Qwen3-Next, DeepMind Gemini Robotics. Déploiement commercial amorcé, notamment pour des tâches de type génération de code, mais performances en raisonnement général en conditions réelles encore faibles"},
+            {"Catégorie": "IA neuronale", "Nom EN": "Tiny Recursion Model", "Nom FR": "Petit modèle récursif", "Acronyme": "TRM", "Définition": "Basé sur une analyse critique du HRM, il en simplifie radicalement l'architecture, réduisent fortement le nombre de paramètre et la taille du modèle. Il est toutefois spécialisé sur le type problème pour lequel il est entrainé.", "Maturité": "Développement", "Justification": "Très récent et encore essentiellement au stade de recherche / expérimentation ciblée. Concept émergent issu d'une analyse critique du HRM, très peu de travaux publiés et validés. Stade des principes de base et de la formulation du concept. Serait adapté à des modèles de raisonnement spécialisés pour dispositifs légers"},
+            {"Catégorie": "IA neuronale", "Nom EN": "Diffusion Model", "Nom FR": "Modèle de diffusion", "Acronyme": null, "Définition": "Un modèle de diffusion génère des données en inversant un processus stochastique qui ajoute progressivement du bruit (phase d'apprentissage) pour une création réalistes d'images, de sons, de musique, etc.", "Maturité": "Déployée et en évolution", "Justification": "Déjà largement utilisée pour génération d'images/audio/vidéo, mais encore en évolution rapide (diffusion vidéo, 3D, audio, guidage conditionnel de la génération). Stable Diffusion, DALL-E, Sora, MusicGen massivement déployés."},
+            {"Catégorie": "IA neuronale", "Nom EN": "Neuromorphic Models", "Nom FR": "Modèles neuromorphiques", "Acronyme": null, "Définition": "Les modèles neuromorphiques cherchent à imiter les composants   biologiques (neurones, synapses) au niveau matériel (« hardware »).", "Maturité": "Développement", "Justification": "Avancées matérielles et académiques réelles, mais adoption industrielle encore limitée. Intel Loihi, IBM TrueNorth (recherche et prototypes) constituent des validations en environnement pertinent, mais loin d'une industrialisation généralisée."},
+            {"Catégorie": "IA neuronale", "Nom EN": "Variational autoencoder", "Nom FR": "Auto-encodeurs variationnels", "Acronyme": "VAE", "Définition": "Encode les données dans un espace latent probabiliste (apprentissage), puis génère un résultat réaliste correspondant à un point de l'espace latent donné en entrée.", "Maturité": "Déployée", "Justification": "Déjà ancienne (2013), bien établie dans certains domaines (ex. « compression » de données » dans un espace latent), mais globalement dépassée pour la génération pure, continuent d'évoluer (VQ-VAE, hybridation avec diffusion). Déployée en génération, compression, détection d'anomalies."},
+            {"Catégorie": "IA neuronale", "Nom EN": "Bayesian Neural Network", "Nom FR": "Réseau neuronal bayésien", "Acronyme": "BNN", "Définition": "Modélise les poids du réseau comme des distributions probabilistes, offrant une robustesse accrue grâce à l'inférence bayésienne.", "Maturité": "Développement", "Justification": "Sujet mature scientifiquement, mais, aujourd'hui le coût computationnel et la complexité d'inférence limitent le déploiement industriel. Est encore un objet de laboratoire et d'applications ciblées."},
+            {"Catégorie": "IA neuronale", "Nom EN": "Graph Neural Network", "Nom FR": "Réseau neuronal graphe", "Acronyme": "GNN", "Définition": "Modélise efficacement (encode) la structure de graphes complexes, associé aux propriétés « physiques » des éléments du graphe et du graphe  (par exemple propriétés chimiques des atomes d'un molécule et celles de la molécules, permet de qualifier celles d'un graphe présenté en entrée ou de construire un graphe ayant certaines propriétés.", "Maturité": "Déployée et en évolution", "Justification": "Architectures encore en évolution rapide. Déployés en chimie computationnelle (AlphaFold), réseaux sociaux, systèmes de recommandation ; adoption croissante mais pas encore universelle"}
+        ];
+        // Complete data set with full definitions and justifications
+        
+        // Complete data set with full definitions and justifications
+        
+        
+        function buildTree() {
+            const treeData = { name: "Technologies", children: [] };
+            const categories = {};
+            
+            technologies.forEach(tech => {
+                const category = tech["Catégorie"];
+                if (!categories[category]) {
+                    categories[category] = { name: category, children: [] };
+                    treeData.children.push(categories[category]);
+                }
+                
+                const acronym = tech["Acronyme"] && tech["Acronyme"] !== ".nan" ? tech["Acronyme"] : "";
+                const nodeName = `${acronym ? "[" + acronym + "] " : ""}${tech["Nom FR"]}`;
+                
+                categories[category].children.push({
+                    name: nodeName,
+                    englishName: tech["Nom EN"],
+                    maturite: tech["Maturité"],
+                    maturiteLevel: maturiteMap[tech["Maturité"]] || 1,
+                    definition: tech["Définition"],
+                    justification: tech["Justification"]
+                });
+            });
+            
+            const margin = {top: 40, right: 120, bottom: 40, left: 120};
+            const container = document.getElementById('tree');
+            const width = container.clientWidth - margin.left - margin.right;
+            const height = container.clientHeight - margin.top - margin.bottom;
+            
+            // Create zoom behavior
+            zoom = d3.zoom()
+                .scaleExtent([0.3, 2])
+                .on('zoom', zoomed);
+            
+            svg = d3.select("#tree").append("svg")
+                .attr("width", width + margin.left + margin.right)
+                .attr("height", height + margin.top + margin.bottom)
+                .call(zoom)
+                .append("g")
+                .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+            
+            treemap = d3.tree().size([height, width]);
+            
+            root = d3.hierarchy(treeData);
+            root.x0 = height / 2;
+            root.y0 = 0;
+            
+            root.children.forEach(collapse);
+            update(root);
+            
+            // Initial zoom to fit
+            setTimeout(() => {
+                const bounds = svg.node().getBBox();
+                const fullWidth = bounds.width + margin.left + margin.right;
+                const fullHeight = bounds.height + margin.top + margin.bottom;
+                const scale = Math.min(
+                    width / fullWidth,
+                    height / fullHeight,
+                    0.8
+                );
+                const translateX = width / 2 - (bounds.x + bounds.width / 2) * scale;
+                const translateY = height / 2 - (bounds.y + bounds.height / 2) * scale;
+                svg.transition().call(
+                    zoom.transform,
+                    d3.zoomIdentity.translate(translateX, translateY).scale(scale)
+                );
+            }, 500);
+            
+            // Set up buttons
+            document.getElementById('expand-all').addEventListener('click', () => {
+                expandAll(root);
+                update(root);
+                setTimeout(fitView, 300);
+            });
+            
+            document.getElementById('collapse-all').addEventListener('click', () => {
+                collapseAll(root);
+                update(root);
+                setTimeout(fitView, 300);
+            });
+            
+            document.getElementById('fit-view').addEventListener('click', fitView);
+            
+            document.getElementById('zoom-in').addEventListener('click', () => {
+                svg.transition().call(zoom.scaleBy, 1.2);
+            });
+            
+            document.getElementById('zoom-out').addEventListener('click', () => {
+                svg.transition().call(zoom.scaleBy, 0.8);
+            });
+            
+            document.getElementById('zoom-reset').addEventListener('click', () => {
+                svg.transition().call(zoom.transform, d3.zoomIdentity);
+            });
+        }
+        
+        function fitView() {
+            const bounds = svg.node().getBBox();
+            const container = document.getElementById('tree');
+            const width = container.clientWidth;
+            const height = container.clientHeight;
+            const margin = {top: 40, right: 120, bottom: 40, left: 120};
+            
+            const fullWidth = bounds.width + margin.left + margin.right;
+            const fullHeight = bounds.height + margin.top + margin.bottom;
+            const scale = Math.min(
+                (width - margin.left - margin.right) / fullWidth,
+                (height - margin.top - margin.bottom) / fullHeight,
+                0.8
+            );
+            const translateX = (width - bounds.width * scale) / 2 - bounds.x * scale;
+            const translateY = (height - bounds.height * scale) / 2 - bounds.y * scale;
+            
+            svg.transition().call(
+                zoom.transform,
+                d3.zoomIdentity.translate(translateX, translateY).scale(scale)
+            );
+        }
+        
+        function zoomed(event) {
+            svg.attr("transform", event.transform);
+        }
+        
+        function collapse(d) {
+            if (d.children) {
+                d._children = d.children;
+                d._children.forEach(collapse);
+                d.children = null;
+            }
+        }
+        
+        function expandAll(d) {
+            if (d._children) {
+                d.children = d._children;
+                d._children = null;
+                d.children.forEach(expandAll);
+            }
+            if (d.children) {
+                d.children.forEach(expandAll);
+            }
+        }
+        
+        function collapseAll(d) {
+            if (d.children) {
+                d._children = d.children;
+                d._children.forEach(collapseAll);
+                d.children = null;
+            }
+        }
+        
+        function update(source) {
+            const treeData = treemap(root);
+            const nodes = treeData.descendants();
+            const links = treeData.descendants().slice(1);
+            
+            // Update nodes
+            const node = svg.selectAll("g.node")
+                .data(nodes, d => d.id || (d.id = ++i));
+            
+            const nodeEnter = node.enter().append("g")
+                .attr("class", "node")
+                .attr("transform", d => `translate(${source.y0},${source.x0})`)
+                .on("click", click)
+                .on("mouseover", mouseover)
+                .on("mouseout", mouseout);
+            
+            nodeEnter.append("circle")
+                .attr("r", 1e-6)
+                .style("fill", d => d._children ? "lightsteelblue" : "#fff")
+                .style("stroke", d => {
+                    if (d.depth === 0) return "#fff";
+                    if (d.depth === 1) return "#2980b9";
+                    if (d.data.maturiteLevel) {
+                        const colors = ["#ff6b6b", "#feca57", "#48dbfb", "#5f27cd"];
+                        return colors[d.data.maturiteLevel - 1];
+                    }
+                    return "steelblue";
+                });
+            
+            nodeEnter.append("text")
+                .attr("dy", ".35em")
+                .attr("x", 0)
+                .attr("text-anchor", "middle")
+                .text(d => {
+                    if (d.depth === 0) return d.data.name;
+                    if (d.depth === 1) return d.data.name;
+                    return d.data.name.replace(/\[.*?\]\s*/, '');
+                })
+                .style("fill-opacity", 1e-6)
+                .attr("class", d => {
+                    if (d.depth === 0) return "root";
+                    if (d.depth === 1) return "category";
+                    if (d.data.maturiteLevel) return `maturite-${d.data.maturiteLevel}`;
+                    return "";
+                });
+            
+            const nodeUpdate = node.merge(nodeEnter).transition()
+                .duration(750)
+                .attr("transform", d => `translate(${d.y},${d.x})`);
+            
+            nodeUpdate.select("circle")
+                .attr("r", d => d.depth === 0 ? 15 : (d.depth === 1 ? 12 : 10))
+                .style("fill", d => d._children ? "lightsteelblue" : (d.depth === 0 ? "#2c3e50" : "#fff"));
+            
+            nodeUpdate.select("text")
+                .style("fill-opacity", 1);
+            
+            const nodeExit = node.exit().transition()
+                .duration(750)
+                .attr("transform", d => `translate(${source.y},${source.x})`)
+                .remove();
+            
+            nodeExit.select("circle").attr("r", 1e-6);
+            nodeExit.select("text").style("fill-opacity", 1e-6);
+            
+            // Update links
+            const link = svg.selectAll("path.link")
+                .data(links, d => d.id);
+            
+            const linkEnter = link.enter().insert("path", "g")
+                .attr("class", "link")
+                .attr("d", d => {
+                    const o = {x: source.x0, y: source.y0};
+                    return diagonal(o, o);
+                });
+            
+            link.merge(linkEnter).transition()
+                .duration(750)
+                .attr("d", d => diagonal(d, d.parent));
+            
+            link.exit().transition()
+                .duration(750)
+                .attr("d", d => {
+                    const o = {x: source.x, y: source.y};
+                    return diagonal(o, o);
+                })
+                .remove();
+            
+            nodes.forEach(d => {
+                d.x0 = d.x;
+                d.y0 = d.y;
+            });
+        }
+        
+        function diagonal(s, d) {
+            const path = `M ${s.y} ${s.x}
+                           C ${(s.y + d.y) / 2} ${s.x},
+                             ${(s.y + d.y) / 2} ${d.x},
+                             ${d.y} ${d.x}`;
+            return path;
+        }
+        
+        function click(event, d) {
+            if (d.children) {
+                d._children = d.children;
+                d.children = null;
+            } else {
+                d.children = d._children;
+                d._children = null;
+            }
+            update(d);
+        }
+        
+        function mouseover(event, d) {
+            if (d.depth === 0) return;
+            
+            const tooltip = d3.select("#tooltip");
+            let content = `<strong>${d.data.name.replace(/\[.*?\]\s*/, '')}</strong>`;
+            
+            if (d.depth > 1) {
+                if (d.data.englishName) {
+                    content += ` (${d.data.englishName})`;
+                }
+                if (d.data.definition) {
+                    content += `<br><br><em>Définition:</em> ${d.data.definition}`;
+                }
+                if (d.data.justification) {
+                    content += `<br><br><em>Justification:</em> ${d.data.justification}`;
+                }
+                if (d.data.maturite) {
+                    content += `<br><br><em>Maturité:</em> ${d.data.maturite}`;
+                }
+            }
+            
+            tooltip.html(content)
+                .style("visibility", "visible");
+            
+            // Position tooltip intelligently to stay on screen
+            const tooltipWidth = 400;
+            const tooltipHeight = tooltip.node().offsetHeight;
+            const windowWidth = window.innerWidth;
+            const windowHeight = window.innerHeight;
+            
+            let left = event.pageX + 15;
+            let top = event.pageY + 15;
+            
+            // Adjust horizontal position if too far right
+            if (left + tooltipWidth > windowWidth) {
+                left = windowWidth - tooltipWidth - 20;
+            }
+            
+            // Adjust vertical position if too far down
+            if (top + tooltipHeight > windowHeight) {
+                top = windowHeight - tooltipHeight - 20;
+            }
+            
+            // Adjust vertical position if too far up
+            if (top < 20) {
+                top = 20;
+            }
+            
+            tooltip.style("left", left + "px")
+                  .style("top", top + "px");
+        }
+        
+        function mouseout() {
+            d3.select("#tooltip").style("visibility", "hidden");
+        }
+        
+        // Initialize with all data
+        buildTree();
+    </script>
+</body>
+</html>

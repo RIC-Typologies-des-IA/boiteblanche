@@ -230,7 +230,7 @@ hr {
 
 /* Main Container */
 .container {
-    max-width: var(--container-lg);
+    max-width: var(--container-2xl);
     margin: 0 auto;
     padding: var(--spacing-lg);
     background-color: var(--bg-color-white);
@@ -566,7 +566,7 @@ th {
 
 .code-block {
     background: var(--color-gray-lighter);
-    padding: var(--spacing-lg);
+    padding: var(--spacing-md);
     border-radius: var(--border-radius-sm);
     border-left: 4px solid var(--color-green);
     margin: var(--spacing-xl) 0;

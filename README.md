@@ -91,10 +91,10 @@ Contrairement à une approche "boîte noire" qui utilise des termes biologiques 
 ```text 
 boiteblanche/
 ├── index.html                 # Page d'accueil et d'orientation
-├── chapitre1.html            # Le neurone artificiel
+├── chapitre1/chapitre1.html            # Le neurone artificiel
 ├── chapitre1-1.html          # Expérimentation pratique
-├── chapitre2.html            # Le réseau
-├── chapitre3.html            # L'apprentissage
+├── chapitre2/chapitre2.html            # Le réseau
+├── chapitre3/chapitre3.html            # L'apprentissage
 ├── chapitre4.html            # Objectifs différents
 ├── chapitre5.html            # Mécanique du langage
 ├── chapitre6.html            # Données et probabilités

@@ -4,7 +4,7 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Le neurone artificiel : une fonction, pas un organe</title>
-        <link rel="stylesheet" href="css/style.css" />
+        <link rel="stylesheet" href="../css/style.css" />
     </head>
     <body>
         <div class="container">
@@ -21,39 +21,37 @@
                 </p>
                 <div class="image-container">
                     <img
-                        src="img/chap1/neuroneBio.png"
+                        src="img/neuroneBio.png"
                         alt="Schéma d'un neurone biologique"
-                        width="360"
+                        width="480"
                     />
-                    <p><em>Représentation d'un neurone biologique</em></p>
+                    <p><em>Représentation d'un neurone biologique, source d'inspiration initiale</em></p>
                 </div>
-
+            </div><div class="section">
                 <h2>Le neurone artificiel est un calcul</h2>
                 <p>
-                    Un neurone artificiel cherche à reproduire cette logique par des opérations simples.
-                </p>
-                <p>
+                    Un neurone artificiel cherche à reproduire cette logique par des opérations arithmétiques simples.
+            <br>
                     Il associe à chaque entrée un <span class="keyword">poids</span> lui fixant son importance
                     dans la décision commune. 
-                    <br>Par des multiplications et une sommation, il va produire un
-                    <span class="keyword">score brut</span>. 
-                    <br>Ce score  est traduit en
+                    <br>Par des produits et une somme, il va calculer un  <span class="keyword">score brut</span>. 
+                   qui est traduit en
                     <span class="keyword">prédiction</span> par une
                     <span class="keyword">fonction d'activation</span> 
-                    <br>Le <span class = "keyword">perceptron</span> est comme le neurone d'origine: Il s'active sur un dépassement de seuil (ou échelon).
+                    <br>Le <span class = "keyword">perceptron</span> est conçu comme le neurone d'origine: Il s'active sur un dépassement de seuil (ou <i>échelon</I>).
                     
                 </p>
                 <div class="image-container">
                     <img
-                        src="img/chap1/perceptronUnique.png"
+                        src="img/perceptronUnique.png"
                         alt="Schéma d'un neurone à deux entrées"
-                        width="500"
+                        width="600"
                     />
                     <p><em>Schéma d'un neurone artificiel à deux entrées</em></p>
                 </div>
                 <p>
-                    Le <span class="keyword">score brut</span> est un calcul  : <i>somme(xi.wi) + biais</i>. 
-                    ( ci-dessus : <i>w1·x1 + w2·x2 + b</i>).
+                    La formuler du  <span class="keyword">score brut</span> est, avec <b>i</b> entrées :<i>somme(xi.wi) + biais</i>. 
+                    Le neurone du schéma calcule: <i>w1·x1 + w2·x2 + b</i>.
                    <br />
                     Avec seulement deux entrées, c'est l'équation d'une droite dans un plan, décalée de l'origine par le <span class="keyword">biais b</span>.
                     <br>Cette frontière sépare les scores positifs des scores négatifs.Les scores nuls sont sur la frontière elle-même.
@@ -63,9 +61,9 @@
       
                 <div class="image-container">
                     <img
-                        src="img/chap1/uneDroite.png"
+                        src="img/uneDroite.png"
                         alt="Découpage d'un plan par une droite"
-                        width="400"
+                        width="480"
                     />
                     <p>
                         <em>
@@ -94,15 +92,15 @@
                     (<i>Heaviside step function</i> du nom de son inventeur):
                 </p>
                 <ul>
-                    <li>La prédiction est 1 (vrai) si le <b>score brut</b> est supérieur ou égal à 0</li>
-                    <li>La prédiction est 0 (faux) s'il est inférieur</li>
+                    <li>La prédiction est <b>1 (vrai)</b> si le <b>score brut</b> est positif ou nul .</li>
+                    <li>La prédiction est <b>0 (faux)</b> si le <b>score brut</b> est négatif.</li>
                 </ul>
 
                 <div class="image-container">
-                    <img src="img/chap1/uneDroite_H.png" width="480" />
+                    <img src="img/uneDroite_H.png" width="480" />
                     <p><em>Le perceptron historique est un classifieur binaire.</em></p>
-                </div>
-
+               </div>
+            <div class ="section">
                 <h4>Classifieur binaire</h4>
                 <p>
                     La fonction d'activation <i>à échelon</i> crée des classifieurs binaires, tout ou rien, vrai ou faux.
@@ -116,12 +114,22 @@
                         <li>etc.</li>
                     </ul>
                 </p>
+            </div>
+            <div class = "section">
                 <h4>Classification multiple</h4>
                 <p>
-                    Si on a N catégories différentes à isoler, on entraîne N classifieurs différents, un par classe.<br />
-                    Si les catégories sont exclusives (<i>One-vs-all</i>) il faut veiller à ce qu'une seule
+                    Si on a N catégories différentes à isoler, on entraîne N classifieurs différents, un par classe.
+                    <br />Ils partagent les valeurs des entrées mais ont chacune leurs propres poids. 
+                    
+
+
+   
+                    <br>Si les catégories sont exclusives (<i>One-vs-all</i>) il faut veiller à ce qu'une seule
                     sortie soit positive à la fois.
+                    <br>Ce n'est possible que si on peut tracer une frontière droite pour séparer parfaitement les catégories.
+<br><br><em> Un exemple de classification multiple à catégories exclusives est proposé dans l'illustration ci-après. </em>
                 </p>
+                </div>
             </div>
 
             <hr />
@@ -135,7 +143,7 @@
 
              
 
-                <b>On imagine n'avoir que deux interrupteurs pour allumer distinctement chacun des trois feux.</b>
+                <b>On imagine n'avoir que deux interrupteurs pour allumer individuellement les feux vert, orange, rouge.</b>
                 <p>
                     <span class="note">
                         Du code simplissime pourrait le faire. L'ambition est d'utiliser des perceptrons pour en
@@ -157,7 +165,7 @@
                 <h3>Le jeu de données et de test</h3>
                 Il définit le comportement attendu du réseau de neurones.
                 <p>
-                C'est ce qu'on appelle l'<span class="keyword">apprentissage supervisé</span> :
+                C'est ce qu'on appelle un <span class="keyword">apprentissage supervisé</span> :
                 on fournit au modèle des <b>exemples étiquetés</b> (entrée + sortie attendue),
                 et il apprend à reproduire ce comportement.
                 <br>Ci-dessous, chaque ligne du tableau est un exemple supervisé :
@@ -173,51 +181,51 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
+                          <tr style="height: 60px;"> 
                                 <td>0 0 <span class = "code"> ouvert ouvert</span>
                                 </td>
-                                <td>
+                                <td> 
                                     <img
-                                        src="img/chap1/000.png"
+                                        src="img/000.png"
                                         alt="Feu éteint"
-                                        width="70"
-                                        style="transform-origin: center; display: inline-block;"
+                                        width="50"
+                                        style="transform-origin: center; display: inline-block;rotate:90deg"
                                     />
                                 </td>
                                 <td>0 0 0</td>
                             </tr>
-                            <tr>
+                             <tr style="height: 60px;"> 
                                 <td>0 1<span class = "code">ouvert fermé </span> </td>
                                 <td>
                                     <img
-                                        src="img/chap1/100.png"
+                                        src="img/100.png"
                                         alt="Feu vert allumé"
-                                        width="70"
-                                        style="transform-origin: center; display: inline-block;"
+                                        width="50"
+                                        style="transform-origin: center; display: inline-block;rotate:-90deg"
                                     />
                                 </td>
                                 <td>1 0 0</td>
                             </tr>
-                            <tr>
+                             <tr style="height: 60px;"> 
                                 <td>1 0 <span class = "code">&nbsp;fermé ouvert</span> </td>
                                 <td>
                                     <img
-                                        src="img/chap1/010.png"
+                                        src="img/010.png"
                                         alt="Feu orange allumé"
-                                        width="70"
-                                        style="transform-origin: center; display: inline-block;"
+                                        width="50"
+                                        style="transform-origin: center; display: inline-block;rotate:90deg"
                                     />
                                 </td>
                                 <td>0 1 0</td>
                             </tr>
-                            <tr>
+                             <tr style="height: 60px;"> 
                                 <td>1 1 <span class = "code">fermé fermé</span></td>
                                 <td>
                                     <img
-                                        src="img/chap1/001.png"
+                                        src="img/001.png"
                                         alt="Feu rouge allumé"
-                                        width="70"
-                                        style="transform-origin: center; display: inline-block;"
+                                        width="50"
+                                        style="transform-origin: center; display: inline-block;rotate:-90deg"
                                     />
                                 </td>
                                 <td>0 0 1</td>
@@ -225,16 +233,16 @@
                         </tbody>
                     </table>
                 </div>
-                <p>Il n'y a que 4 cas possibles à l'entrée: On peut tenter d'entraîner ce réseau simplissime manuellement.</p>
+              
 
                 <h3>Un neurone par feu</h3>
                 <p>
-                    Un neurone n'ayant qu'une sortie. Il faut associer trois neurones  distincts: un par feu.
+                    Un neurone n'ayant qu'une sortie. Il faut associer trois neurones  distincts: un neurone par feu.
                 </p>
                 <div class="image-container">
                     <img
-                        width="600"
-                        src="img/chap1/NeuronesUneCoucheVertical.png"
+                        width="700"
+                        src="img/NeuronesUneCoucheVertical.png"
                         alt="Représentation un neurone par feu"
                     />
                     <p>
@@ -248,22 +256,22 @@
                 Pour que tous les neurones utilisent la même règle simple — <i>activer si le score est positif</i> —,
                 on intègre le biais directement dans le calcul de la somme.
                 Aussi, on ajoute une entrée fixe à 1, multipliée par le biais.
-
-                <h4>La taille du modèle</h4>
+            </div><div class = "section">
+                <h4>La taille d'un modèle</h4>
                 <p>
-                    Le <span class="keyword">modèle</span> est le tableau numérique des paramètres une fois le
+                    Un <span class="keyword">modèle</span> est le tableau numérique des paramètres une fois le
                     réseau entraîné. Sa taille est son nombre de paramètres.<br />
 
-                    Notre <span class="keyword">modèle à <b>9</b> paramètres</span> :
-                     1 <span class="keyword">couche de sortie </span> faite de 3 neurones avec 3
-                    paramètres chacun. <br />
+                    Notre modèle est un <span class="keyword">modèle à <b>9</b> paramètres et 
+                     1 couche de sortie </span> ( faite de 3 neurones avec 3
+                    paramètres chacun.) <br />
                     Les réseaux  pour la reconnaissance d'images ont <b>des millions (10<sup>6</sup>)</b>
                     de paramètres et des dizaines de couches.<br />
                     Les grands <span class="keyword">LLM (Large Language Model)</span> qui répondent aux questions en ont des
                     <b>milliers de milliards (10<sup>12</sup>)</b> et des centaines de couches.<br />
                     
                     <br><b>Le fonctionnement de base fait de calculs reste le même</b>, que ce soit pour 10, 10<sup>6</sup> ou
-                    10<sup>12</sup> paramètres, <br>mais la puissance de calcul à mobiliser est exponentielle.
+                    10<sup>12</sup> paramètres, mais la puissance de calcul à mobiliser est exponentielle.
                 </p>
                 </div>
                 <div class = "section">
@@ -271,16 +279,17 @@
                 <h4>Expérimenter ce réseau</h4>
                 <p>
                     Les poids sont initialisés au hasard au début de chaque entraînement.
-                <br> Le but est de les ajuster  pour isoler chaque feu indépendamment.
-                    <br>On pourra entrainer soi-même ce modèle en modifiant ses poids ou voir un algorithme de résolution  automatique en action.
-                
+                 Le but est de les ajuster  pour isoler chaque feu indépendamment.
+                     <br>On pourra entrainer soi-même le modèle en modifiant ses poids ou voir un algorithme de résolution  automatique en action.
+               
                 </p>
                 <div class="center" style="margin: 20px 0;">
                     <a href="./chapitre1-1.html" class="more-info-button">Aller à l'expérimentation</a>
                 </div>
+                
                 <div class = "image-container">
-                    <img src = "img/chap1/troisDroites.png"
-                        width =340
+                    <img src = "img/troisDroites.png"
+                        width =500
                         />
                         <em>
                         <br> La visualisation montre les droites des trois neurones selon leurs paramètres courants.
@@ -289,15 +298,17 @@
                </em>
                 </div>
                
-         <hr>
-                 <a href="./chapitre2.html">
-                <h4>Aller directement au chapitre 2</h4>
-                <p>
-                 comment composer des transformations simples
-                    </p>
-                </a>
-             
+        
            </div>
         </div>
+    
+        <hr>
+        <div style="margin-top: 40px; text-align: center; padding: 20px; background-color: #f8f9fa; border-top: 1px solid #e9ecef;">
+            <p style="margin-bottom: 15px;">
+                <a href="../index.html" style="margin-right: 20px; text-decoration: none; color: #007bff;">↩ Retour au sommaire</a>
+                <a href="../chapitre2/chapitre2.html" style="text-decoration: none; color: #007bff;">→ Aller à la page suivante</a>
+            </p>
+        </div>
+
     </body>
 </html>

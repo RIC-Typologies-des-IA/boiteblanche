@@ -3,6 +3,22 @@
 **Objectif pédagogique** :    
 Il ne s'agit pas d'utiliser ni de juger l'IA, mais d'**armer l'esprit critique** par une compréhension de ses mécanismes.
 
+---
+
+## 🎓 Public Cible
+
+- **Débutants** en intelligence artificielle
+- **Pédagogues** cherchant une approche méchaniste
+- **Curieux** qui veulent comprendre sans utiliser
+- **Critiques** souhaitant démystifier l'IA
+
+
+---
+
+
+
+
+
 ## La démarche Boîte blanche 
 
 Quand on regarde une IA de l'extérieur comme une _boîte noire_, on utilise des termes empruntés au lexique de la biologie et de l'esprit qui masquent les mécanismes intérieurs :     
@@ -13,17 +29,20 @@ Quand on regarde une IA de l'extérieur comme une _boîte noire_, on utilise des
    
  **Nommer le mécanisme sous le mot**, c'est  la démarche **_boîte blanche_**.
 
-### Différents plans 
-L'IA  se compose de **strates superposés** avec des  **changements de  nature** de son objet.  
+### Différentes strates 
+L'IA  se compose de **strates superposées** avec des  **changements de  nature** de son objet.  
 
 Le parcours _boîte blanche_ avance par **changements de question** et, avec chaque question, l'objet à décrire. 
 
 - **Que fait un réseau ?** (Chapitres 1–2) : il compose des transformations simples, de nombres en nombres.
 - **Comment s'est-il formé ?** (Chapitre 3) : non par des règles programmées, mais par apprentissage.
 - **Pour quoi est-il fait ?** (Chapitre 4) : une même mécanique, mise au service d'objectifs et de formats de sortie différents.
+
 - **Comment saisit-il le langage ?** (Chapitre 5) : par une architecture qui pondère ce qui précède pour prédire ce qui suit.
 - **Que produit-il exactement ?** (Chapitre 6) : une distribution de candidats conditionnée par un corpus.
+Contenu : Corpus, biais, température, hallucination comme propriété structurelle
 - **Que fait-il paraître ?** (Chapitres 7–8) : un effet de compréhension, un plan de réponse, un raisonnement déroulé — produits du conditionnement et de la génération.
+  Contenu : Prompt, fine-tuning, alignement, plan de réponse
 - **Que révèle cette mécanique des limites de l'IA ?** (Chapitre 9) On referme la boîte avec cette question critique. 
 
 ---
@@ -66,6 +85,15 @@ Changement de question : on ne demande plus ce que fait le réseau, mais comment
 **Objectif pédagogique :** faire saisir que la taxonomie des IA (classifieur, régression, traduction, génération, apprentissage par renforcement) est une taxonomie d'objectifs et de formats de sortie, pas de mécanismes. L'architecture découle de la tâche.
 - Du classifieur au modèle génératif
 - Où se situent les LLM dans cette taxonomie
+
+  
+| Objectif | Question | Exemple |
+| --- | --- | --- | 
+| Classification | À quelle classe appartient X ? |  Chat vs. chien |
+| Régression | Quelle est la valeur de Y ? |  Prix d’une maison |
+| Traduction | Comment dire X en langue L ? | "Bonjour" → "Hello" |
+| Génération | Que vient après X ? | Suite de texte |
+| Renforcement | Quelle action maximise R (Récompense) ? | Jeu d’échecs |
 
 
 ## Chapitre 5 — La mécanique propre au langage
