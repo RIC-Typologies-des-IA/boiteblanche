@@ -1,0 +1,63 @@
+name: Validate and deploy Boîte Blanche
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+      - name: Check service worker syntax
+        run: node --check sw.js
+      - name: Check vendored Chart.js syntax
+        run: node --check vendor/chart.js/chart.umd.min.js
+      - name: Validate offline assets and PWA manifest
+        run: python scripts/validate_site.py
+
+  deploy:
+    if: github.event_name != 'pull_request' && (github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch')
+    needs: validate
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    concurrency:
+      group: pages
+      cancel-in-progress: true
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/configure-pages@v5
+      - name: Validate published site
+        run: |
+          test -s index.html
+          test -s sw.js
+          test -s manifest.webmanifest
+          node --check sw.js
+          python scripts/validate_site.py
+      - name: Assemble static site artifact
+        run: python scripts/build_site.py
+      - name: Validate assembled artifact
+        run: |
+          node --check dist/sw.js
+          node --check dist/vendor/chart.js/chart.umd.min.js
+          python scripts/validate_site.py dist
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
