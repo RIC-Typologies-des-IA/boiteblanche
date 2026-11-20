@@ -23,4 +23,10 @@ for source in ROOT.rglob("*"):
     target.parent.mkdir(parents=True, exist_ok=True)
     shutil.copy2(source, target)
 
+# Preserve the third-party license next to the vendored browser distribution.
+license_source = ROOT / "vendor/chart.js/LICENSE.md"
+license_target = OUTPUT / "vendor/chart.js/LICENSE.md"
+license_target.parent.mkdir(parents=True, exist_ok=True)
+shutil.copy2(license_source, license_target)
+
 print(f"Prepared GitHub Pages artifact in {OUTPUT}.")
