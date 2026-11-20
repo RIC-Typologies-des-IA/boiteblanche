@@ -120,3 +120,60 @@ boiteblanche/
 ## 📖 Pour aller plus loin
 
 Consultez `Perspective boîte blanche.md` pour une vision détaillée de la philosophie et de la progression pédagogique.
+
+## 🧪 Prévisualiser la branche en local (Linux et macOS)
+
+Pour contrôler le rendu avant la fusion, **ouvrez un terminal sous Linux ou macOS et copiez-collez cette commande complète**. Elle clone la branche de cette PR, récupère ses dernières modifications avec `git pull`, puis construit et ouvre la prévisualisation :
+
+```sh
+if git -C boiteblanche-preview rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+  cd boiteblanche-preview && git switch feat/github-pages-pwa
+elif [ -e boiteblanche-preview ]; then
+  echo "Erreur : boiteblanche-preview existe mais n'est pas un dépôt Git. Renommez-le ou supprimez-le avant de continuer." >&2
+  exit 1
+else
+  git clone --branch feat/github-pages-pwa --single-branch https://github.com/RIC-Typologies-des-IA/boiteblanche.git boiteblanche-preview && cd boiteblanche-preview
+fi && git pull --ff-only origin feat/github-pages-pwa && sh scripts/preview_site.sh
+```
+
+Le script, identique sous **Linux et macOS**, effectue les opérations suivantes :
+
+1. construit dans `dist/` une copie complète du dépôt, sans filtrer les types de fichiers ;
+2. vérifie le manifeste PWA, l'icône et les ressources déclarées pour le mode hors ligne ;
+3. vérifie également la syntaxe JavaScript si Node.js est installé ;
+4. démarre un serveur HTTP limité à la machine locale ;
+5. ouvre le navigateur sur **http://127.0.0.1:8000/**.
+
+Il suffit de laisser le terminal ouvert pendant la visite. **Ctrl+C** arrête le serveur.
+Python 3 est requis ; Node.js est facultatif. Si le port 8000 est déjà utilisé, choisissez
+un autre port, par exemple :
+
+```sh
+PREVIEW_PORT=8080 sh scripts/preview_site.sh
+```
+
+Cette prévisualisation sert les fichiers construits depuis votre checkout local : elle
+n'utilise pas GitHub Actions, ne publie rien sur Internet et ne nécessite aucun jeton
+ni compte auprès d'un hébergeur. Pour vérifier précisément les changements proposés,
+placez-vous d'abord sur la branche `feat/github-pages-pwa`.
+
+## 🌐 Application web et utilisation hors ligne
+
+Le dépôt est publiable comme site statique, sans serveur applicatif ni étape de compilation.
+Le workflow GitHub Actions `.github/workflows/deploy-pages.yml` valide les ressources,
+puis publie le contenu sur GitHub Pages à chaque mise à jour de `main` (et à la demande).
+
+Après activation de GitHub Pages avec **Source: GitHub Actions** dans les paramètres du dépôt,
+l'application sera accessible à l'adresse :
+
+**https://ric-typologies-des-ia.github.io/boiteblanche/**
+
+La page d'accueil expose un manifeste PWA et enregistre un service worker. Les pages,
+feuilles de style, scripts locaux et illustrations listés dans le cache de précaution sont
+disponibles après le premier chargement en ligne ; l'application peut ensuite être installée
+depuis un navigateur compatible et consultée hors connexion.
+
+La visualisation des feux tricolores utilise une copie locale de **Chart.js 4.4.0**
+(`vendor/chart.js/`), distribuée sous licence MIT avec son fichier de licence.
+Cette dépendance est incluse dans le cache initial du service worker : aucun accès à un CDN
+n'est nécessaire pour afficher les graphiques après l'installation du cache hors ligne.

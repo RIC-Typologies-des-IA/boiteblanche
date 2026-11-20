@@ -1,0 +1,20 @@
+{
+  "id": "./",
+  "name": "Boîte Blanche — Découverte de l'IA",
+  "short_name": "Boîte Blanche",
+  "description": "Parcours pédagogique pour comprendre les mécanismes internes de l'intelligence artificielle.",
+  "lang": "fr",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#f2c94c",
+  "icons": [
+    {
+      "src": "./icons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
