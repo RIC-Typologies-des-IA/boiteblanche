@@ -21,7 +21,14 @@ missing = [path for path in paths if not (ROOT / path.removeprefix("./")).is_fil
 if missing:
     raise SystemExit("Missing precache resources: " + ", ".join(missing))
 
-for required in ("index.html", "css/style.css", "sw.js", "manifest.webmanifest"):
+for required in ("index.html", "css/style.css", "sw.js", "manifest.webmanifest",
+                "feux_tricolores/indexFeux.html", "vendor/chart.js/chart.umd.min.js",
+                "vendor/chart.js/LICENSE.md"):
     assert (ROOT / required).is_file(), required
+
+traffic_lights = (ROOT / "feux_tricolores/indexFeux.html").read_text(encoding="utf-8")
+assert '../vendor/chart.js/chart.umd.min.js' in traffic_lights
+assert 'cdn.jsdelivr.net/npm/chart.js' not in traffic_lights
+assert './vendor/chart.js/chart.umd.min.js' in service_worker
 
 print(f"Validated manifest, icon and {len(paths)} offline resources in {ROOT}.")
