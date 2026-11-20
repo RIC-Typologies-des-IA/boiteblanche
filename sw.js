@@ -52,18 +52,6 @@ self.addEventListener("install", (event) => {
     const cache = await caches.open(CACHE_NAME);
     await cache.addAll(PRECACHE_URLS);
 
-    // Best-effort cache of the only third-party runtime dependency.
-    // The offline shell remains installable if the CDN is unavailable.
-    try {
-      const chartUrl = "https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js";
-      const response = await fetch(chartUrl, { mode: "cors" });
-      if (response.ok && response.type !== "opaque") {
-        await cache.put(chartUrl, response);
-      }
-    } catch {
-      // The traffic-light visualisation may need one online visit to warm this cache.
-    }
-
     await self.skipWaiting();
   })());
 });
