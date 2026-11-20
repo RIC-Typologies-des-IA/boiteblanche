@@ -46,16 +46,15 @@ jobs:
           test -s manifest.webmanifest
           node --check sw.js
           python scripts/validate_site.py
+      - name: Assemble static site artifact
+        run: python scripts/build_site.py
+      - name: Validate assembled artifact
+        run: |
+          node --check dist/sw.js
+          python scripts/validate_site.py dist
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: .
-          exclude: |
-            .git
-            .github
-            scripts
-            *.py
-            *.pptx
-            *.pdf
+          path: dist
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
