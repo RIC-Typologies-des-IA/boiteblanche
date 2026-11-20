@@ -101,7 +101,7 @@ boiteblanche/
 ├── chapitre7.html            # Compréhension et planification
 ├── chapitre8.html            # Chain of thought
 ├── chapitre9.html            # Limites
-├── feu-modele-ia.html        # Simulation interactive
+├── feux_tricolores           # répertoire du projet Simulation interactive
 ├── Perspective boîte blanche.md
 └── img/                      # Images et illustrations
 ```
