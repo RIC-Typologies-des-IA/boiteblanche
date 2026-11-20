@@ -2,9 +2,10 @@
 """Validate the static Boîte Blanche site before publishing it."""
 import json
 import re
+import sys
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(sys.argv[1]).resolve() if len(sys.argv) > 1 else Path(__file__).resolve().parents[1]
 manifest = json.loads((ROOT / "manifest.webmanifest").read_text(encoding="utf-8"))
 assert manifest["start_url"] == "./"
 assert manifest["scope"] == "./"
@@ -23,4 +24,4 @@ if missing:
 for required in ("index.html", "css/style.css", "sw.js", "manifest.webmanifest"):
     assert (ROOT / required).is_file(), required
 
-print(f"Validated manifest, icon and {len(paths)} offline resources.")
+print(f"Validated manifest, icon and {len(paths)} offline resources in {ROOT}.")
