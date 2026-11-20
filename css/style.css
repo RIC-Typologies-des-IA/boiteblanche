@@ -481,6 +481,31 @@ th {
     font-weight: bold;
 }
 
+/* répartition sur la page */
+.table-equal {
+    width: 100%;
+    max-width: 100%;
+    table-layout: fixed;
+    margin: var(--spacing-xl) 0;
+    border-collapse: collapse;
+}
+
+.table-equal th,
+.table-equal td {
+    width: auto; /* Le navigateur répartit équitablement */
+    padding: var(--spacing-md);
+    text-align: center;
+    border: 1px solid var(--color-gray);
+}
+
+.table-equal col {
+    width: 100%; /* Force chaque colonne à prendre la même largeur */
+}
+
+
+
+
+
 /* ===================================================================
    9. INSTRUCTION & INFO BOXES
    =================================================================== */
