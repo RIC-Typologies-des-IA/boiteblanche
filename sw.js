@@ -1,4 +1,4 @@
-const CACHE_NAME = "boite-blanche-v2";
+const CACHE_NAME = "boite-blanche-v3";
 const PRECACHE_URLS = [
   "./",
   "./index.html",
@@ -8,6 +8,7 @@ const PRECACHE_URLS = [
   "./chapitre2/chapitre2.html",
   "./chapitre3/chapitre3.html",
   "./chapitre4/chapitre4.html",
+  "./feux_tricolores/index.html",
   "./feux_tricolores/indexFeux.html",
   "./feux_tricolores/description.html",
   "./css/style.css",
