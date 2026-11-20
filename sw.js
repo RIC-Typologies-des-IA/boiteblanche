@@ -41,7 +41,6 @@ const PRECACHE_URLS = [
   "./chapitre4/img/chat.png",
   "./img/rab/ImageCouches.png",
   "./img/rab/apprentissage.png",
-  "./feux_tricolores/../chapitre1/img/neuroneBio.png",
   "./manifest.webmanifest",
   "./icons/icon.svg"
 ];
