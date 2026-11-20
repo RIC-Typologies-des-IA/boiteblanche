@@ -137,8 +137,7 @@ feuilles de style, scripts locaux et illustrations listés dans le cache de pré
 disponibles après le premier chargement en ligne ; l'application peut ensuite être installée
 depuis un navigateur compatible et consultée hors connexion.
 
-**Limite hors ligne connue :** la visualisation des feux tricolores utilise Chart.js depuis
-jsDelivr. Le service worker tente d'en conserver une copie lors de son installation, sans
-faire échouer l'installation si le CDN est indisponible. Pour garantir cette visualisation
-hors ligne dès la première ouverture, il faudra éventuellement embarquer localement cette
-dépendance.
+La visualisation des feux tricolores utilise une copie locale de **Chart.js 4.4.0**
+(`vendor/chart.js/`), distribuée sous licence MIT avec son fichier de licence.
+Cette dépendance est incluse dans le cache initial du service worker : aucun accès à un CDN
+n'est nécessaire pour afficher les graphiques après l'installation du cache hors ligne.
