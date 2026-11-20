@@ -17,7 +17,7 @@ for source in ROOT.rglob("*"):
     if not source.is_file():
         continue
     relative = source.relative_to(ROOT)
-    if ".git" in relative.parts or "dist" in relative.parts:
+    if relative.parts[0] in {".git", "dist"}:
         continue
     target = OUTPUT / relative
     target.parent.mkdir(parents=True, exist_ok=True)
