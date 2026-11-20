@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-"""Check local HTML/CSS references and HTML fragment identifiers."""
+"""Check local HTML/CSS references; known planned content is reported as a warning."""
 
 from __future__ import annotations
 
 import argparse
-import re
+import json
 import sys
 from html.parser import HTMLParser
 from pathlib import Path
@@ -13,7 +13,6 @@ from urllib.parse import unquote, urlsplit
 SKIP_SCHEMES = {"http", "https", "mailto", "tel", "javascript", "data", "blob", "ftp"}
 URL_ATTRS = {"href", "src", "action", "poster", "data", "cite", "formaction", "manifest"}
 SRCSET_ATTRS = {"srcset"}
-CSS_URL = re.compile(r"url\(\s*(['\"]?)(.*?)\1\s*\)", re.IGNORECASE)
 
 
 class PageParser(HTMLParser):
@@ -21,7 +20,6 @@ class PageParser(HTMLParser):
         super().__init__(convert_charrefs=True)
         self.references: list[tuple[int, str]] = []
         self.ids: set[str] = set()
-        self.base_href: str | None = None
 
     def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
         values = dict(attrs)
@@ -29,8 +27,6 @@ class PageParser(HTMLParser):
             self.ids.add(values["id"] or "")
         if tag == "a" and values.get("name"):
             self.ids.add(values["name"] or "")
-        if tag == "base" and values.get("href"):
-            self.base_href = values["href"]
         for name, value in attrs:
             if not value:
                 continue
@@ -62,22 +58,50 @@ def resolve_target(root: Path, source: Path, url: str) -> tuple[Path | None, str
         target = target.resolve()
         target.relative_to(root.resolve())
     except (ValueError, OSError):
-        return None, parsed.fragment
+        return None, unquote(parsed.fragment)
     if target.is_dir():
         target = target / "index.html"
     return target, unquote(parsed.fragment)
 
 
+def load_exceptions(path: Path) -> dict[tuple[str, str], dict[str, str]]:
+    if not path.is_file():
+        return {}
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    exceptions: dict[tuple[str, str], dict[str, str]] = {}
+    for item in payload.get("references", []):
+        if item.get("severity") != "warning":
+            raise ValueError("Les exceptions doivent utiliser severity=warning.")
+        key = (item["source"], item["target"])
+        if key in exceptions:
+            raise ValueError(f"Exception dupliquée : {key}")
+        exceptions[key] = item
+    return exceptions
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--root", type=Path, default=Path("."))
+    parser.add_argument(
+        "--exceptions",
+        type=Path,
+        default=Path("scripts/link_check_exceptions.json"),
+        help="Registre explicite des références anticipées non bloquantes.",
+    )
     args = parser.parse_args()
     root = args.root.resolve()
-    errors: list[str] = []
-    checked = 0
+    exceptions_path = args.exceptions if args.exceptions.is_absolute() else root / args.exceptions
+    exceptions = load_exceptions(exceptions_path)
 
-    html_files = sorted(p for p in root.rglob("*") if p.is_file() and p.suffix.lower() in {".html", ".htm"} and ".git" not in p.parts)
+    errors: list[str] = []
+    warnings: list[tuple[str, int, str]] = []
+    checked = 0
+    html_files = sorted(
+        p for p in root.rglob("*")
+        if p.is_file() and p.suffix.lower() in {".html", ".htm"} and ".git" not in p.parts
+    )
     parsed_pages: dict[Path, PageParser] = {}
+
     for page in html_files:
         document = PageParser()
         try:
@@ -88,17 +112,23 @@ def main() -> int:
         parsed_pages[page.resolve()] = document
 
     for page, document in parsed_pages.items():
+        source_name = page.relative_to(root).as_posix()
         for line, raw_url in document.references:
             checked += 1
             if is_external(raw_url):
                 continue
             target, fragment = resolve_target(root, page, raw_url)
-            label = f"{page.relative_to(root)}:{line}: {raw_url}"
+            label = f"{source_name}:{line}: {raw_url}"
             if target is None:
                 errors.append(f"{label}: chemin sortant du dépôt ou URL invalide")
                 continue
             if not target.is_file():
-                errors.append(f"{label}: fichier cible introuvable ({target.relative_to(root)})")
+                exception = exceptions.get((source_name, raw_url))
+                if exception:
+                    reason = exception.get("reason", "Contenu planifié, non encore publié.")
+                    warnings.append((source_name, line, f"{raw_url}: {reason}"))
+                else:
+                    errors.append(f"{label}: fichier cible introuvable ({target.relative_to(root)})")
                 continue
             if fragment and target.suffix.lower() in {".html", ".htm"}:
                 target_page = parsed_pages.get(target.resolve())
@@ -119,7 +149,9 @@ def main() -> int:
         except (OSError, UnicodeError) as exc:
             errors.append(f"{css.relative_to(root)}: impossible de lire la feuille CSS ({exc})")
             continue
-        for match in CSS_URL.finditer(content):
+        # Keep CSS URL parsing deliberately narrow: url(...) references only.
+        import re
+        for match in re.finditer(r"url\(\s*(['\"]?)(.*?)\1\s*\)", content, re.IGNORECASE):
             raw_url = match.group(2).strip()
             if not raw_url or is_external(raw_url):
                 continue
@@ -130,15 +162,28 @@ def main() -> int:
             if target is None or not target.is_file():
                 errors.append(f"{label}: ressource CSS introuvable ou hors du dépôt")
 
-    print(f"Contrôle des liens locaux : {checked} références examinées dans {len(html_files)} pages HTML et {len(css_files)} feuilles CSS.")
+    print(
+        f"Contrôle des liens locaux : {checked} références examinées dans "
+        f"{len(html_files)} pages HTML et {len(css_files)} feuilles CSS."
+    )
+    for source, line, message in warnings:
+        print(f"::warning file={source},line={line}::Référence vers un contenu planifié : {message}")
+    if warnings:
+        print(f"{len(warnings)} avertissement(s) non bloquant(s) :")
+        for source, line, message in warnings:
+            print(f" - {source}:{line}: {message}")
     if errors:
-        print(f"\n{len(errors)} problème(s) détecté(s) :")
+        print(f"\n{len(errors)} erreur(s) bloquante(s) :")
         for error in errors:
-            print(f" - {error}")
+            print(f"::error::{error}")
         return 1
-    print("OK : toutes les cibles locales et ancres HTML vérifiées existent.")
+    print("OK : aucune erreur bloquante de référence locale.")
     return 0
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    try:
+        sys.exit(main())
+    except (OSError, ValueError, KeyError, json.JSONDecodeError) as exc:
+        print(f"Erreur de configuration du contrôle des liens : {exc}", file=sys.stderr)
+        sys.exit(2)
