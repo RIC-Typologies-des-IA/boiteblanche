@@ -22,7 +22,7 @@ if missing:
     raise SystemExit("Missing precache resources: " + ", ".join(missing))
 
 for required in ("index.html", "css/style.css", "sw.js", "manifest.webmanifest",
-                "feux_tricolores/indexFeux.html", "vendor/chart.js/chart.umd.min.js",
+                "feux_tricolores/index.html", "feux_tricolores/indexFeux.html", "vendor/chart.js/chart.umd.min.js",
                 "vendor/chart.js/LICENSE.md"):
     assert (ROOT / required).is_file(), required
 
