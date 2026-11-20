@@ -19,6 +19,8 @@ jobs:
           node-version: "24"
       - name: Check service worker syntax
         run: node --check sw.js
+      - name: Check vendored Chart.js syntax
+        run: node --check vendor/chart.js/chart.umd.min.js
       - name: Validate offline assets and PWA manifest
         run: python scripts/validate_site.py
 
@@ -51,6 +53,7 @@ jobs:
       - name: Validate assembled artifact
         run: |
           node --check dist/sw.js
+          node --check dist/vendor/chart.js/chart.umd.min.js
           python scripts/validate_site.py dist
       - uses: actions/upload-pages-artifact@v3
         with:
