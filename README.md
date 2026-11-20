@@ -120,3 +120,25 @@ boiteblanche/
 ## 📖 Pour aller plus loin
 
 Consultez `Perspective boîte blanche.md` pour une vision détaillée de la philosophie et de la progression pédagogique.
+
+## 🌐 Application web et utilisation hors ligne
+
+Le dépôt est publiable comme site statique, sans serveur applicatif ni étape de compilation.
+Le workflow GitHub Actions `.github/workflows/deploy-pages.yml` valide les ressources,
+puis publie le contenu sur GitHub Pages à chaque mise à jour de `main` (et à la demande).
+
+Après activation de GitHub Pages avec **Source: GitHub Actions** dans les paramètres du dépôt,
+l'application sera accessible à l'adresse :
+
+**https://ric-typologies-des-ia.github.io/boiteblanche/**
+
+La page d'accueil expose un manifeste PWA et enregistre un service worker. Les pages,
+feuilles de style, scripts locaux et illustrations listés dans le cache de précaution sont
+disponibles après le premier chargement en ligne ; l'application peut ensuite être installée
+depuis un navigateur compatible et consultée hors connexion.
+
+**Limite hors ligne connue :** la visualisation des feux tricolores utilise Chart.js depuis
+jsDelivr. Le service worker tente d'en conserver une copie lors de son installation, sans
+faire échouer l'installation si le CDN est indisponible. Pour garantir cette visualisation
+hors ligne dès la première ouverture, il faudra éventuellement embarquer localement cette
+dépendance.
