@@ -123,11 +123,10 @@ Consultez `Perspective boîte blanche.md` pour une vision détaillée de la phil
 
 ## 🧪 Prévisualiser la branche en local (Linux et macOS)
 
-Pour contrôler le rendu avant la fusion, récupérez la branche de cette PR sur votre
-ordinateur, ouvrez un terminal à la racine du dépôt et lancez :
+Pour contrôler le rendu avant la fusion, **ouvrez un terminal sous Linux ou macOS et copiez-collez cette commande complète**. Elle clone la branche de cette PR, récupère ses dernières modifications avec `git pull`, puis construit et ouvre la prévisualisation :
 
 ```sh
-sh scripts/preview_site.sh
+git clone --branch feat/github-pages-pwa --single-branch https://github.com/RIC-Typologies-des-IA/boiteblanche.git boiteblanche-preview && cd boiteblanche-preview && git pull --ff-only origin feat/github-pages-pwa && sh scripts/preview_site.sh
 ```
 
 Le script, identique sous **Linux et macOS**, effectue les opérations suivantes :
