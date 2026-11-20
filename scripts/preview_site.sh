@@ -55,6 +55,11 @@ else
     echo "Information : Node.js absent ; vérification JavaScript ignorée."
 fi
 
+if ! python3 -c 'import socket,sys; s=socket.socket(); s.setsockopt(socket.SOL_SOCKET,socket.SO_REUSEADDR,1); r=s.connect_ex((sys.argv[1],int(sys.argv[2]))); s.close(); sys.exit(1 if r == 0 else 0)' "$HOST" "$PORT"; then
+    echo "Erreur : le port $PORT est déjà utilisé. Choisissez un autre port avec PREVIEW_PORT." >&2
+    exit 1
+fi
+
 echo "==> Démarrage du serveur local sur $URL"
 python3 -u -m http.server "$PORT" --bind "$HOST" --directory "$DIST" >"$SERVER_LOG" 2>&1 &
 SERVER_PID=$!
