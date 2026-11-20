@@ -1,0 +1,465 @@
+<!doctype html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chapitre 4 : Une même mécanique, des objectifs différents</title>
+    <link rel="stylesheet" href="../css/style.css" />
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1>Chapitre 4 : Une même mécanique, des objectifs différents</h1>
+            <p class="subtitle">Comprendre que la taxonomie des IA est une taxonomie d'objectifs, pas de mécanismes</p>
+        </header>
+
+        <!-- ======================================================== -->
+        <!-- PHASES D'ENTRAINEMENT VS INFÉRENCE -->
+        <!-- ======================================================== -->
+
+
+        <div class="section">
+            <h2>Phases d'entraînement vs Inférence</h2>
+            <p>
+                Un <b>réseau de neurones artificiel</b> produit un <b>modèle</b> pendant <span class="keyword">la phase d'entraînement</span> (apprentissage) (cf. Chapitres 1, 2 et 3).
+           <br>
+                Les supports de la phase d'entraînement sont des milliers de machines équipées de GPU (Graphic Processing Unit, spécialisées dans les opérations mathématiques parallèles).
+            </p>
+            <p>
+                Ce <b>modèle</b> (une matrice de chiffres) est ensuite exploité pendant <span class="keyword">la phase d'inférence</span> pour faire des <b>prédictions</b> sur de nouvelles données.
+            <br>
+                Selon leur taille, les modèles peuvent être déployés sur de simples smartphones, des ordinateurs personnels, des serveurs cloud ou dans des datacenters complets pour les plus imposants.
+            </p>
+        </div>
+
+
+
+
+
+        <!-- ======================================================== -->
+        <!-- TABLEAU RÉCAPITULATIF -->
+        <!-- ======================================================== -->
+        <div class="section">
+            <h2>Différencier les réseaux pour servir des objectifs différents</h2>
+            <p>
+                Tous les modèles suivants partagent la même architecture de base :
+                des couches de neurones qui effectuent des sommes pondérées et des activations,
+                mais ils cherchent à répondre à <b>différents objectifs</b>.
+            </p>
+
+            <table class="table-equal">
+                <thead>
+                    <tr>
+                        <th><strong>Objectif</strong></th>
+                        <th><strong>Données d'entrée</strong></th>
+                        <th><strong>Tâche</strong></th>
+                        <th><strong>Sortie</strong></th>
+                        <th><strong>Fonction de perte</strong></th>
+                        <th><strong>Interprétation</strong></th>
+                        <th><strong>Exemple</strong></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Classification</strong></td>
+                        <td>Images, texte, caractéristiques (<i>features</i>)</td>
+                        <td>Classer</td>
+                        <td>Probabilité par classe</td>
+                        <td>Cross-entropy</td>
+                        <td>Étiquette la plus probable</td>
+                        <td>Chat vs. chien</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Régression</strong></td>
+                        <td>Nombres, caractéristiques</td>
+                        <td>Prédire</td>
+                        <td>Nombre continu</td>
+                        <td>MSE</td>
+                        <td>Valeur numérique prédite</td>
+                        <td>Prix d'une maison</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Traduction</strong></td>
+                        <td>Texte (langue source)</td>
+                        <td>Traduire</td>
+                        <td>Séquence de tokens</td>
+                        <td>Cross-entropy</td>
+                        <td>Texte dans la langue cible</td>
+                        <td>"Bonjour" → "Hello"</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Génération</strong></td>
+                        <td>Texte, prompt</td>
+                        <td>Générer</td>
+                        <td>Séquence générée</td>
+                        <td>Cross-entropy</td>
+                        <td>Contenu nouveau</td>
+                        <td>Suite de texte</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Renforcement</strong></td>
+                        <td>État de l'environnement</td>
+                        <td>Agir</td>
+                        <td>Action + politique</td>
+                        <td>Récompense cumulative</td>
+                        <td>Stratégie optimale</td>
+                        <td>Jeu d'échecs</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="info">
+                <p>
+                    La <b>fonction de perte</b> est une transformation mathématique qui :
+                </p>
+                <ul>
+                    <li>mesure l'écart entre prédiction et cible (l'erreur brute) ;</li>
+                    <li>pondère cet écart selon son importance pour le problème ;</li>
+                    <li>agrège ces erreurs pondérées en une valeur unique que l'optimiseur peut minimiser.</li>
+                </ul>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th><b>Objectif</b></th>
+                            <th><b>Fonction de perte</b></th>
+                            <th><b>Ce qu'elle pondère</b></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Classification</td>
+                            <td>Cross-entropy</td>
+                            <td>Les erreurs de forte confiance</td>
+                        </tr>
+                        <tr>
+                            <td>Régression</td>
+                            <td>MSE</td>
+                            <td>Pondère fortement les grandes erreurs (10× d'écart = 100× de pénalité)</td>
+                        </tr>
+                        <tr>
+                            <td>Traduction</td>
+                            <td>Cross-entropy</td>
+                            <td>Les tokens mal prédits</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <hr />
+
+        <!-- ======================================================== -->
+        <!-- CLASSIFICATION -->
+        <!-- ======================================================== -->
+        <div class="section">
+            <h2 id="classification">📊 1. Classification : « Dans quelle boîte ranger ? »</h2>
+            <div class="two-columns">
+                <div class="column">
+                    <h3>Le problème</h3>
+                    <p>
+                        La classification consiste à <strong>attribuer une étiquette</strong> à une entrée
+                        parmi un ensemble prédéfini de catégories.
+                    </p>
+                    <p>
+                        C'est l'une des tâches les plus fondamentales <strong>de l'apprentissage supervisé</strong>
+                        où les données sont étiquetées (ex: photos étiquetées "chat" ou "chien").
+                    </p>
+                    <h4>Question centrale :</h4>
+                    <p class="important-box">
+                        <strong>« À quelle classe appartient X ? »</strong>
+                    </p>
+                    <h4>Exemple :</h4>
+                    <p>Distinguer un chat d'un chien dans une photo, ou filtrer les spams dans une boîte mail.</p>
+                </div>
+                <div class="column">
+                    <h3>Le mécanisme</h3>
+                    <p>
+                        Le modèle prend une entrée (ex: pixels d'une image) et produit
+                        une <span class="keyword">probabilité pour chaque classe</span>.
+                    </p>
+                    <div class="code-block">
+                        <img src="./img/chat.png" width="300" alt="Image d'un chat" />
+                        <br>
+                        [<b>0.85 "chat"</b>, 0.10 "chien", 0.05 "autre"]
+                    </div>
+                    <p>La classe avec la probabilité la plus élevée est choisie comme prédiction.</p>
+                    <h4>Fonction de perte :</h4>
+                    <p class="keyword">Cross-entropy (entropie croisée)</p>
+                    <p>
+                        Cette fonction punit sévèrement les prédictions à forte probabilité mais incorrectes,
+                        ce qui est idéal pour la classification.
+                    </p>
+                </div>
+            </div>
+            <div class="note">
+                ⚠️ <strong>Boîte Blanche</strong> : Le modèle ne « reconnaît » pas : il
+                <strong>calcule une probabilité</strong> que l'image correspond à une étiquette donnée.
+            </div>
+        </div>
+
+        <hr />
+
+        <!-- ======================================================== -->
+        <!-- REGRESSION -->
+        <!-- ======================================================== -->
+        <div class="section">
+            <h2 id="regression">📈 2. Régression : « Combien ? »</h2>
+            <div class="two-columns">
+                <div class="column">
+                    <h3>Le problème</h3>
+                    <p>
+                        La régression consiste à <strong>prédire une valeur numérique continue</strong>.
+                        Contrairement à la classification, la sortie n'est pas une catégorie, mais un nombre.
+                    </p>
+                    <h4>Question centrale :</h4>
+                    <p class="important-box">
+                        <strong>« Quelle est la valeur de Y ? »</strong>
+                    </p>
+                    <h4>Exemple :</h4>
+                    <p>Prédire le prix d'une maison en fonction de sa surface, ou la température de demain.</p>
+                </div>
+                <div class="column">
+                    <h3>Le mécanisme</h3>
+                    <p>Le modèle produit une <span class="keyword">valeur continue</span>. Par exemple :</p>
+                    <div class="code-block">Prix prédit : 350 000 €</div>
+                    <p>Le modèle ajuste essentiellement une courbe (linéaire ou non) pour coller aux données.</p>
+                    <h4>Fonction de perte :</h4>
+                    <p class="keyword">MSE (Mean Squared Error / Erreur Quadratique Moyenne)</p>
+                    <p>Elle calcule la moyenne des carrés des différences entre les valeurs prédites et les valeurs réelles.</p>
+                    <p>Plus l'écart est grand, plus la pénalité est forte.</p>
+                    <div class="formula">MSE = <code>1/n * Σ(y_pred - y_true)²</code></div>
+                </div>
+            </div>
+            <div class="note">
+                ⚠️ <strong>Boîte Blanche</strong> : Pas de magie ! Le modèle
+                <strong>ajuste une courbe</strong> pour minimiser l'erreur.
+                Si la courbe est trop simple, il sous-estime ; trop complexe, il surajuste (mémorisation, cf. Chap. 3).
+            </div>
+        </div>
+
+        <hr />
+
+        <!-- ======================================================== -->
+        <!-- TRADUCTION -->
+        <!-- ======================================================== -->
+        <div class="section">
+            <h2 id="traduction">🌍 3. Traduction : « Comment dire X en langue L ? »</h2>
+            <div class="two-columns">
+                <div class="column">
+                    <h3>Le problème</h3>
+                    <p>
+                        La traduction automatique consiste à
+                        <strong>transformer une séquence dans une langue en une séquence dans une autre langue</strong>.
+                    </p>
+                    <h4>Question centrale :</h4>
+                    <p class="important-box">
+                        <strong>« Comment dire X en langue L ? »</strong>
+                    </p>
+                    <h4>Exemple :</h4>
+                    <p>Traduire « Bonjour » en anglais, ou un article complet du français à l'espagnol.</p>
+                </div>
+                <div class="column">
+                    <h3>Le mécanisme</h3>
+                    <p>Les modèles modernes (comme les Transformers) utilisent une architecture <span class="keyword">encoder-décoder</span> :</p>
+                    <ol>
+                        <li><strong>Tokenisation</strong> : « Bonjour » → [&lt;BON&gt;, &lt;JOUR&gt;]</li>
+                        <li><strong>Encodage</strong> : Chaque token → vecteur (embedding)</li>
+                        <li><strong>Transformation</strong> : Le réseau mappe la séquence source à la séquence cible</li>
+                        <li><strong>Décodage</strong> : Vecteurs → tokens cible (&lt;HELLO&gt;)</li>
+                    </ol>
+                    <h4>Fonction de perte :</h4>
+                    <p class="keyword">Cross-entropy</p>
+                    <p>Comme pour la classification, mais appliquée à chaque token de la séquence de sortie.</p>
+                </div>
+            </div>
+            <div class="note">
+                ⚠️ <strong>Boîte Blanche</strong> : Le modèle
+                <strong>apprend une fonction</strong> qui associe des séquences de nombres (tokens)
+                à d'autres séquences. Rien de plus !
+            </div>
+        </div>
+
+        <hr />
+
+        <!-- ======================================================== -->
+        <!-- GÉNÉRATION -->
+        <!-- ======================================================== -->
+        <div class="section">
+            <h2 id="generation">✍️ 4. Génération : « Que vient après X ? »</h2>
+            <div class="two-columns">
+                <div class="column">
+                    <h3>Le problème</h3>
+                    <p>
+                        La génération consiste à <strong>produire du contenu nouveau</strong>
+                        (texte, image, musique...) qui ressemble à des données existantes.
+                    </p>
+                    <h4>Question centrale :</h4>
+                    <p class="important-box">
+                        <strong>« Que vient après X ? »</strong>
+                    </p>
+                    <h4>Exemple :</h4>
+                    <p>
+                        Écrire une suite à « Il était une fois... »,
+                        générer une image à partir d'une description,
+                        ou composer de la musique.
+                    </p>
+                </div>
+                <div class="column">
+                    <h3>Le mécanisme</h3>
+                    <p>Les modèles de génération (comme les LLMs) utilisent l'<span class="keyword">auto-régression</span> :</p>
+                    <p>
+                        Ils prédisent <strong>le prochain token</strong> en fonction des précédents,
+                        puis réutilisent cette prédiction comme nouvelle entrée pour générer le token suivant.
+                    </p>
+                    <p>La sortie est une <span class="keyword">distribution de probabilités</span> sur le vocabulaire.</p>
+                    <h4>Fonction de perte :</h4>
+                    <p class="keyword">Cross-entropy</p>
+                    <p>Le modèle apprend à prédire la probabilité de chaque token suivant.</p>
+                    <h4>Paramètre clé :</h4>
+                    <p>La <span class="keyword">température</span> contrôle l'aléatoire :</p>
+                    <ul>
+                        <li><strong>Faible</strong> : déterministe, répétitif</li>
+                        <li><strong>Élevée</strong> : créatif, diversifié</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="note">
+                ⚠️ <strong>Boîte Blanche</strong> : Le modèle
+                <strong>ne crée pas</strong>, il <strong>échantillonne</strong> dans une distribution apprise.
+                Une « hallucination » (Chap. 6) n'est pas un bug, mais une propriété structurelle !
+            </div>
+        </div>
+
+        <hr />
+
+        <!-- ======================================================== -->
+        <!-- RENFORCEMENT -->
+        <!-- ======================================================== -->
+        <div class="section">
+            <h2 id="renforcement">5. Apprentissage par renforcement</h2>
+            <h3>« Quelle action maximise ma récompense ? »</h3>
+            <div class="two-columns">
+                <div class="column">
+                    <h3>Le problème</h3>
+                    <p>
+                        L'apprentissage par renforcement consiste à
+                        <strong>apprendre à prendre des décisions</strong> par essai-erreur
+                        dans un environnement.
+                    </p>
+                    <h4>Question centrale :</h4>
+                    <p class="important-box">
+                        <strong>« Quelle action maximise la récompense cumulative ? »</strong>
+                    </p>
+                    <h4>Exemple :</h4>
+                    <p>Jouer aux échecs, conduire une voiture autonome, ou optimiser des portefeuilles financiers.</p>
+                </div>
+                <div class="column">
+                    <h3>Le mécanisme</h3>
+                    <p>Un agent interagit avec un environnement selon un cycle :</p>
+                    <ol>
+                        <li><strong>Observation</strong> : L'agent perçoit l'état de l'environnement</li>
+                        <li><strong>Action</strong> : L'agent choisit une action (ex: déplacer un pion)</li>
+                        <li><strong>Récompense</strong> : L'environnement retourne un signal (+1, -1, 0...)</li>
+                        <li><strong>Nouvel état</strong> : L'environnement évolue</li>
+                    </ol>
+                    <h4>Optimisation :</h4>
+                    <p>
+                        L'agent ajuste sa <span class="keyword">politique</span> (stratégie) pour
+                        <strong>maximiser la récompense cumulative</strong> sur le long terme.
+                    </p>
+                    <h4>Fonction objective :</h4>
+                    <p class="keyword">Récompense cumulative (pas de fonction de perte classique)</p>
+                </div>
+            </div>
+            <div class="note">
+                ⚠️ <strong>À ne pas confondre renforcement avec le fine-tuning</strong> :
+                L'apprentissage par renforcement n'utilise <strong>pas de données étiquetées</strong>.
+                L'agent apprend <strong>par essai-erreur</strong> avec des récompenses,
+                pas en adaptant un modèle existant à de nouvelles données.
+                <br>
+                Le <strong>fine-tuning</strong> (ou apprentissage par transfert) est une autre technique
+                où l'on ré-entraîne un modèle existant sur de <strong>nouvelles données étiquetées</strong>.
+            </div>
+            <div class="note">
+                ⚠️ <strong>Boîte Blanche</strong> : L'agent
+                <strong>explore et exploite</strong>. Mais sans modèle du monde,
+                il peut apprendre des stratégies absurdes !
+            </div>
+        </div>
+
+        <hr />
+
+        <!-- ======================================================== -->
+        <!-- MESSAGE BOÎTE BLANCHE -->
+        <!-- ======================================================== -->
+        <div class="info">
+            <h4>💡 Le message Boîte Blanche</h4>
+            <p>
+                <strong>Même mécanique sous-jacente</strong> :
+                somme pondérée → activation → propagation.
+                <br>
+                <strong>Différences</strong> :
+                l'objectif, la sortie, et la fonction de perte.
+            </p>
+        </div>
+
+        <hr />
+
+        <!-- ======================================================== -->
+        <!-- CONCLUSION -->
+        <!-- ======================================================== -->
+        <div class="section">
+            <h2>🎯 Conclusion : La leçon du Chapitre 4</h2>
+            <p>Ce chapitre révèle une vérité fondamentale sur l'IA :</p>
+            <p class="important-box">
+                <strong>
+                    La taxonomie des IA n'est pas une taxonomie de mécanismes,
+                    mais une taxonomie d'objectifs.
+                </strong>
+            </p>
+            <p>
+                Que ce soit pour classer, prédire, traduire, générer ou agir,
+                les modèles utilisent <strong>les mêmes briques de base</strong> :
+                des neurones artificiels organisés en couches.
+            </p>
+            <p>Ce qui change, c'est :</p>
+            <ul>
+                <li><strong>L'entrée</strong> : images, texte, nombres...</li>
+                <li><strong>La tâche</strong> : classer, prédire, traduire...</li>
+                <li><strong>La sortie</strong> : probabilités, valeurs, séquences...</li>
+                <li><strong>La fonction de perte</strong> : cross-entropy, MSE, récompense...</li>
+            </ul>
+            <p>Cette compréhension est essentielle pour :</p>
+            <ul>
+                <li><strong>Démystifier</strong> : Pas d'IA « magique » vs. « basique »... juste des objectifs différents.</li>
+                <li><strong>Évaluer</strong> : Un modèle de traduction ne « comprend » pas plus qu'un classifieur (cf. Chap. 7).</li>
+                <li><strong>Critiquer</strong> : Savoir que la génération repose sur des probabilités aide à détecter les biais (cf. Chap. 6).</li>
+            </ul>
+            <p>
+                Dans les prochains chapitres, nous allons explorer comment ces mécanismes
+                s'appliquent à un domaine spécifique : le langage (Chap. 5), les probabilités (Chap. 6),
+                ou la planification (Chap. 7).
+            </p>
+        </div>
+
+        <footer>
+            <p>
+                <a href="../index.html">← Retour à l'index</a> |
+                <a href="../chapitre3/chapitre3.html">Chapitre 3 : L'apprentissage</a> |
+               <!-- <a href="../chapitre5.html">Chapitre 5 : La mécanique du langage →</a>-->
+            </p>
+        </footer>
+    </div>
+
+    <hr>
+    <div style="margin-top: 40px; text-align: center; padding: 20px; background-color: #f8f9fa; border-top: 1px solid #e9ecef;">
+        <p style="margin-bottom: 15px;">
+            <a href="../index.html" style="margin-right: 20px; text-decoration: none; color: #007bff;">↩ Retour au sommaire</a>
+        </p>
+    </div>
+</body>
+
+</html>

@@ -158,11 +158,13 @@ p {
     margin: 0 0 var(--spacing-lg);
     line-height: 1.6;
     color: var(--color-primary);
-}
+} 
 
 p:last-child {
     margin-bottom: 0;
 }
+
+
 
 /* Emphasis */
 em {
@@ -1619,7 +1621,32 @@ footer {
 .perceptron { border-collapse: collapse; text-align: center; }
 .perceptron th, .perceptron td { border: 1px solid #333; padding: 4px; }
 
+/* ===================================================================
+   25. SPACING UTILITIES (pour remplacer <br><br><br>)
+   =================================================================== */
 
+/* Marges en bas (margin-bottom) */
+.mb-xs { margin-bottom: var(--spacing-xs); }
+.mb-sm { margin-bottom: var(--spacing-sm); }
+.mb-md { margin-bottom: var(--spacing-md); }
+.mb-lg { margin-bottom: var(--spacing-lg); }
+.mb-xl { margin-bottom: var(--spacing-xl); }
+.mb-2xl { margin-bottom: var(--spacing-2xl); }
+.mb-3xl { margin-bottom: var(--spacing-3xl); }
+
+/* Marges en haut (margin-top) */
+.mt-xs { margin-top: var(--spacing-xs); }
+.mt-sm { margin-top: var(--spacing-sm); }
+.mt-md { margin-top: var(--spacing-md); }
+.mt-lg { margin-top: var(--spacing-lg); }
+.mt-xl { margin-top: var(--spacing-xl); }
+.mt-2xl { margin-top: var(--spacing-2xl); }
+
+/* Marges verticales combinées */
+.my-sm { margin: var(--spacing-sm) 0; }
+.my-md { margin: var(--spacing-md) 0; }
+.my-lg { margin: var(--spacing-lg) 0; }
+.my-xl { margin: var(--spacing-xl) 0; }
 
 /* ===================================================================
    END OF FILE
