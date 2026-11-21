@@ -6,6 +6,45 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>2 — Le réseau : composer des transformations</title>
     <link rel="stylesheet" href="../css/style.css" />
+    <style>
+        /* Tableau des fonctions d'activation - 3 colonnes égales */
+        .activation-table {
+            width: 100%;
+            table-layout: fixed;
+        }
+        .activation-table td {
+            width: 400px;
+            vertical-align: top;
+        }
+        .table-container {
+            overflow-x: auto;
+        }
+        .activation-table img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+        }
+        
+        @media (max-width: 768px) {
+            .activation-table tr {
+                display: block;
+            }
+            .activation-table td {
+                display: block;
+                width: 100% !important;
+                margin-bottom: 20px;
+                padding: 8px;
+                box-sizing: border-box;
+            }
+        }
+        
+        /* Ajustement dynamique de l'image softmax uniquement */
+        .center img[alt*="softmax"] {
+            max-width: 100%;
+            height: auto;
+        }
+    </style>
 </head>
 
 <body>
@@ -50,7 +89,7 @@
                 <br>Elle répondra au final <i>dans</i> le disque (1) ou <i>en dehors</i> du disque (0).
 
             <div class="image-container">
-                <img width="700" src="img/reseauA12.png" alt="Réseau de 12 neurones" />
+                <img width="800px" src="img/reseauA12.png" alt="Réseau de 12 neurones" />
                 <br><em> Un <span class="keyword">réseau de neurones</span> perceptron </em>
             </div>
             <p>
@@ -109,26 +148,27 @@
 
             <h3>Fonctions d'activation des réseaux de neurones</h3>
 
-            <table>
+            <div class="table-container">
+            <table class="activation-table">
                 <tbody>
                     <tr>
                         <td>
                             <div class="center">
-                                <img src="img/sigmoid.png" width="380" alt="Front lissé de la sigmoide" />
+                                <img src="img/sigmoid.png" width="400" alt="Front lissé de la sigmoide" />
                                 <br>
                                 <h4>sigmoid</h4>
                             </div>
                         </td>
                         <td>
                             <div class="center">
-                                <img src="img/tanh.png" width="380" alt="Front tangente H" />
+                                <img src="img/tanh.png" width="400" alt="Front tangente H" />
                                 <br>
                                 <h4>tanh</h4>
                             </div>
                         </td>
                         <td>
                             <div class="center">
-                                <img src="img/ReLU.png" width="380" alt="Front ReLU" />
+                                <img src="img/ReLU.png" width="400" alt="Front ReLU" />
                                 <br>
                                 <h4>ReLU</h4>
                             </div>
@@ -148,6 +188,7 @@
                     </tr>
                 </tbody>
             </table>
+            </div>
 
 
         </div>
@@ -172,7 +213,7 @@
             </p>
 
             <div class="center">
-                <img src="img/softmax.png" width="800" alt="Courbe du softmax : amplification des différences entre scores" />
+                <img src="img/softmax.png" width="700" alt="Courbe du softmax : amplification des différences entre scores" />
                 <p><em>
                         Formule : pour un vecteur <b>z</b> = [z₁, z₂, ..., zₙ],
                         softmax(z)<sub>i</sub> = e<sup>zᵢ</sup> / Σ(e<sup>zⱼ</sup>)

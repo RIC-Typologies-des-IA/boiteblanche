@@ -6,11 +6,99 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Jouer avec un modèle </title>
     <link rel="stylesheet" href="../css/style.css" />
+    <style>
+        /* Réduction des espaces dans le tableau matrix-output-section pour tenir dans 400px max */
+        .matrix-output-section .matrix-section {
+            max-width: 400px;
+        }
+        
+        .matrix-output-section .param-cell {
+            width: 70px !important;
+            position: relative !important;
+            padding-bottom: 14px !important;
+        }
+        
+        .matrix-output-section .cell {
+            width: 70px !important;
+            height: 25px !important;
+        }
+        
+        .matrix-output-section .plus-symbol {
+            width: 20px !important;
+            font-size: 16px !important;
+            text-align: center !important;
+        }
+        
+        .matrix-output-section .cell-value {
+            width: 30px !important;
+            font-size: 12px !important;
+        }
+        
+        .matrix-output-section .cell-btn {
+            width: 18px !important;
+            height: 18px !important;
+            font-size: 11px !important;
+        }
+        
+        .matrix-output-section .coeff-label {
+            font-size: 9px !important;
+            position: absolute !important;
+            bottom: 0px !important;
+            width: 100% !important;
+            text-align: center !important;
+            margin: 0 !important;
+            padding: 0 0 2px 0 !important;
+        }
+        
+        .matrix-output-section .bit-label {
+            font-size: 12px !important;
+        }
+        
+        .matrix-output-section .neuron-params {
+            gap: 0px !important;
+        }
+        
+        .matrix-output-section .neuron-row {
+            padding: 4px 4px !important;
+        }
+        
+        .matrix-output-section .equal-symbol-horizontal {
+            margin: 0 4px !important;
+            font-size: 16px !important;
+        }
+        
+        .matrix-output-section .neuron-output {
+            margin-left: 4px !important;
+            gap: 4px !important;
+        }
+        
+        .matrix-output-section .neuron-result {
+            width: 38px !important;
+            height: 25px !important;
+            font-size: 11px !important;
+        }
+        
+        .matrix-output-section .feu {
+            width: 35px !important;
+            height: 35px !important;
+        }
+        
+        .matrix-output-section .bit-box {
+            width: 70px !important;
+            height: 25px !important;
+            font-size: 12px !important;
+            line-height: 25px !important;
+            text-align: center !important;
+        }
+    </style>
 </head>
 
 <body>
     <div class="container">
         <h1>Entrainez le réseau de neurones des feux tricolores</h1>
+
+
+
 
         <div class="info" style="font-size: 1.0em;">
             <p>
@@ -85,22 +173,20 @@
                 <div class="matrix-and-learning-row">
                     <div class="matrix-section">
                         <!-- En-têtes des colonnes avec x1 et x2 -->
-                        <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 5px; padding: 0 10px;">
+                        <div style="display: flex; align-items: center; gap: 0px; margin-bottom: 8px; padding: 0 4px;">
                             <div class="neuron-params" style="border: none; background: transparent;">
-                                <div class="param-cell" style="width: 89px; border: none; background: transparent;">
-                                    <div class="bit-label" style="text-align: center; font-weight: bold; margin-bottom: 2px;">x₁</div>
-                                    <div class="bit-box" id="b1" onclick="toggleBit('b1')" style="width: 89px; height: 35px; font-size: 14px; font-weight: bold;">0</div>
-                                    <div style="text-align: center; font-size: 20px; font-weight: bold; color: #3A8EBA; margin-top: 2px;">×</div>
+                                <div class="param-cell" style="width: 70px; border: none; background: transparent;">
+                                    <div class="bit-label" style="text-align: center; font-weight: bold; margin-bottom: 0px; font-size: 12px;">x₁</div>
+                                    <div class="bit-box" id="b1" onclick="toggleBit('b1')" style="width: 70px; height: 25px; font-size: 12px; font-weight: bold; line-height: 25px; text-align: center;">0</div>
                                 </div>
-                                <div class="plus-symbol" style="visibility: hidden;">+</div>
-                                <div class="param-cell" style="width: 89px; border: none; background: transparent;">
-                                    <div class="bit-label" style="text-align: center; font-weight: bold; margin-bottom: 2px;">x₂</div>
-                                    <div class="bit-box" id="b0" onclick="toggleBit('b0')" style="width: 89px; height: 35px; font-size: 14px; font-weight: bold;">0</div>
-                                    <div style="text-align: center; font-size: 20px; font-weight: bold; color: #3A8EBA; margin-top: 2px;">×</div>
+                                <div class="plus-symbol" style="visibility: hidden; width: 20px;">+</div>
+                                <div class="param-cell" style="width: 70px; border: none; background: transparent;">
+                                    <div class="bit-label" style="text-align: center; font-weight: bold; margin-bottom: 0px; font-size: 12px;">x₂</div>
+                                    <div class="bit-box" id="b0" onclick="toggleBit('b0')" style="width: 70px; height: 25px; font-size: 12px; font-weight: bold; line-height: 25px; text-align: center;">0</div>
                                 </div>
-                                <div class="plus-symbol" style="visibility: hidden;">-</div>
-                                <div class="param-cell" style="width: 89px; border: none; background: transparent;">
-                                    <div class="coeff-label" style="font-weight: bold; color: #333; font-size: 14px;">bⱼ</div>
+                                <div class="plus-symbol" style="visibility: hidden; width: 20px;">-</div>
+                                <div class="param-cell" style="width: 70px; border: none; background: transparent;">
+
                                 </div>
                             </div>
                         </div>

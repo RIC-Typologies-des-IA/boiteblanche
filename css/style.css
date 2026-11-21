@@ -14,12 +14,12 @@
     --color-text-light: #666;
     --color-text-lighter: #888;
     --color-text-white: #fff;
-    
+
     /* Background Colors */
     --bg-color: #f5f5f5;
     --bg-color-light: #f8f9fa;
     --bg-color-white: #fff;
-    
+
     /* Semantic Colors */
     --color-blue: #3498db;
     --color-blue-light: #2196F3;
@@ -38,24 +38,24 @@
     --color-red-light: #f44336;
     --color-red-lighter: #f8d7da;
     --color-red-dark: #e74c3c;
-    
+
     /* Grays */
     --color-gray: #ddd;
     --color-gray-dark: #ccc;
     --color-gray-light: #eee;
     --color-gray-lighter: #f9f9f9;
-    
+
     /* Status Colors */
     --color-success: var(--color-green);
     --color-warning: var(--color-orange-dark);
     --color-danger: var(--color-red);
     --color-info: var(--color-blue-light);
-    
+
     /* Fonts */
     --font-primary: Arial, sans-serif;
     --font-system: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
     --font-monospace: 'Courier New', monospace;
-    
+
     /* Spacing */
     --spacing-xs: 5px;
     --spacing-sm: 10px;
@@ -64,25 +64,25 @@
     --spacing-xl: 25px;
     --spacing-2xl: 30px;
     --spacing-3xl: 40px;
-    
+
     /* Border Radius */
     --border-radius-sm: 4px;
     --border-radius: 8px;
     --border-radius-lg: 10px;
     --border-radius-full: 50%;
-    
+
     /* Shadows */
     --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.08);
     --shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
     --shadow-md: 0 2px 10px rgba(0, 0, 0, 0.1);
     --shadow-lg: 0 4px 12px rgba(0, 0, 0, 0.12);
     --shadow-xl: 0 4px 15px rgba(0, 0, 0, 0.1);
-    
+
     /* Transitions */
     --transition-fast: 0.15s ease;
     --transition: 0.2s ease;
     --transition-slow: 0.3s ease;
-    
+
     /* Container widths */
     --container-sm: 800px;
     --container-md: 900px;
@@ -116,7 +116,12 @@ body {
    =================================================================== */
 
 /* Headings */
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
     font-family: var(--font-primary);
     font-weight: normal;
     margin: 0;
@@ -152,13 +157,18 @@ h4 {
     margin: var(--spacing-lg) 0 var(--spacing-md);
     color: var(--color-secondary);
 }
+h5 {
+    font-size: 1.2em;
+    margin: var(--spacing-lg) 0 var(--spacing-md);
+    color: var(--color-secondary);
+}
 
 /* Paragraphs and text */
 p {
     margin: 0 0 var(--spacing-lg);
     line-height: 1.6;
     color: var(--color-primary);
-} 
+}
 
 p:last-child {
     margin-bottom: 0;
@@ -196,7 +206,8 @@ a:hover {
 }
 
 /* Lists */
-ul, ol {
+ul,
+ol {
     margin: var(--spacing-sm) 0 var(--spacing-lg);
     padding-left: var(--spacing-xl);
 }
@@ -405,7 +416,7 @@ header .subtitle {
 }
 
 .image-container img {
-    max-width: 80%;
+    max-width: 100%;
     height: auto;
     border: 1px solid var(--color-gray);
     border-radius: var(--border-radius-sm);
@@ -472,7 +483,8 @@ table tr:nth-child(even) {
     background: var(--color-gray-lighter);
 }
 
-th, td {
+th,
+td {
     border: 1px solid var(--color-gray);
     padding: var(--spacing-md);
     text-align: center;
@@ -494,18 +506,22 @@ th {
 
 .table-equal th,
 .table-equal td {
-    width: auto; /* Le navigateur répartit équitablement */
-    padding: var(--spacing-md);
+    word-break: break-word;
+    /* Casse les mots longs si nécessaire */
+    overflow-wrap: break-word;
+    /* Alternative moderne */
+    white-space: normal;
+    /* Autorise le retour à la ligne */
+    max-width: 200px;
+    /* Limite la largeur max des cellules */
     text-align: center;
-    border: 1px solid var(--color-gray);
+    /* Garde l'alignement centré */
 }
 
 .table-equal col {
-    width: 100%; /* Force chaque colonne à prendre la même largeur */
+    width: 100%;
+    /* Force chaque colonne à prendre la même largeur */
 }
-
-
-
 
 
 /* ===================================================================
@@ -687,12 +703,6 @@ button:disabled {
 }
 
 
-
-
-
-
-
-
 .btn:hover {
     background: var(--color-gray);
 }
@@ -728,7 +738,7 @@ button:disabled {
     display: flex;
     flex-direction: column;
     font-size: 0.9em;
-    color: var( --color-tertiary);
+    color: var(--color-tertiary);
     font-family: var(--font-monospace);
     line-height: 1.1;
 }
@@ -1190,14 +1200,16 @@ footer {
 
 /* Threshold/Seuil controls */
 
-      /* Seuil */
-      .seuil-control {
-        margin: 4px 0;
-        padding: 4px;
-        background: #f0f0f0;
-        border-radius: 6px;
-        text-align: center;
-      }
+/* Seuil */
+.seuil-control {
+    font-size: 16px;
+    margin: 4px 0;
+    padding: 4px;
+    background: #f0f0f0;
+    border-radius: 6px;
+    text-align: center;
+}
+
 .seuil-value {
     display: inline-block;
     background: white;
@@ -1228,19 +1240,49 @@ footer {
     text-align: left;
 }
 
-.mt-sm { margin-top: var(--spacing-sm); }
-.mt-md { margin-top: var(--spacing-md); }
-.mt-lg { margin-top: var(--spacing-lg); }
-.mt-xl { margin-top: var(--spacing-xl); }
+.mt-sm {
+    margin-top: var(--spacing-sm);
+}
 
-.mb-sm { margin-bottom: var(--spacing-sm); }
-.mb-md { margin-bottom: var(--spacing-md); }
-.mb-lg { margin-bottom: var(--spacing-lg); }
-.mb-xl { margin-bottom: var(--spacing-xl); }
+.mt-md {
+    margin-top: var(--spacing-md);
+}
 
-.p-sm { padding: var(--spacing-sm); }
-.p-md { padding: var(--spacing-md); }
-.p-lg { padding: var(--spacing-lg); }
+.mt-lg {
+    margin-top: var(--spacing-lg);
+}
+
+.mt-xl {
+    margin-top: var(--spacing-xl);
+}
+
+.mb-sm {
+    margin-bottom: var(--spacing-sm);
+}
+
+.mb-md {
+    margin-bottom: var(--spacing-md);
+}
+
+.mb-lg {
+    margin-bottom: var(--spacing-lg);
+}
+
+.mb-xl {
+    margin-bottom: var(--spacing-xl);
+}
+
+.p-sm {
+    padding: var(--spacing-sm);
+}
+
+.p-md {
+    padding: var(--spacing-md);
+}
+
+.p-lg {
+    padding: var(--spacing-lg);
+}
 
 /* ===================================================================
    18. VISUALIZATION CANVAS
@@ -1289,18 +1331,45 @@ footer {
    =================================================================== */
 
 .text-green,
-.feu-vert { color: var(--color-green); font-weight: bold; }
+.feu-vert {
+    color: var(--color-green);
+    font-weight: bold;
+}
+
 .text-orange,
-.feu-orange { color: var(--color-orange); font-weight: bold; }
+.feu-orange {
+    color: var(--color-orange);
+    font-weight: bold;
+}
+
 .text-red,
-.feu-rouge { color: var(--color-red); font-weight: bold; }
-.text-blue { color: var(--color-blue); font-weight: bold; }
+.feu-rouge {
+    color: var(--color-red);
+    font-weight: bold;
+}
+
+.text-blue {
+    color: var(--color-blue);
+    font-weight: bold;
+}
+
 .text-success,
-.ok { color: var(--color-green); }
+.ok {
+    color: var(--color-green);
+}
+
 .text-danger,
-.nok { color: var(--color-red); }
-.text-warning { color: var(--color-orange-dark); }
-.text-info { color: var(--color-blue); }
+.nok {
+    color: var(--color-red);
+}
+
+.text-warning {
+    color: var(--color-orange-dark);
+}
+
+.text-info {
+    color: var(--color-blue);
+}
 
 /* ===================================================================
    20. TABLE STYLES FOR FEUX TRICOLORES
@@ -1334,13 +1403,13 @@ footer {
    =================================================================== */
 
 
-      .top-row {
-        display: flex;
-        align-items: flex-start;
-        gap: 10px;
-        margin-bottom: 20px;
-        flex-wrap: nowrap;
-      }
+.top-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 20px;
+    flex-wrap: nowrap;
+}
 
 
 .buttons-section {
@@ -1402,18 +1471,18 @@ footer {
     align-items: center;
     flex-wrap: wrap;
 }
-      
-      .learning-btn {
-        padding: 6px 12px;
-        background: #9c27b0;
-        color: white;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-        font-size: 13px;
-        font-weight: bold;
-        transition: all 0.2s;
-      }
+
+.learning-btn {
+    padding: 6px 12px;
+    background: #9c27b0;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: bold;
+    transition: all 0.2s;
+}
 
 .learning-btn:hover {
     background: #7b1fa2;
@@ -1437,8 +1506,15 @@ footer {
 }
 
 @keyframes pulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.6; }
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.6;
+    }
 }
 
 .column-group {
@@ -1528,6 +1604,7 @@ footer {
    =================================================================== */
 
 @media (max-width: 1200px) {
+
     .container-xl,
     .container-2xl {
         max-width: var(--container-lg);
@@ -1535,13 +1612,14 @@ footer {
 }
 
 @media (max-width: 1000px) {
+
     .container,
     .container-lg,
     .container-xl,
     .container-2xl {
         max-width: var(--container-md);
     }
-    
+
     .two-columns {
         flex-direction: column;
         gap: var(--spacing-xl);
@@ -1549,31 +1627,32 @@ footer {
 }
 
 @media (max-width: 768px) {
+
     .container,
     .container-lg,
     .container-xl,
     .container-2xl {
         padding: var(--spacing-md);
     }
-    
+
     h1 {
         font-size: 2em;
     }
-    
+
     .card-container {
         grid-template-columns: 1fr;
     }
-    
+
     .top-row {
         flex-direction: column;
         align-items: stretch;
     }
-    
+
     .matrix-and-learning-row {
         flex-direction: column;
         align-items: stretch;
     }
-    
+
     .auto-learning-controls {
         flex-direction: column;
         align-items: stretch;
@@ -1581,21 +1660,22 @@ footer {
 }
 
 @media (max-width: 600px) {
+
     .container,
     .container-lg,
     .container-xl,
     .container-2xl {
         padding: var(--spacing-md);
     }
-    
+
     header h1 {
         font-size: 1.8em;
     }
-    
+
     .chapter-card {
         padding: var(--spacing-md);
     }
-    
+
     .chapter-card h3 {
         font-size: 1.1em;
     }
@@ -1618,35 +1698,91 @@ footer {
 }
 
 
-.perceptron { border-collapse: collapse; text-align: center; }
-.perceptron th, .perceptron td { border: 1px solid #333; padding: 4px; }
+.perceptron {
+    border-collapse: collapse;
+    text-align: center;
+}
+
+.perceptron th,
+.perceptron td {
+    border: 1px solid #333;
+    padding: 4px;
+}
 
 /* ===================================================================
    25. SPACING UTILITIES (pour remplacer <br><br><br>)
    =================================================================== */
 
 /* Marges en bas (margin-bottom) */
-.mb-xs { margin-bottom: var(--spacing-xs); }
-.mb-sm { margin-bottom: var(--spacing-sm); }
-.mb-md { margin-bottom: var(--spacing-md); }
-.mb-lg { margin-bottom: var(--spacing-lg); }
-.mb-xl { margin-bottom: var(--spacing-xl); }
-.mb-2xl { margin-bottom: var(--spacing-2xl); }
-.mb-3xl { margin-bottom: var(--spacing-3xl); }
+.mb-xs {
+    margin-bottom: var(--spacing-xs);
+}
+
+.mb-sm {
+    margin-bottom: var(--spacing-sm);
+}
+
+.mb-md {
+    margin-bottom: var(--spacing-md);
+}
+
+.mb-lg {
+    margin-bottom: var(--spacing-lg);
+}
+
+.mb-xl {
+    margin-bottom: var(--spacing-xl);
+}
+
+.mb-2xl {
+    margin-bottom: var(--spacing-2xl);
+}
+
+.mb-3xl {
+    margin-bottom: var(--spacing-3xl);
+}
 
 /* Marges en haut (margin-top) */
-.mt-xs { margin-top: var(--spacing-xs); }
-.mt-sm { margin-top: var(--spacing-sm); }
-.mt-md { margin-top: var(--spacing-md); }
-.mt-lg { margin-top: var(--spacing-lg); }
-.mt-xl { margin-top: var(--spacing-xl); }
-.mt-2xl { margin-top: var(--spacing-2xl); }
+.mt-xs {
+    margin-top: var(--spacing-xs);
+}
+
+.mt-sm {
+    margin-top: var(--spacing-sm);
+}
+
+.mt-md {
+    margin-top: var(--spacing-md);
+}
+
+.mt-lg {
+    margin-top: var(--spacing-lg);
+}
+
+.mt-xl {
+    margin-top: var(--spacing-xl);
+}
+
+.mt-2xl {
+    margin-top: var(--spacing-2xl);
+}
 
 /* Marges verticales combinées */
-.my-sm { margin: var(--spacing-sm) 0; }
-.my-md { margin: var(--spacing-md) 0; }
-.my-lg { margin: var(--spacing-lg) 0; }
-.my-xl { margin: var(--spacing-xl) 0; }
+.my-sm {
+    margin: var(--spacing-sm) 0;
+}
+
+.my-md {
+    margin: var(--spacing-md) 0;
+}
+
+.my-lg {
+    margin: var(--spacing-lg) 0;
+}
+
+.my-xl {
+    margin: var(--spacing-xl) 0;
+}
 
 /* ===================================================================
    END OF FILE
