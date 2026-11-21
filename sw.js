@@ -1,8 +1,7 @@
-const CACHE_NAME = "boite-blanche-v3";
+const CACHE_NAME = "boite-blanche-v4";
 const PRECACHE_URLS = [
   "./",
   "./index.html",
-  "./mindmap_clean_final.html",
   "./chapitre1/chapitre1.html",
   "./chapitre1/chapitre1-1.html",
   "./chapitre2/chapitre2.html",
@@ -32,7 +31,6 @@ const PRECACHE_URLS = [
   "./chapitre2/img/reseauA12.png",
   "./chapitre2/img/reseauA12Et3sorties.png",
   "./chapitre2/img/sigmoid.png",
-  "./chapitre2/img/sigmoide.png",
   "./chapitre2/img/softmax.png",
   "./chapitre2/img/tablette200x400.png",
   "./chapitre2/img/tanh.png",
@@ -41,8 +39,6 @@ const PRECACHE_URLS = [
   "./chapitre3/img/reseauA12Et3sorties.png",
   "./chapitre3/img/tangente1.png",
   "./chapitre4/img/chat.png",
-  "./img/rab/ImageCouches.png",
-  "./img/rab/apprentissage.png",
   "./manifest.webmanifest",
   "./icons/icon.svg"
 ];
