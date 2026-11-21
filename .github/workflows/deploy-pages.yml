@@ -11,9 +11,13 @@ permissions:
 
 jobs:
   validate:
+    name: Validate PR merge result and published artifact
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        # For pull_request, checkout uses GitHub's synthetic merge ref by default.
+        # This validates the proposed result against the current target branch,
+        # rather than validating the PR branch in isolation.
       - uses: actions/setup-node@v4
         with:
           node-version: "24"
@@ -21,8 +25,15 @@ jobs:
         run: node --check sw.js
       - name: Check vendored Chart.js syntax
         run: node --check vendor/chart.js/chart.umd.min.js
-      - name: Validate offline assets and PWA manifest
+      - name: Validate source tree
         run: python scripts/validate_site.py
+      - name: Assemble the exact static-site layout
+        run: python scripts/build_site.py
+      - name: Validate assembled publication artifact
+        run: |
+          node --check dist/sw.js
+          node --check dist/vendor/chart.js/chart.umd.min.js
+          python scripts/validate_site.py dist
 
   deploy:
     if: github.event_name != 'pull_request' && (github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch')
