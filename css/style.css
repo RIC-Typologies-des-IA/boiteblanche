@@ -1784,6 +1784,23 @@ footer {
     margin: var(--spacing-xl) 0;
 }
 
+.warning-box {
+    background-color: #fff8e1;  /* Jaune pâle */
+    border-left: 4px solid #ffc107;  /* Bordure orange */
+    padding: 10px 15px;
+    margin: 15px 0;
+    border-radius: 4px;
+    font-size: 1,05em;
+    line-height: 1.5;
+}
+
+.image-container svg {
+    display: block !important;
+    overflow: visible !important;
+    max-width: 100% !important;
+    height: auto !important;
+}
+
 /* ===================================================================
    END OF FILE
    =================================================================== */

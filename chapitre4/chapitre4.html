@@ -9,8 +9,8 @@
 
     <body>
         <div class="section">
-            <h2>Chapitre en débroussaillage - patience</h2>
-            <img src="../img/debroussaille.png" width="600px" \ />
+            <h2>Chapitre en cours de débroussaillage</h2>
+            <img src="../img/debroussaille.png" width="500px" \ />
         </div>
         <div class="container">
             <header>
@@ -22,8 +22,6 @@
                     d'objectifs, pas de mécanismes
                 </p>
             </header>
-
-  
 
             <!-- ======================================================== -->
             <!-- TABLEAU RÉCAPITULATIF -->
@@ -39,22 +37,33 @@
                     pondérées et des activations, mais ils cherchent à répondre
                     à <b>différents objectifs</b>.
                 </p>
+                <p>
+                    Une <b>fonction de perte</b> est une transformation
+                    mathématique qui amplifie ou pénalise davantage certaines
+                    erreurs et donc <b>orienter l'apprentissage.</b>
+
+                    <br />Plus la pénalité est élevée, plus le modèle va
+                    fortement corriger ses poids pour éviter de refaire la même
+                    erreur.
+                </p>
 
                 <table class="table-equal">
                     <thead>
                         <tr>
-                            <th><strong>Objectif</strong></th>
+                            <th><h4>Objectif</h4></th>
                             <th><strong>Données d'entrée</strong></th>
                             <th><strong>Tâche</strong></th>
                             <th><strong>Sortie</strong></th>
-                            <th><strong>Fonction de perte</strong></th>
+                            <th><h4>Fonction de perte</h4></th>
                             <th><strong>Interprétation</strong></th>
                             <th><strong>Exemple</strong></th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td><strong>Classification</strong></td>
+                            <td>
+                                <strong><i>Classification</i></strong>
+                            </td>
                             <td>
                                 Images, texte, caractéristiques
                                 (<i>features</i>)
@@ -66,7 +75,9 @@
                             <td>Chat vs. chien</td>
                         </tr>
                         <tr>
-                            <td><strong>Régression</strong></td>
+                            <td>
+                                <strong><i>Régression</i></strong>
+                            </td>
                             <td>Nombres, caractéristiques</td>
                             <td>Prédire</td>
                             <td>Nombre continu</td>
@@ -75,7 +86,9 @@
                             <td>Prix d'une maison</td>
                         </tr>
                         <tr>
-                            <td><strong>Traduction</strong></td>
+                            <td>
+                                <strong><i>Traduction</i></strong>
+                            </td>
                             <td>Texte (langue source)</td>
                             <td>Traduire</td>
                             <td>Séquence de tokens</td>
@@ -84,7 +97,9 @@
                             <td>"Bonjour" → "Hello"</td>
                         </tr>
                         <tr>
-                            <td><strong>Génération</strong></td>
+                            <td>
+                                <strong><i>Génération</i></strong>
+                            </td>
                             <td>Texte, prompt</td>
                             <td>Générer</td>
                             <td>Séquence générée</td>
@@ -93,7 +108,9 @@
                             <td>Suite de texte</td>
                         </tr>
                         <tr>
-                            <td><strong>Renforcement</strong></td>
+                            <td>
+                                <strong><i>Renforcement</i></strong>
+                            </td>
                             <td>État de l'environnement</td>
                             <td>Agir</td>
                             <td>Action + politique</td>
@@ -104,21 +121,14 @@
                     </tbody>
                 </table>
 
-                <h3>Les fonctions de perte</h3>
+                <h2>Les fonctions de perte</h2>
                 <p>
-                    Une <b>fonction de perte</b> est une transformation
-                    mathématique qui amplifie ou pénalise davantage certaines
-                    erreurs.
-
-                    <br />
-                    Une pénalité très élevée demandera une correction forte des
-                    poids du réseau.
-
-                    <br />Plus la pénalité est forte, plus le modèle va beaucoup
-                    corriger ses poids pour éviter de refaire la même erreur.
+                    Les fonctions de perte orientent le réseau de neurones vers
+                    des objectifs précis en privilégiant ou pénalisant certaines
+                    réponses lors de l'apprentissage
                 </p>
 
-                <h4>Cross-entropy</h4>
+                <h3>Cross-entropy</h3>
                 <p>
                     La cross-entropy ne pénalise pas juste l'erreur, mais
                     <b>l'erreur + la confiance.</b>
@@ -127,8 +137,8 @@
                 <table class="table-equal">
                     <thead>
                         <tr>
-                            <th>Objectif</th>
-                            <th>Source</th>
+                            <th><h4>Objectif</h4></th>
+                            <th>Source <br />exemple</th>
                             <th>Cible</th>
                             <th>Prédiction</th>
                             <th>Score de confiance</th>
@@ -138,7 +148,7 @@
                     <tbody>
                         <tr>
                             <td>
-                                <b><i>classification</i></b>
+                                <b><i>Classification</i></b>
                             </td>
                             <td>
                                 <img src="img/chienChat.png" width="80px" />
@@ -162,7 +172,7 @@
                         </tr>
                         <tr>
                             <td>
-                                <b><i>traduction</i></b> <br />
+                                <b><i>Traduction</i></b> <br />
                             </td>
                             <td><b>I</b></td>
                             <td>Je</td>
@@ -201,36 +211,120 @@
                     </tbody>
                 </table>
 
-                <h4>MSE - Mean Squared Error</h4>
-
-                <h5>Erreur Quadratique Moyenne</h5>
+                <h4>MSE - Mean Squared Error - Erreur Quadratique Moyenne</h4>
                 <p>
-                    C'est la fonction de perte la plus courante en régression.
-                    Elle mesure l'écart moyen entre la prédiction et la valeur
-                    réelle, mais <b>en élevant au carré les erreurs</b>.
+                    Pour orienter l’apprentissage vers
+                    <b>la prédiction de valeurs</b>
+                    à partir de données représentatives du jeu de données, on
+                    utilise le MSE.
+                </p>
+
+                <!-- WARNING -->
+                <div class="warning-box">
+                    <strong>⚠️ Limite fondamentale :</strong>
+                    Le MSE optimise les poids du modèle, mais il ne peut pas
+                    corriger des <em>données d’entrée de mauvaise qualité</em>.
+                    <br />"Garbage in, garbage out" : un jeu de données bruité
+                    ou biaisé produira des prédictions peu fiables.
+                </div>
+
+                <p>
+                    <b>MSE</b> est la fonction de perte la plus courante en
+                    régression. <br />Elle mesure l'écart moyen entre la
+                    prédiction et la valeur réelle, mais
+                    <b>en élevant au carré les erreurs</b>, ce qui pénalise les
+                    grosses erreurs et élimine les signes négatifs.
                 </p>
                 <p>
-                    Le carré a deux effets importants :
+                    Une erreur de 10 € (ou de -10 €) est transformée en 100,
+                    tandis qu’une erreur de 100 € devient 10 000 — soit une
+                    pénalité 100 fois plus forte. <br />Ainsi, le modèle apprend
+                    à écarter les points aberrants dont l’erreur est trop
+                    importante.
+                </p>
 
-                   1) Il pénalise les grosses erreurs ; 2) Il élimine les signes négatifs :
+                <b>La régression linéaire s'applique pour toute dimension</b>
 
-                    <br />Une erreur de 10 € → 10² = 100  mais une erreur de 100
-                    € → 100² = 10 000 (100× plus pénalisée !) → Le modèle
-                    apprend à éviter les erreurs graves.
+                <h4>
+                    2D - prédire y (ex: un prix) en fonction de x (ex: la
+                    surface)
+                </h4>
+                <div class="image-container">
+                    <img
+                        src="img/droiteCarre.png"
+                        width="500px"
+                        alt="Visualisation droite des moindres carrés"
+                    />
+                    <br /><em
+                        >avec deux variables (surface, prix) on obtient une
+                        droite de prédiction</em
+                    >
+                </div>
+                <h4>
+                    3D - prédire z (ex: un prix) en fonction de x (ex: la
+                    surface) et de y (ex: le nombre de pièces)
+                </h4>
+                <div class="image-container">
+                    <img
+                        src="img/planCarre.png"
+                        width="500px"
+                        .alt="plan des moindres carrés"
+                    />
+                    <br /><em
+                        >Avec trois variables (surface, nombre de pièces, prix)
+                        on aura un plan de prédiction</em
+                    >
+                </div>
+                <h4>n D - prédire un prix en fonction de n critères</h4>
+                <p>
+                    Les calculs restent les mêmes pour n dimensions (sans
+                    représentation visuelle possible).
+                    <br />Avec des caractéristiques (surface, nombre de pièces,
+                    quartier, ensoleillement, indice énergétique), on construit
+                    un hyperespace à <b>5 dimensions</b> (les
+                    <i>variables d’entrée</i>). <br />Le <b>prix</b> lui, est la
+                    <b>6ᵉ dimension</b> : c’est la <b>variable cible</b> que le
+                    modèle cherche à prédire en croisant ces données.
+                </p>
 
-                    <br />Sans le carré, une
-                    erreur de +10 et -10 s'annuleraient (moyenne = 0), alors
-                    qu'elles sont toutes les deux mauvaises.
+                <h3>
+                    Pourquoi un réseau de neurones avec couches cachées en
+                    régression
+                </h3>
+
+                <div class="image-container">
+                    <img
+                        src="img/reseau_regression_5_4_3_1.png"
+                        alt="Réseau de neurones pour la régression"
+                        width="800"
+                    />
+                    <br />
+                    <em>
+                        Architecture : 5 entrées → 2 couches cachées (ReLU) → 1
+                        sortie (prix).
+                        <br />
+                        <strong>Fonction de perte : MSE</strong> (Erreur
+                        Quadratique Moyenne) → Compare le
+                        <i>prix prédit</i> avec le <i>prix réel</i> pour ajuster
+                        les poids.
+                    </em>
+                </div>
+
+                <p>
+                    Sans couches cachées, le réseau linéaire serait limité à un
+                    modèle trop simple :
+                    <i>prix = a·surface + b·pièces + ... </i>
+
+                    <br>Avec des couches cachées à activation non linéaires (ReLU), Le réseau apprend des combinaisons
+                    complexes (ex : "quartier premium + ensoleillé = +15% de
+                    prix"). 
+                    <br>Le MSE : Mesure l’erreur et guide l’apprentissage.
                 </p>
             </div>
 
+            <hr />
 
-
-
-
-<hr>
-
-          <!-- ======================================================== -->
+            <!-- ======================================================== -->
             <!-- PHASES D'ENTRAINEMENT VS INFÉRENCE -->
             <!-- ======================================================== -->
 
@@ -259,60 +353,52 @@
                 </p>
             </div>
 
-<table class="table-equal">
-    <thead>
-        <tr>
-            <th><strong>Critère</strong></th>
-            <th><strong>Phase d'entraînement</strong></th>
-            <th><strong>Phase d'inférence</strong></th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td><strong>Objectif</strong></td>
-            <td>Apprendre (ajuster les poids)</td>
-            <td>Prédire (appliquer le modèle)</td>
-        </tr>
-        <tr>
-            <td><strong>Matériel</strong></td>
-            <td>GPU/TPU puissants, clusters</td>
-            <td>CPU, smartphone, cloud léger</td>
-        </tr>
-        <tr>
-            <td><strong>Calculs</strong></td>
-            <td>Forward + Backward (gradients) + Mise à jour</td>
-            <td>Uniquement Forward (pas de gradients)</td>
-        </tr>
-        <tr>
-            <td><strong>Données</strong></td>
-            <td>Jeu d'entraînement (labelisé)</td>
-            <td>Nouvelles données (non labelisées)</td>
-        </tr>
-        <tr>
-            <td><strong>Sortie</strong></td>
-            <td>Modèle entraîné (matrice de poids)</td>
-            <td>Prédictions (classification, régression, etc.)</td>
-        </tr>
-        <tr>
-            <td><strong>Fonction de perte</strong></td>
-            <td>Oui (ex: Cross-entropy, MSE)</td>
-            <td>Non</td>
-        </tr>
-        <tr>
-            <td><strong>Mise à jour des poids</strong></td>
-            <td>Oui (via l'optimiseur)</td>
-            <td>Non</td>
-        </tr>
-    </tbody>
-</table>
-
-
-
-
-
-
-
-
+            <table class="table-equal">
+                <thead>
+                    <tr>
+                        <th><strong>Critère</strong></th>
+                        <th><strong>Phase d'entraînement</strong></th>
+                        <th><strong>Phase d'inférence</strong></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Objectif</strong></td>
+                        <td>Apprendre (ajuster les poids)</td>
+                        <td>Prédire (appliquer le modèle)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Matériel</strong></td>
+                        <td>GPU/TPU puissants, clusters</td>
+                        <td>CPU, smartphone, cloud léger</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Calculs</strong></td>
+                        <td>Forward + Backward (gradients) + Mise à jour</td>
+                        <td>Uniquement Forward (pas de gradients)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Données</strong></td>
+                        <td>Jeu d'entraînement (labelisé)</td>
+                        <td>Nouvelles données (non labelisées)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Sortie</strong></td>
+                        <td>Modèle entraîné (matrice de poids)</td>
+                        <td>Prédictions (classification, régression, etc.)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Fonction de perte</strong></td>
+                        <td>Oui (ex: Cross-entropy, MSE)</td>
+                        <td>Non</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Mise à jour des poids</strong></td>
+                        <td>Oui (via l'optimiseur)</td>
+                        <td>Non</td>
+                    </tr>
+                </tbody>
+            </table>
 
             <hr />
 
@@ -375,15 +461,6 @@
                     planification (Chap. 7).
                 </p>
             </div>
-
-
-
-
-
-
-
-
-
 
             <footer>
                 <p>
