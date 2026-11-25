@@ -1,4 +1,5 @@
-const CACHE_NAME = "boite-blanche-v4";
+// The build replaces this token with the published commit/build identifier.
+const CACHE_NAME = "boite-blanche-__BUILD_ID__";
 const PRECACHE_URLS = [
   "./",
   "./index.html",
@@ -46,7 +47,18 @@ const PRECACHE_URLS = [
 self.addEventListener("install", (event) => {
   event.waitUntil((async () => {
     const cache = await caches.open(CACHE_NAME);
-    await cache.addAll(PRECACHE_URLS);
+
+    // Fetch the published files rather than reusing a potentially stale HTTP cache.
+    await Promise.all(PRECACHE_URLS.map(async (url) => {
+      const request = new Request(new URL(url, self.registration.scope), {
+        cache: "reload"
+      });
+      const response = await fetch(request);
+      if (!response.ok) {
+        throw new Error(`Unable to precache ${url}: HTTP ${response.status}`);
+      }
+      await cache.put(request, response);
+    }));
 
     await self.skipWaiting();
   })());
@@ -55,7 +67,8 @@ self.addEventListener("install", (event) => {
 self.addEventListener("activate", (event) => {
   event.waitUntil((async () => {
     const keys = await caches.keys();
-    await Promise.all(keys.filter((key) => key.startsWith("boite-blanche-") && key !== CACHE_NAME)
+    await Promise.all(keys
+      .filter((key) => key.startsWith("boite-blanche-") && key !== CACHE_NAME)
       .map((key) => caches.delete(key)));
     await self.clients.claim();
   })());
@@ -64,6 +77,27 @@ self.addEventListener("activate", (event) => {
 self.addEventListener("fetch", (event) => {
   if (event.request.method !== "GET") return;
 
+  // HTML must be fresh whenever the device is online, while retaining an
+  // offline fallback to the last successfully cached page.
+  if (event.request.mode === "navigate") {
+    event.respondWith((async () => {
+      const cache = await caches.open(CACHE_NAME);
+      try {
+        const response = await fetch(event.request);
+        if (response.ok) {
+          await cache.put(event.request, response.clone());
+        }
+        return response;
+      } catch {
+        return (await cache.match(event.request))
+          || (await cache.match(new URL("./index.html", self.registration.scope)))
+          || Response.error();
+      }
+    })());
+    return;
+  }
+
+  // Static resources remain cache-first for reliable offline operation.
   event.respondWith((async () => {
     const cached = await caches.match(event.request);
     if (cached) return cached;
@@ -71,9 +105,6 @@ self.addEventListener("fetch", (event) => {
     try {
       return await fetch(event.request);
     } catch {
-      if (event.request.mode === "navigate") {
-        return (await caches.match("./index.html")) || Response.error();
-      }
       return Response.error();
     }
   })());
