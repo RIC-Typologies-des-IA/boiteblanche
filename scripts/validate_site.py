@@ -13,7 +13,7 @@ for icon in manifest["icons"]:
     assert (ROOT / icon["src"].removeprefix("./")).is_file(), icon["src"]
 
 service_worker = (ROOT / "sw.js").read_text(encoding="utf-8")
-match = re.search(r"const PRECACHE_URLS = \\[(.*?)\\];", service_worker, re.S)
+match = re.search(r"const PRECACHE_URLS = \[(.*?)\];", service_worker, re.S)
 assert match, "PRECACHE_URLS not found in sw.js"
 paths = re.findall(r'"([^"]+)"', match.group(1))
 missing = [path for path in paths if not (ROOT / path.removeprefix("./")).is_file()
