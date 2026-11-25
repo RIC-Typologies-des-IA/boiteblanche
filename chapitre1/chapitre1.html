@@ -14,11 +14,19 @@
             <div class="section">
                 <h2>Pourquoi <i>"neurone"</i></h2>
                 <p>
-                    Dans un neurone biologique, lorsque le cumul des stimulations reçues dépasse un certain seuil, <b>le neurone excite son axone</b>.
+                    Dans un neurone biologique, lorsque le cumul des
+                    stimulations reçues dépasse un certain seuil,
+                    <b>le neurone excite son axone</b>.
                     <br />
-                    <b>Ce comportement à seuil, simple en apparence, a inspiré les premiers modèles.</b>
+                    <b
+                        >Ce comportement à seuil, simple en apparence, a inspiré
+                        les premiers modèles.</b
+                    >
                     <br />
-                    Les neurobiologistes et les informaticiens pensaient alors que l’intelligence émergerait du nombre de connexions, <b>à l’instar du cerveau humain</b>. Cette hypothèse s’est cependant révélée erronée.
+                    Les neurobiologistes et les informaticiens pensaient alors
+                    que l’intelligence émergerait du nombre de connexions,
+                    <b>à l’instar du cerveau humain</b>. Cette hypothèse s’est
+                    cependant révélée erronée.
                 </p>
                 <div class="image-container">
                     <img
@@ -40,13 +48,14 @@
                     Un neurone artificiel cherche à reproduire cette logique par
                     des opérations arithmétiques simples.
                     <br />
-                    Il associe à chaque entrée un
+                    Il associe à chaque entrée <b>un</b>
                     <span class="keyword">poids</span> qui détermine son
                     importance dans la décision finale. <br />Par des produits
-                    et une somme, il calcule un
+                    et des sommes, il calcule un
                     <span class="keyword">score brut</span>
                     qui est traduit en
-                    <span class="keyword">prédiction</span> (au sens mathématique : <i>la sortie</i> du modèle) par une
+                    <span class="keyword">prédiction</span> (au sens
+                    mathématique: <i>la sortie</i> du modèle) par une
                     <span class="keyword">fonction d'activation</span>. <br />Le
                     <span class="keyword">perceptron</span> est conçu à partir
                     du neurone d'origine : il s'active sur un dépassement de
@@ -68,11 +77,12 @@
                     <i>somme(x<sub>i</sub>·w<sub>i</sub>) + biais</i>."
 
                     <br />Le neurone du schéma à deux entrées calcule:
-                    <i>w₁·x₁ + w₂·x₂ + b</i>. C'est l'équation d'une <b>droite de décision</b> dans
-                    le plan des entrées (x₁, x₂), décalée de l'origine grâce au 
-                    <span class="keyword">biais <i>b</i></span>. <br />Cette frontière
-                    sépare les scores positifs des négatifs. Les scores
-                    nuls sont sur la frontière elle-même.
+                    <i>w₁·x₁ + w₂·x₂ + b</i>. C'est l'équation d'une
+                    <b>droite de décision</b> dans le plan (x₁, x₂) décalée de
+                    l'origine grâce au
+                    <span class="keyword">biais <i>b</i></span
+                    >. <br />Cette frontière sépare les scores positifs des
+                    négatifs. Les scores nuls sont sur la frontière elle-même.
                 </p>
 
                 <h4>
@@ -92,30 +102,75 @@
                             et le biais son décalage de l'origine.
                             <br />
                             Le score brut est la distance, positive ou négative,
-                            d'un point à la frontière de décision.
+                            entre un point et la frontière de décision.
                         </em>
                     </p>
                 </div>
 
                 <h4>
-                    Tout neurone artificiel découpe son espace numérique en
-                    deux parties.
+                    Tout neurone artificiel découpe son espace numérique en deux
+                    parties.
                 </h4>
-                <ul>
-                    <li>
-                        Avec deux entrées, il sépare <b>le plan (x₁, x₂)</b> en deux parties par <b>une droite de décision</b>.
-                    </li>
-                    <li>
-                        Avec trois entrées, il séparera <b>l’espace à 3 dimensions</b> en deux parties par <b>un plan de décision</b>.
-                    </li>
-                    <li>
-                        Avec n entrées, il séparera <b>un hyperespace</b> en
-                        deux parties par <b>un hyperplan de décision</b>.
-                    </li>
-                </ul>
+
+                Le score brut s(x) = w₁x₁ + w₂x₂ + b peut se voir comme un plan
+                incliné au-dessus du plan (x₁, x₂). <br />
+                Il traverse le plan horizontal z = 0 le long de la droite de
+                séparation avec un angle dépendant des poids (<code
+                    >angle θ = arctan(w₂/w₁)</code
+                >):
+                <div class="image-container">
+                    <img
+                        src="img/perceptron_score_brut.png"
+                        alt="Découpage d'un plan par une droite"
+                        width="400"
+                    />
+                    <br /><em
+                        >Le plan des scores bruts n'est pas borné.<br />
+                        Il peut se prolonger à l'infini, que ce soit en positif
+                        ou en négatif</em
+                    >
+                </div>
+                <p>
+                    Un changement des poids ajustera simultanément l'orientation
+                    de la droite, sa position, et l'inclinaison du plan des
+                    scores.
+                </p>
+                <h4>Généralisation à n dimensions</h4>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Entrées</th>
+                            <th>Espace des entrées</th>
+                            <th>Frontière (z = 0)</th>
+                            <th>Graphe du score (dimension n+1)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>2</td>
+                            <td>plan (x₁, x₂)</td>
+                            <td>droite</td>
+                            <td>plan incliné dans l'espace 3D</td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td>espace 3D</td>
+                            <td>plan</td>
+                            <td>hyperplan incliné dans l'espace 4D</td>
+                        </tr>
+                        <tr>
+                            <td>n</td>
+                            <td>ℝⁿ</td>
+                            <td>hyperplan de dimension n−1</td>
+                            <td>hyperplan dans ℝⁿ⁺¹</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
             <div class="section">
-                <h3>La fonction d'activation crée la prédiction</h3>
+                <h3>
+                    La fonction d'activation transforme le score en prédiction
+                </h3>
                 <p>
                     La
                     <span class="keyword">fonction d'activation</span>
@@ -130,11 +185,11 @@
                 </p>
                 <ul>
                     <li>
-                        La prédiction est <b>1 (vrai)</b> si le
+                        La prédiction vaut <b>1 (vrai)</b> si le
                         <b>score brut</b> est positif ou nul.
                     </li>
                     <li>
-                        La prédiction est <b>0 (faux)</b> si le
+                        La prédiction vaut <b>0 (faux)</b> si le
                         <b>score brut</b> est négatif.
                     </li>
                 </ul>
@@ -150,14 +205,25 @@
                             binaire.</em
                         >
                     </p>
+
+                    <div class="image-container">
+                        <img src="img/relief01.png" width=" 300" />
+                        <br />
+                        <em>
+                            Avec une fonction de seuil l'espace des scores
+                            devient borné. <br />Il se réduit à deux plateaux:
+                            vrai ou faux.
+                        </em>
+                    </div>
                 </div>
+                <!---->
                 <div class="section">
                     <h4>Classifieur binaire</h4>
                     <p>
-                        La fonction d'activation <i>échelon</i> crée des
-                        classifieurs binaires, tout ou rien, vrai ou faux.
-                        <br />De nombreux usages sont binaires en fin de
-                        traitement:
+                        La fonction d'activation <i>échelon</i> produit des
+                        classifieurs binaires (tout ou rien, vrai ou faux).
+                        <br />De nombreux usages requièrent une classification
+                        binaire en fin de traitement:
                     </p>
                     <ul>
                         <li>
@@ -183,34 +249,36 @@
                     <h4>Classification multiple</h4>
                     <p>
                         Si l'on a N catégories à isoler, on entraîne N
-                        classifieurs différents, un par classe.
+                        classifieurs distincts, un par classe.
                         <br />Ils partagent les valeurs des entrées mais chacun
                         a ses propres poids.
 
-                        <br />Si les catégories sont exclusives
-                        (<i>One-vs-all</i>) il faut veiller à ce qu'une seule
-                        sortie soit positive à la fois. <br />Ce n'est possible
-                        que si l'on peut tracer une frontière droite pour
-                        séparer parfaitement les catégories. <br /><br /><em>
+                        <br />Si les catégories sont exclusives (<i
+                            >approche One-vs-all</i
+                        >) il faut s'assurer qu'une seule sortie soit active à
+                        la fois. <br />Ce n'est possible que si l'on peut tracer
+                        une frontière linéaire pour séparer parfaitement les
+                        catégories. <br /><em>
                             Un exemple de classification multiple à catégories
-                            exclusives est proposé dans l'illustration ci-après.
+                            mutuellement exclusives est présenté dans
+                            l'illustration ci-après.
                         </em>
                     </p>
                 </div>
             </div>
 
-<hr />
-<div class="section">
-    <h2>Conclusion du chapitre 1</h2>
-    <p>
-        Le neurone artificiel est une simple fonction, dont les paramètres s’ajustent par apprentissage.
-        <br>À l’inverse d’un calcul exact, ses résultats sont <b>variables</b> : pour un même problème,
-        il existe autant de solutions valides que d’entraînements, et donc de comportements possibles.
-    </p>
-</div>
-
-
-
+            <hr />
+            <div class="section">
+                <h2>Conclusion du chapitre 1</h2>
+                <p>
+                    Le neurone artificiel est une fonction simple, dont les
+                    paramètres s’ajustent par apprentissage.
+                    <br />Contrairement à un calcul exact, ses résultats varient: 
+                    pour un même problème, il existe <b>autant de solutions
+                    valides que d’entraînements</b>, et donc autant de comportements
+                    différents.
+                </p>
+            </div>
 
             <hr />
 
@@ -241,13 +309,13 @@
                 </p>
                 <ul>
                     <li>
-                        On prend arbitrairement comme convention qu'un
-                        interrupteur fermé a la valeur 1 et un interrupteur
-                        ouvert la valeur 0.<br />
+                        On adopte la convention suivante: un
+                        interrupteur fermé vaut 1 et un interrupteur
+                        ouvert vaut 0.<br />
                     </li>
                     <li>
-                        On considère que la prise d’un feu est alimentée si sa valeur est
-                        1 et hors tension si elle vaut 0.
+                        On considère que la prise d’un feu est alimentée si sa
+                        valeur est 1 et hors tension si elle vaut 0.
                     </li>
                 </ul>
 
@@ -255,12 +323,12 @@
                 Il définit le comportement attendu du réseau de neurones.
                 <p>
                     Cela s'appelle un
-                    <span class="keyword">apprentissage supervisé</span> : on
+                    <span class="keyword">apprentissage supervisé</span>: on
                     fournit au modèle des <b>exemples étiquetés</b> (« entrée +
                     sortie attendue »), et il apprend à reproduire ce
                     comportement. <br />Ci-dessous, chaque ligne du tableau est
                     un exemple supervisé:
-                    <span class="code">(entrées) → (sortie souhaitée)</span>.
+                    <span class="code">(Entrées) → (Sortie souhaitée)</span>.
                 </p>
                 <div class="center">
                     <table class="weight-table">
@@ -351,8 +419,8 @@
 
                 <h3>Un neurone par feu</h3>
                 <p>
-                    Un neurone n'ayant qu'une sortie, il faut associer trois
-                    neurones distincts: un neurone par feu.
+                    Un neurone n'ayant qu'une sortie, il faut donc associer trois
+                    neurones distincts: un feu.
                 </p>
                 <div class="image-container">
                     <img
@@ -371,46 +439,46 @@
                 <h4>L'entrée à "1" du biais</h4>
                 Pour que tous les neurones utilisent la même règle simple —
                 <i>activer si le score est positif</i> —, on intègre le biais
-                directement dans le calcul de la somme. Pour cela, on ajoute une
+                directement dans la somme. Pour cela, on ajoute une
                 entrée fixe à 1, multipliée par le biais.
             </div>
             <div class="section">
                 <h4>La taille d'un modèle</h4>
                 <p>
-                    Un <span class="keyword">modèle</span> est le tableau
-                    numérique des paramètres une fois que le réseau est
+                    Un <span class="keyword">modèle</span> est un tableau
+                    numérique des paramètres une fois que le réseau 
                     entraîné. Sa taille est son nombre de paramètres.<br />
 
-                    Notre modèle est un
+                    Notre modèle comporte un
                     <span class="keyword"
                         >modèle à <b>9</b> paramètres et 1 couche de sortie
                     </span>
-                    ( faite de 3 neurones avec 3 paramètres chacun.) <br />
-                    Les réseaux pour la reconnaissance d'images ont
+                    ( composée de 3 neurones chacun ayant 3 paramètres ). <br />
+                    Les réseaux de reconnaissance d'images comptent 
                     <b>des millions (10<sup>6</sup>)</b> de paramètres et des
                     dizaines de couches.<br />
                     Les grands
-                    <span class="keyword">LLM (Large Language Model)</span> qui
-                    répondent aux questions en ont des
+                    <span class="keyword">LLM (Large Language Model)</span>, qui
+                    répondent aux questions, en ont des
                     <b>milliers de milliards (10<sup>12</sup>)</b> et des
                     centaines de couches.<br />
 
                     <br /><b
-                        >Le fonctionnement de base fait de calculs reste le
+                        >Le fonctionnement de base fondé sur des calculs reste le
                         même</b
                     >, que ce soit pour 10, 10<sup>6</sup> ou 10<sup>12</sup>
-                    paramètres, mais la puissance de calcul à mobiliser est
+                    paramètres, tandis que la puissance de calcul à mobiliser croît de manière 
                     exponentielle.
                 </p>
             </div>
             <div class="section">
                 <h4>Expérimenter ce réseau</h4>
                 <p>
-                    Les poids sont initialisés au hasard au début de chaque
-                    entraînement. Le but est de les ajuster pour isoler chaque
+                    Les poids sont initialisés aléatoirement au début de chaque
+                    entraînement. Le but est de les ajuster afin d'activer chaque
                     feu indépendamment.
                     <br />On pourra entraîner soi-même le modèle en modifiant
-                    ses poids ou voir un algorithme de résolution automatique en
+                    ses poids ou observer un algorithme de résolution automatique en
                     action.
                 </p>
                 <div class="center" style="margin: 20px 0">
@@ -427,8 +495,8 @@
                     />
                     <p>
                         <em>
-                            La visualisation montre les droites de décision des
-                            trois neurones selon leurs paramètres actuels.
+                            La visualisation montre les droites de décision associées aux
+                            trois neurones, en fonction de leurs paramètres actuels.
                             <br />
                             Les points colorés indiquent quel feu doit s'allumer
                             selon la position des interrupteurs.
@@ -437,8 +505,8 @@
                             neurone est positif (zone colorée) et y être le
                             seul.
                         </em>
-                    </p> 
-
+                    </p>
+                     
                 </div>
             </div>
         </div>
