@@ -483,6 +483,18 @@ table tr:nth-child(even) {
     background: var(--color-gray-lighter);
 }
 
+
+/* 👇 TRAIT ÉPAIS SOUS L'EN-TÊTE (thead) */
+.table-equal thead tr th {
+  border-bottom: 3px solid var(--color-gray); /* Épaisseur + couleur personnalisées */
+}
+
+/* Traits très épais pour les séparateurs */
+.table-equal tr.separator td {
+  border-top: 3px solid var(--color-gray); /* Rouge pour un effet visuel fort */
+  border-bottom: none !important; /* Évite les doublons */
+}
+
 th,
 td {
     border: 1px solid var(--color-gray);

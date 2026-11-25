@@ -189,8 +189,8 @@
                             </td>
                         </tr>
 
-                        <tr>
-                            <td rowspan="3">
+                        <tr  class="separator">
+                            <td rowspan="4">
                                 <b><i>Traduction</i></b>
                             </td>
                             <td>I</td>
@@ -203,15 +203,21 @@
                             <td>très faible</td>
                         </tr>
                         <tr>
-                            <td>love</td>
-                            <td>aime</td>
-                            <td><span style="color: red">✗</span> admire</td>
+                            <td rowspan="2">love</td>
+                            <td rowspan="2">aime</td>
+                            <td rowspan="2">
+                                <span style="color: red">✗</span> admire
+                            </td>
                             <td>95%</td>
                             <td>
                                 🔥 Enorme, correction forte des poids du réseau.
                             </td>
                         </tr>
                         <tr>
+                            <td>18%</td>
+                            <td>faible</td>
+                        </tr>
+                        <tr >
                             <td>cats</td>
                             <td>chats</td>
                             <td>
@@ -221,7 +227,7 @@
                             <td>98%</td>
                             <td>très faible</td>
                         </tr>
-                        <tr>
+                        <tr class="separator">
                             <td rowspan="2">
                                 <b><i>Génération</i></b>
                             </td>
@@ -241,6 +247,7 @@
                             <td>23%</td>
                             <td>faible, correction standard</td>
                         </tr>
+   
                     </tbody>
                 </table>
             </div>
@@ -252,8 +259,8 @@
                 </h4>
                 <p>
                     Pour éliminer les éventuels points aberrants
-                    <b>MSE éleve au carré les erreurs</b>, ce qui va pénaliser les
-                    grosses erreurs (et éliminer les signes négatifs):
+                    <b>MSE éleve au carré les erreurs</b>, ce qui va pénaliser
+                    les grosses erreurs (et éliminer les signes négatifs):
                     <br />
                     Une erreur de 10 devient 100, une erreur de 100 devient 10
                     000 — soit une pénalité 100 fois plus forte.
@@ -263,17 +270,17 @@
                     différents critères en se basant sur un jeu de données issu
                     d'un recensement préalable.
                     <br />
-                    En apprenant à partir des données collectées, le réseau produit un modèle de calcul : prix (critères) 
+                    En apprenant à partir des données collectées, le réseau
+                    produit un modèle de calcul : prix (critères)
                 </p>
-
 
                 <h4>Régression linéaire standard 2D 3D et n Dimensions</h4>
                 <p>
-                    C'est une approche classique déjà utilisée  bien avant les
+                    C'est une approche classique déjà utilisée bien avant les
                     réseaux de neurones.
                 </p>
                 <div class="image-container">
-                   <img
+                    <img
                         src="img/droiteCarre.png"
                         width="400px"
                         alt="Visualisation droite des moindres carrés"
@@ -297,41 +304,40 @@
                     <br />
                     L'exemple suivant représente l'équation d'un hyperplan à 5
                     dimensions. Comme en 2D ou en 3D, cet hyperplan reste
-                    parfaitement linéaire : <br />c'est <b>une surface
-                    plane</b> généralisée à un espace multidimensionnel.
+                    parfaitement linéaire : <br />c'est
+                    <b>une surface plane</b> généralisée à un espace
+                    multidimensionnel.
                 </p>
 
                 <div class="image-container">
                     <img src="img/reseau_5_1.png" alt="direct" width="350" />
-<br>
+                    <br />
                     <em>
-                
                         <i
                             ><b
                                 >prix = a·surface + b·pièces + c.quartier +
                                 d.ensoleillement + e.indice énergétique
                             </b>
                         </i>
-<p>
-                    Le modèle est linéaire : toute variation d’une variable d’entrée entraîne une
-                    variation proportionnelle de la prédiction.
-                    <br />
-                    (si on augmente la surface de 10 m², le prix
-                    augmentera <i>toujours</i> de <code>a × 10</code>, quel que
-                    soit le nombre de pièces ou l’ensoleillement)
-                </p>
+                        <p>
+                            Le modèle est linéaire : toute variation d’une
+                            variable d’entrée entraîne une variation
+                            proportionnelle de la prédiction.
+                            <br />
+                            (si on augmente la surface de 10 m², le prix
+                            augmentera <i>toujours</i> de <code>a × 10</code>,
+                            quel que soit le nombre de pièces ou
+                            l’ensoleillement)
+                        </p>
                     </em>
                 </div>
-                
 
-                <h3>
-                    Apport d'un réseau de neurones avec couches cachées 
-                </h3>
+                <h3>Apport d'un réseau de neurones avec couches cachées</h3>
                 <p>
-                    Avec le même jeu d'entraînement mais avec des couches cachées utilisant des fonctions non linéaires (comme ReLU), on autorise des courbes de séparation au lieu de droites. 
+                    Avec le même jeu d'entraînement mais avec des couches
+                    cachées utilisant des fonctions non linéaires (comme ReLU),
+                    on autorise des courbes de séparation au lieu de droites.
                 </p>
-
-    
 
                 <div class="image-container">
                     <img
@@ -348,7 +354,10 @@
                         l’erreur et guide l’apprentissage.
                     </em>
                 </div>
-                            <h4> Au lieu d'un espace plat, ce réseau fait émerger des zônes d'intérêt particulier</h4>
+                <h4>
+                    Au lieu d'un espace plat, ce réseau fait émerger des zônes
+                    d'intérêt particulier
+                </h4>
                 <div class="image-container">
                     <img
                         src="img/pli3D.png"
@@ -358,9 +367,8 @@
 
                     <br />
                     <em
-                        >Le réseau
-                        <b>apprend des combinaisons complexes</b> qui vont créer
-                        des "plis" dans le plan
+                        >Le réseau <b>apprend des combinaisons complexes</b> qui
+                        vont créer des "plis" dans le plan
                         <br />
                         Exemple ici:<b>
                             "quartier premium + ensoleillé = pic +15% de
@@ -377,79 +385,122 @@
                     ou biaisé produira des prédictions peu fiables.
                 </div>
             </div>
-        
+
             <!-- section-->
 
-<div class="section">
-    <h3>
-        Renforcement avec la fonction de perte
-        <i>récompense cumulative</i>
-    </h3>
-    <p>
-        En apprentissage par renforcement, <b>le réseau de neurones</b> prend l'état de l'environnement en entrée
-        et produit une <b>politique</b> (action à exécuter) ou une <b>valeur Q</b> (estimation de la récompense future).
-        <br />
-        La <b>récompense cumulative</b> guide l'ajustement des poids : plus la récompense finale est élevée,
-        plus les actions qui y ont conduit sont renforcées dans le réseau.
-    </p>
+            <div class="section">
+                <h3>
+                    Renforcement avec la fonction de perte
+                    <i>récompense cumulative</i>
+                </h3>
+                <p>
+                    En apprentissage par renforcement,
+                    <b>le réseau de neurones</b> prend l'état de l'environnement
+                    en entrée et produit une <b>politique</b> (action à
+                    exécuter) ou une <b>valeur Q</b> (estimation de la
+                    récompense future).
+                    <br />
+                    La <b>récompense cumulative</b> guide l'ajustement des poids
+                    : plus la récompense finale est élevée, plus les actions qui
+                    y ont conduit sont renforcées dans le réseau.
+                </p>
 
-    <table class="table-equal">
-        <thead>
-            <tr>
-                <th><h4>Objectif</h4></th>
-                <th>Architecture du réseau</th>
-                <th>Entrée (État)</th>
-                <th>Sortie du réseau</th>
-                <th>Action choisie</th>
-                <th>Récompense finale / Mise à jour</th>
-            </tr>
-        </thead>
-        <tbody>
-            <!-- Exemple 1 : Réseau pour les échecs -->
-            <tr>
-                <td rowspan="2"><b><i>Échecs (AlphaZero)</i></b></td>
-                <td rowspan="2">
-                    Réseau convolutif<br/>(20 couches)<br/>→ Tête de politique<br/>→ Tête de valeur
-                </td>
-                <td rowspan="2">
-                    Position échiquéenne<br/>(tableau 8×8×12)
-                </td>
-                <td rowspan="2">
-                    Politique : probabilités pour<br/>
-                    chaque coup possible (1982 actions)<br/>
-                    Valeur : estimation du résultat
-                </td>
-                <td><span style="color: yellowgreen">&#10003;</span> e4 (meilleur coup)</td>
-                <td>+1.0 (victoire) → Renforcement fort des poids pour cette politique</td>
-            </tr>
-            <tr>
-                <td><span style="color: red">✗</span> d4 (mauvais coup)</td>
-                <td>-1.0 (défaite) → Affaiblissement des poids pour cette politique, renforcement de e4</td>
-            </tr>
+                <table class="table-equal">
+                    <thead>
+                        <tr>
+                            <th><h4>Objectif</h4></th>
+                            <th>Architecture du réseau</th>
+                            <th>Entrée (État)</th>
+                            <th>Sortie du réseau</th>
+                            <th>Action choisie</th>
+                            <th>Récompense finale / Mise à jour</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Exemple 1 : Réseau pour les échecs -->
+                        <tr>
+                            <td rowspan="2">
+                                <b><i>Échecs (AlphaZero)</i></b>
+                            </td>
+                            <td rowspan="2">
+                                Réseau convolutif<br />(20 couches)<br />→ Tête
+                                de politique<br />→ Tête de valeur
+                            </td>
+                            <td rowspan="2">
+                                Position échiquéenne<br />(tableau 8×8×12)
+                            </td>
+                            <td rowspan="2">
+                                Politique : probabilités pour<br />
+                                chaque coup possible (1982 actions)<br />
+                                Valeur : estimation du résultat
+                            </td>
+                            <td>
+                                <span style="color: yellowgreen">&#10003;</span>
+                                e4 (meilleur coup)
+                            </td>
+                            <td>
+                                +1.0 (victoire) → Renforcement fort des poids
+                                pour cette politique
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span style="color: red">✗</span> d4 (mauvais
+                                coup)
+                            </td>
+                            <td>
+                                -1.0 (défaite) → Affaiblissement des poids pour
+                                cette politique, renforcement de e4
+                            </td>
+                        </tr>
 
-            <!-- Exemple 2 : Réseau pour labyrinthe -->
-            <tr>
-                <td rowspan="2"><b><i>Labyrinthe (DQN)</i></b></td>
-                <td rowspan="2">
-                    Réseau convolutif<br/>(3 couches)<br/>→ 4 neurones de sortie
-                </td>
-                <td rowspan="2">
-                    Image 84×84 du labyrinthe
-                </td>
-                <td rowspan="2">
-                    Q-values pour :<br/>
-                    ↑ Haut, ↓ Bas, ← Gauche, → Droite
-                </td>
-                <td><span style="color: yellowgreen">&#10003;</span> → (droite, vers la sortie)</td>
-                <td>+10.0 → Mise à jour des poids : Q(→) augmente fortement</td>
-            </tr>
-            <tr>
-                <td><span style="color: red">✗</span> ↑ (haut, dans un mur)</td>
-                <td>-5.0 → Mise à jour : Q(↑) diminue, Q(→) augmente</td>
-            </tr>
-        </tbody>
-    </table>
-</div>
+                        <!-- Exemple 2 : Réseau pour labyrinthe -->
+                        <tr class ="separator">
+                            <td rowspan="2">
+                                <b><i>Labyrinthe (DQN)</i></b>
+                            </td>
+                            <td rowspan="2">
+                                Réseau convolutif<br />(3 couches)<br />→ 4
+                                neurones de sortie
+                            </td>
+                            <td rowspan="2">Image 84×84 du labyrinthe</td>
+                            <td rowspan="2">
+                                Q-values pour :<br />
+                                ↑ Haut, ↓ Bas, ← Gauche, → Droite
+                            </td>
+                            <td>
+                                <span style="color: yellowgreen">&#10003;</span>
+                                → (droite, vers la sortie)
+                            </td>
+                            <td>
+                                +10.0 → Mise à jour des poids : Q(→) augmente
+                                fortement
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span style="color: red">✗</span> ↑ (haut, dans
+                                un mur)
+                            </td>
+                            <td>
+                                -5.0 → Mise à jour : Q(↑) diminue, Q(→) augmente
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+
+                <div class="center" style="margin: 20px 0">
+                    <a
+                        href="chapitre4_labyrinthe.html"
+                        class="more-info-button"
+                        >Expérimenter un apprentissage par renforcement (labyrinthe)</a
+                    >
+                </div>
+
+
+
+            </div>
 
             <hr />
 
@@ -530,9 +581,6 @@
             </table>
 
             <hr />
-
-            
-   
 
             <!-- ======================================================== -->
             <!-- CONCLUSION -->

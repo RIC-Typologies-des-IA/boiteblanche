@@ -48,7 +48,8 @@
                 <p>
                     Dans le brouillard, on ignore où l’on se trouve.
                     <br />
-                    On peut <b>cependant</b> sentir sous ses pieds <b>l’inclinaison</b> de la pente.
+                    On peut <b>cependant</b> sentir sous ses pieds
+                    <b>l’inclinaison</b> de la pente.
                     <br />
                     On choisit alors de descendre — tant que c’est possible.
                 </p>
@@ -82,9 +83,8 @@
                     /><br />
                     <em>
                         Paysage d’erreur en 3D<br />
-                        Les axes θ₁ et θ₂ représentent deux poids du
-                        réseau à ajuster, et L(θ) la fonction de coût
-                        (<i>Perte</i>).
+                        Les axes θ₁ et θ₂ représentent deux poids du réseau à
+                        ajuster, et L(θ) la fonction de coût (<i>Perte</i>).
                         <br />
                         La descente de gradient suit la pente pour trouver le
                         minimum.
@@ -95,26 +95,32 @@
                     On ne peut pas savoir si on est loin du fond de la vallée,
                     ni même s’il existe une seule vallée plutôt que plusieurs.
                     <br />
-                    Le relief peut tromper : si on a atteint une cuvette au lieu
-                    de la vallée, l’erreur restera grande.
+                    Le relief peut également tromper : si on a atteint une
+                    cuvette au lieu de la vallée, l’erreur restera élevée en fin
+                    de descente.
                     <br />
-                    <b>L’apprentissage n’est jamais garanti</b>, et <b>de surcroît</b>,
-                    <b>il n’est pas déterministe</b> : en raison
-                    de l’initialisation aléatoire des poids et de l’ordre de
-                    traitement des exemples, deux entraînements successifs sur
-                    les mêmes données produisent des modèles
+                    <b>L’apprentissage n’est jamais garanti</b>, et
+                    <b>de surcroît</b>, <b>il n’est pas déterministe</b> : en
+                    raison de l’initialisation aléatoire des poids et de l’ordre
+                    de traitement des exemples, deux entraînements successifs
+                    sur les mêmes données produisent des modèles
                     <b>légèrement différents</b>.
                     <br />
-                    <b>Il faut donc des validations postérieures à l’entraînement.</b>
+                    <b
+                        >Il faut donc des validations postérieures à
+                        l’entraînement.</b
+                    >
                 </p>
             </div>
             <div class="section">
                 <h3>La rétropropagation</h3>
                 <p>
                     Le génie des années 1980, c’est la
-                    <span class="keyword">rétropropagation</span> : on a réussi à démontrer qu’en <b>empilant</b> des fonctions dérivables
-                    en couches, on peut <b>remonter</b> l’erreur de la sortie jusqu’aux
-                    premières couches, et donc <b>entraîner des couches cachées</b>.
+                    <span class="keyword">rétropropagation</span> : on a réussi
+                    à démontrer qu’en <b>empilant</b> des fonctions dérivables
+                    en couches, on peut <b>remonter</b> l’erreur de la sortie
+                    jusqu’aux premières couches, et donc
+                    <b>entraîner des couches cachées</b>.
                 </p>
 
                 <h4>Principes</h4>
@@ -122,27 +128,33 @@
                     Pour chaque neurone de sortie, on mesure l’erreur, son
                     ampleur et la direction à suivre pour la diminuer.
                     <br />
-                    Cette erreur est <b>ensuite renvoyée</b> aux neurones de la couche cachée
-                    précédente <b>en proportion de</b> leur influence.
+                    Cette erreur est <b>ensuite renvoyée</b> aux neurones de la
+                    couche cachée précédente <b>en proportion de</b> leur
+                    influence.
                     <br />
-                    Chaque neurone caché <b>connaît ainsi</b> la direction à suivre et
-                    applique un petit pas de correction, proportionnel au
-                    gradient reçu.
+                    Chaque neurone caché <b>connaît ainsi</b> la direction à
+                    suivre et applique un petit pas de correction, proportionnel
+                    au gradient reçu.
                 </p>
 
                 <h4>Ce que les couches cachées finissent par détecter</h4>
                 <p>
-                    Comme plusieurs sorties peuvent <b>exiger</b> d’une même couche
-                    cachée des ajustements contradictoires, les <b>demandes</b>
+                    Comme plusieurs sorties peuvent <b>exiger</b> d’une même
+                    couche cachée des ajustements contradictoires, les
+                    <b>demandes</b>
                     s’additionnent.
-                    <br /><b>La couche de neurones cachés fabrique alors des
-                    compromis, qui révèlent ce que les sorties ont en commun.</b>
+                    <br /><b
+                        >La couche de neurones cachés fabrique alors des
+                        compromis, qui révèlent ce que les sorties ont en
+                        commun.</b
+                    >
                 </p>
                 <p>
                     Dans <b>l’analyse de texte</b>, on observe une progression :
-                    les premières couches repèrent des suites de lettres et de mots,
-                    les suivantes des tournures récurrentes <b>liées à la grammaire</b>,
-                    et les autres le sens des expressions <b>et des intentions</b>.
+                    les premières couches repèrent des suites de lettres et de
+                    mots, les suivantes des tournures récurrentes
+                    <b>liées à la grammaire</b>, et les autres le sens des
+                    expressions <b>et des intentions</b>.
                 </p>
 
                 <h4><b>La convolution</b> pour la reconnaissance d'images</h4>
@@ -158,19 +170,21 @@
 -->
 
                 <p>
-                    Une image peut contenir une quantité colossale de pixels,
-                    ce qui rend impossible l’utilisation de chaque pixel individuellement
-                    comme entrée dans un réseau de classification.
+                    Une image peut contenir une quantité colossale de pixels, ce
+                    qui rend impossible l’utilisation de chaque pixel
+                    individuellement comme entrée dans un réseau de
+                    classification.
 
                     <br />L’opération de <b>convolution</b> consiste à faire
                     glisser une petite fenêtre (par exemple, 3 × 3 pixels) sur
                     toute l’image : à chaque position, les valeurs de la fenêtre
                     sont combinées avec un filtre (un tableau de coefficients)
                     pour produire une nouvelle valeur.
-                    <br />Chaque filtre étant différent, il produit ainsi une
-                    nouvelle image, appelée <b>carte de caractéristiques</b>
-                    (ou <i>feature map</i> en anglais) : on obtient donc autant de
-                    cartes que de filtres.
+
+                    <br />Avec plusieurs filtres, chacun étant différent,
+                    l'opération produit de nouvelles images qui construise une
+                    <b>carte de caractéristiques</b> (ou <i>feature map</i> en
+                    anglais).
                 </p>
 
                 <div class="image-container">
@@ -179,18 +193,25 @@
                 </div>
 
                 <p>
-                    Des convolutions successives, suivies de fonctions d’activation
-                    (comme ReLU), font émerger automatiquement les caractéristiques
-                    utiles pour la classification, organisées selon une hiérarchie :
+                    Des convolutions successives, suivies de fonctions
+                    d’activation (comme ReLU), font émerger automatiquement les
+                    caractéristiques utiles pour la classification, organisées
+                    selon une hiérarchie :
                 </p>
                 <ul>
                     <li>Couche 1 : détecte des contours et des couleurs</li>
-                    <li>Couche 2 : détecte des textures et des formes simples</li>
-                    <li>Couche 3 : détecte par exemple des yeux ou des roues</li>
+                    <li>
+                        Couche 2 : détecte des textures et des formes simples
+                    </li>
+                    <li>
+                        Couche 3 : détecte par exemple des yeux ou des roues
+                    </li>
                     <li>Couche 4 : détecte des visages ou des voitures</li>
                 </ul>
 
                 <h4>Un flux de convolution</h4>
+                L'opération est répétée à nouveau à partir des images
+                précédentes, avec des phases de consolidation-réduction.
                 <div class="image-container">
                     <img src="img/convolutionFlow.png" width="1200px" />
                     <br />
@@ -202,14 +223,16 @@
                 </div>
 
                 <p>
-                    Une phase de <b>pooling</b> réduit ensuite chaque carte en
-                    remplaçant un carré de pixels (par exemple, 2 × 2) par
-                    une seule valeur (moyenne ou maximum).
-                    <br />Cette étape diminue la taille des images tout en conservant
-                    l’information essentielle.
-                    <br />En empilant plusieurs couches (<b>convolution → activation → pooling</b>), on réduit
-                    progressivement le nombre de valeurs, tout en extrayant des
-                    caractéristiques de plus en plus abstraites (par exemple, des contours en entrée, puis des textures, puis des objets).
+                    Une phase de <b>pooling</b> réduit la taille des cartes en
+                    remplaçant un carré de pixels (par exemple, 2 × 2) par une
+                    seule valeur (moyenne ou maximum). <br />Cette étape diminue
+                    la taille des images tout en conservant l’information
+                    essentielle. <br />En empilant plusieurs couches (<b
+                        >convolution → activation → pooling</b
+                    >), on réduit progressivement le nombre de valeurs, tout en
+                    extrayant des caractéristiques de plus en plus abstraites
+                    (par exemple, des contours en entrée, puis des textures,
+                    puis des objets).
                 </p>
 
                 <div class="image-container">
@@ -220,8 +243,9 @@
                     />
                     <br />
                     <em>
-                        La dernière carte est finalement « aplatie » en un vecteur
-d’entrée et envoyée à un réseau de classification classique.
+                        La dernière carte est finalement « aplatie » en un
+                        vecteur d’entrée et envoyée à un réseau de
+                        classification classique.
                     </em>
                 </div>
             </div>
@@ -231,11 +255,13 @@ d’entrée et envoyée à un réseau de classification classique.
                     Les réseaux en couches font <b>émerger</b> des aptitudes
                 </h3>
                 <p>
-                    <b>Aucune de ces aptitudes n’a été programmée : elles
-                    émergent de la masse.</b>
+                    <b
+                        >Aucune de ces aptitudes n’a été programmée : elles
+                        émergent de la masse.</b
+                    >
                     <br />
-                    Par des compromis successifs<b>,</b> chaque couche apprend ce qui
-                    est commun aux demandes de la suivante.
+                    Par des compromis successifs<b>,</b> chaque couche apprend
+                    ce qui est commun aux demandes de la suivante.
                 </p>
                 <div class="important-box">
                     Un réseau ne peut apprendre que ce qui est déjà présent sous
@@ -248,7 +274,10 @@ d’entrée et envoyée à un réseau de classification classique.
             <div class="section">
                 <h1>Exemple d’apprentissage d’un réseau à couche cachée</h1>
 
-                <h2>Exemple de topologie : un MLP (<i>Multi Layer Perceptron</i>)</h2>
+                <h2>
+                    Exemple de topologie : un MLP (<i>Multi Layer Perceptron</i
+                    >)
+                </h2>
 
                 <ul>
                     <li>
@@ -256,7 +285,8 @@ d’entrée et envoyée à un réseau de classification classique.
                         <ul>
                             <li>
                                 <strong>Couche d’entrée</strong> : 2 neurones
-                                (x, y), correspondant à un clic sur un écran 200 × 400 (soit 80 000 positions possibles)
+                                (x, y), correspondant à un clic sur un écran 200
+                                × 400 (soit 80 000 positions possibles)
                             </li>
                             <li>
                                 <strong>Couche cachée</strong> : 12 neurones
@@ -273,20 +303,23 @@ d’entrée et envoyée à un réseau de classification classique.
                         <ul>
                             <li>
                                 <strong>Couche cachée</strong> :
-                                <span class="keyword">ReLU</span> (<i>Rectified Linear Unit</i>)
+                                <span class="keyword">ReLU</span> (<i
+                                    >Rectified Linear Unit</i
+                                >)
                                 <div class="note">
-                                    Cette fonction évite notamment le problème du gradient évanescent
-                                    (qui fait « piétiner » l’algorithme sur des zones plates) et permet un
-                                    apprentissage plus rapide.
+                                    Cette fonction évite notamment le problème
+                                    du gradient évanescent (qui fait « piétiner
+                                    » l’algorithme sur des zones plates) et
+                                    permet un apprentissage plus rapide.
                                 </div>
                             </li>
                             <li>
                                 <strong>Couche de sortie</strong> :
                                 <span class="keyword">Sigmoïde</span>
                                 <div class="note">
-                                    Produit des valeurs comprises entre 0 et 1 pour
-                                    chacune des sorties. Si la sortie dépasse 0,5, le feu
-                                    correspondant s’allume.
+                                    Produit des valeurs comprises entre 0 et 1
+                                    pour chacune des sorties. Si la sortie
+                                    dépasse 0,5, le feu correspondant s’allume.
                                 </div>
                             </li>
                         </ul>
@@ -302,9 +335,11 @@ d’entrée et envoyée à un réseau de classification classique.
                     <br />
                     Ce modèle comprend 75 paramètres
                     <div class="note">
-                        Du côté de l’entrée, on trouve : 2 × (12 poids + 1 biais), soit 36 paramètres.
+                        Du côté de l’entrée, on trouve : 2 × (12 poids + 1
+                        biais), soit 36 paramètres.
                         <br />
-                        Du côté de la couche de sortie, on trouve : 3 × (12 poids + 1 biais), soit 39 paramètres.
+                        Du côté de la couche de sortie, on trouve : 3 × (12
+                        poids + 1 biais), soit 39 paramètres.
                     </div>
                 </div>
 
@@ -313,7 +348,8 @@ d’entrée et envoyée à un réseau de classification classique.
                     Au départ, on ignore combien de neurones sont nécessaires.
                     <br />
                     On teste donc différentes architectures et on évalue les
-                    résultats obtenus sur le jeu de test pour choisir la meilleure configuration.
+                    résultats obtenus sur le jeu de test pour choisir la
+                    meilleure configuration.
                 </p>
 
                 <div class="info">
@@ -327,40 +363,53 @@ d’entrée et envoyée à un réseau de classification classique.
                     <br />
                     16 neurones cachés : 94,75 % de précision
                     <br />
-                    <em>On remarque que plus de neurones ne garantissent pas toujours de meilleurs résultats.</em>
+                    <em
+                        >On remarque que plus de neurones ne garantissent pas
+                        toujours de meilleurs résultats.</em
+                    >
                 </div>
             </div>
 
             <div class="section">
                 <h2>L’apprentissage supervisé</h2>
                 <p>
-                    L’apprentissage <span class="keyword">supervisé</span> consiste à fournir
-                    au réseau un <span class="keyword">jeu de données</span>,
+                    L’apprentissage
+                    <span class="keyword">supervisé</span> consiste à fournir au
+                    réseau un <span class="keyword">jeu de données</span>,
                     composé de couples « entrée ; sortie » à apprendre.
                 </p>
 
                 <h4>Un jeu de données à créer</h4>
                 <p>
-                    Prenons l’exemple d’un clic sur un écran 200 × 400 contenant des cercles différents.
-                    On ne peut pas fournir les 80 000 positions possibles, chacune devant être associée au résultat attendu.
+                    Prenons l’exemple d’un clic sur un écran 200 × 400 contenant
+                    des cercles différents. On ne peut pas fournir les 80 000
+                    positions possibles, chacune devant être associée au
+                    résultat attendu.
                     <br /><br />
-                    On peut appliquer une <b>règle empirique</b> : utiliser 10 à 100 fois plus de données que de paramètres.
+                    On peut appliquer une <b>règle empirique</b> : utiliser 10 à
+                    100 fois plus de données que de paramètres.
                     <br />
-                    Avec 75 paramètres, en retenant un facteur de 16, il faut donc environ 1 200 exemples dans le jeu d’entraînement.
+                    Avec 75 paramètres, en retenant un facteur de 16, il faut
+                    donc environ 1 200 exemples dans le jeu d’entraînement.
                 </p>
 
                 <h4>Entraînement vs Validation</h4>
                 <p>
-                    Il faut diviser le jeu de données en deux lots : entraînement (<b>80 %</b>) et validation (<b>20 %</b>).
+                    Il faut diviser le jeu de données en deux lots :
+                    entraînement (<b>80 %</b>) et validation (<b>20 %</b>).
                     <br />
-                    Le réseau est entraîné avec le premier lot (1 200 exemples), ce qui permet d’obtenir un <b>modèle</b> (un tableau de paramètres).
+                    Le réseau est entraîné avec le premier lot (1 200 exemples),
+                    ce qui permet d’obtenir un <b>modèle</b> (un tableau de
+                    paramètres).
                     <br />
-                    On évalue ensuite le modèle avec le second lot (240 exemples) pour vérifier s’il prédit correctement.
+                    On évalue ensuite le modèle avec le second lot (240
+                    exemples) pour vérifier s’il prédit correctement.
                 </p>
 
                 <h4>Taux de précision</h4>
                 <p>
-                    Un entraînement est jugé réussi si son taux de précision dépasse le seuil requis pour son domaine.
+                    Un entraînement est jugé réussi si son taux de précision
+                    dépasse le seuil requis pour son domaine.
                 </p>
 
                 <table>
@@ -402,11 +451,11 @@ d’entrée et envoyée à un réseau de classification classique.
 
                 <h4>Apprentissage par <span class="keyword">époques</span></h4>
                 <p>
-                    Une <b>époque</b> correspond au passage complet de tous les exemples
-                    du jeu d’entraînement.
+                    Une <b>époque</b> correspond au passage complet de tous les
+                    exemples du jeu d’entraînement.
                     <br />
-                    À la fin de chaque époque, on mesure la précision et on stoppe
-                    l’entraînement si celle-ci plafonne.
+                    À la fin de chaque époque, on mesure la précision et on
+                    stoppe l’entraînement si celle-ci plafonne.
                 </p>
 
                 <div class="code">
@@ -438,36 +487,40 @@ d’entrée et envoyée à un réseau de classification classique.
                 </div>
                 <h4>Prise de conscience de l’impact énergétique</h4>
                 <p>
-                    Rien que pour ce petit réseau de 12 neurones :
+                    Rien que pour ce petit réseau à 2 entrées, 12 neurones
+                    cachés et 3 neurones de sortie :
                 </p>
                 <ul>
                     <li>
-                        Pour 1 test (x₁, x₂) : 60 multiplications et 63 additions
-                        sont nécessaires pour calculer un score.
+                        Pour 1 test (x₁, x₂) : 60 multiplications et 63
+                        additions sont nécessaires pour calculer un score.
                     </li>
                     <li>
-                        Pour une époque (1 200 tests) : 72 000 multiplications et
-                        75 800 additions, soit 147 600 opérations
+                        Pour une époque (1 200 tests) : 72 000 multiplications
+                        et 75 800 additions, soit 147 600 opérations
                         arithmétiques.
                     </li>
                     <li>
-                        Pour les 1 800 époques d’un seul apprentissage, dans cet exemple : plus de
+                        Pour les 1 800 époques d’<b
+                            >un seul lancement d'apprentissage</b
+                        >: plus de
                         <b>265 millions d’opérations arithmétiques !</b>
                     </li>
-                    <br />Les LLM modernes, eux, exigent des
-                    <span class="keyword">centres de données</span>
-                    géants pour leurs milliards de paramètres.
+                    <br />Les LLM modernes, eux, exigent des <span class="keyword">centres de données</span>
+                    géants pour leurs milliards de paramètres et leurs
+                    trillions d'opérations arithmétiques.
                 </ul>
             </div>
             <div class="section">
                 <h3>Pratiquer</h3>
                 <p>
-                    Entraînez un réseau pour qu’il apprenne à piloter les
-                    feux lorsqu’on clique sur leurs images sur une tablette.
+                    Entraînez un réseau pour qu’il apprenne à piloter les feux
+                    lorsqu’on clique sur leurs images sur une tablette.
 
                     <br /><span class="note">
-                        Le code de cet apprentissage tournera dans votre navigateur. 
-                        Pas besoin de centre de données pour apprendre à entraîner un réseau.
+                        Le code de cet apprentissage tournera dans votre
+                        navigateur. Pas besoin de centre de données pour
+                        apprendre à entraîner un réseau.
                     </span>
                 </p>
 
@@ -479,8 +532,8 @@ d’entrée et envoyée à un réseau de classification classique.
                     >
                 </div>
 
-                <br />Uniquement pour ceux qui souhaitent approfondir
-                les concepts fondamentaux des réseaux de neurones.
+                <br />Uniquement pour ceux qui souhaitent approfondir les
+                concepts fondamentaux des réseaux de neurones.
                 <br />
                 <a href="../feux_tricolores/description.html">
                     Voir la description complète et détaillée du projet
