@@ -8,10 +8,6 @@
     </head>
 
     <body>
-        <div class="section">
-            <h2>Chapitre en cours de débroussaillage</h2>
-            <img src="../img/debroussaille.png" width="500px" \ />
-        </div>
         <div class="container">
             <header>
                 <h1>
@@ -40,7 +36,7 @@
                 <p>
                     Une <b>fonction de perte</b> est une transformation
                     mathématique qui amplifie ou pénalise davantage certaines
-                    erreurs et donc <b>orienter l'apprentissage.</b>
+                    erreurs et donc <b>oriente l'apprentissage.</b>
 
                     <br />Plus la pénalité est élevée, plus le modèle va
                     fortement corriger ses poids pour éviter de refaire la même
@@ -50,15 +46,35 @@
                 <table class="table-equal">
                     <thead>
                         <tr>
-                            <th><h4>Objectif</h4></th>
+                            <th>
+                                <strong
+                                    style="
+                                        background-color: darkred;
+                                        color: ivory !important;
+                                        padding: 4px;
+                                    "
+                                    >&nbsp;Objectifs&nbsp;
+                                </strong>
+                            </th>
+
                             <th><strong>Données d'entrée</strong></th>
                             <th><strong>Tâche</strong></th>
                             <th><strong>Sortie</strong></th>
-                            <th><h4>Fonction de perte</h4></th>
+                            <th>
+                                <strong
+                                    style="
+                                        background-color: darkred;
+                                        color: ivory !important;
+                                        padding: 4px;
+                                    "
+                                    >&nbsp;fonction de perte&nbsp;
+                                </strong>
+                            </th>
                             <th><strong>Interprétation</strong></th>
                             <th><strong>Exemple</strong></th>
                         </tr>
                     </thead>
+
                     <tbody>
                         <tr>
                             <td>
@@ -73,17 +89,6 @@
                             <td>Cross-entropy</td>
                             <td>Étiquette la plus probable</td>
                             <td>Chat vs. chien</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <strong><i>Régression</i></strong>
-                            </td>
-                            <td>Nombres, caractéristiques</td>
-                            <td>Prédire</td>
-                            <td>Nombre continu</td>
-                            <td>MSE</td>
-                            <td>Valeur numérique prédite</td>
-                            <td>Prix d'une maison</td>
                         </tr>
                         <tr>
                             <td>
@@ -109,6 +114,18 @@
                         </tr>
                         <tr>
                             <td>
+                                <strong><i>Régression</i></strong>
+                            </td>
+                            <td>Nombres, caractéristiques</td>
+                            <td>Prédire</td>
+                            <td>Nombre continu</td>
+                            <td>MSE</td>
+                            <td>Valeur numérique prédite</td>
+                            <td>Prix d'une maison</td>
+                        </tr>
+
+                        <tr>
+                            <td>
                                 <strong><i>Renforcement</i></strong>
                             </td>
                             <td>État de l'environnement</td>
@@ -121,17 +138,22 @@
                     </tbody>
                 </table>
 
-                <h2>Les fonctions de perte</h2>
                 <p>
                     Les fonctions de perte orientent le réseau de neurones vers
                     des objectifs précis en privilégiant ou pénalisant certaines
                     réponses lors de l'apprentissage
                 </p>
+            </div>
+            <!-- section-->
 
-                <h3>Cross-entropy</h3>
+            <div class="section">
+                <h3>
+                    La fonction de perte <b>cross-entropy</b> pénalise l'erreur
+                    en fonction de la confiance
+                </h3>
                 <p>
-                    La cross-entropy ne pénalise pas juste l'erreur, mais
-                    <b>l'erreur + la confiance.</b>
+                    Cette prise en compte va redresser les erreurs de
+                    trajectoire par des revirements brutaux
                 </p>
 
                 <table class="table-equal">
@@ -147,78 +169,205 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <td>
-                                <b><i>Classification</i></b>
+                            <td rowspan="2">
+                                <i><b>Classification</b></i>
                             </td>
-                            <td>
-                                <img src="img/chienChat.png" width="80px" />
+                            <td rowspan="2">
+                                <img src="img/chatChien.png" width="100px" />
                             </td>
-                            <td>Chien</td>
-                            <td><span style="color: red">✗</span> Chat</td>
+                            <td rowspan="2">Chat</td>
+                            <td rowspan="2">
+                                <span style="color: red">✗</span> Chien
+                            </td>
+                            <td>53%</td>
+                            <td>faible, correction standard</td>
+                        </tr>
+                        <tr>
                             <td>95%</td>
                             <td>
                                 🔥 Enorme, correction forte des poids du réseau.
                             </td>
                         </tr>
+
                         <tr>
-                            <td></td>
-                            <td>
-                                <img src="img/chatChien.png" width="80px" />
+                            <td rowspan="3">
+                                <b><i>Traduction</i></b>
                             </td>
-                            <td>Chat</td>
-                            <td><span style="color: red">✗</span> Chien</td>
-                            <td>53%</td>
-                            <td>Faible, correction standard</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <b><i>Traduction</i></b> <br />
-                            </td>
-                            <td><b>I</b></td>
+                            <td>I</td>
                             <td>Je</td>
                             <td>
                                 <span style="color: yellowgreen">&#10003;</span>
                                 Je
                             </td>
                             <td>99%</td>
-                            <td>
-                                <span style="color: yellowgreen">&#10003;</span>
-                            </td>
+                            <td>très faible</td>
                         </tr>
                         <tr>
-                            <td></td>
-                            <td><b>love</b></td>
+                            <td>love</td>
                             <td>aime</td>
-                            <td><span style="color: red">✗</span> foulée</td>
+                            <td><span style="color: red">✗</span> admire</td>
                             <td>95%</td>
                             <td>
                                 🔥 Enorme, correction forte des poids du réseau.
                             </td>
                         </tr>
                         <tr>
-                            <td></td>
-                            <td><b>cats</b></td>
+                            <td>cats</td>
                             <td>chats</td>
                             <td>
                                 <span style="color: yellowgreen">&#10003;</span>
                                 chats
                             </td>
                             <td>98%</td>
-                            <td>
-                                <span style="color: yellowgreen">&#10003;</span>
+                            <td>très faible</td>
+                        </tr>
+                        <tr>
+                            <td rowspan="2">
+                                <b><i>Génération</i></b>
                             </td>
+                            <td rowspan="2">"Il était une"</td>
+                            <!-- ← Texte, pas image -->
+                            <td rowspan="2">"Il était une fois..."</td>
+                            <td rowspan="2">
+                                <span style="color: red">✗</span> "Il était une
+                                bergère"
+                            </td>
+                            <td>92%</td>
+                            <td>
+                                🔥 Enorme, correction forte des poids du réseau.
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>23%</td>
+                            <td>faible, correction standard</td>
                         </tr>
                     </tbody>
                 </table>
-
-                <h4>MSE - Mean Squared Error - Erreur Quadratique Moyenne</h4>
+            </div>
+            <!-- section-->
+            <div class="section">
+                <h3>La fonction de perte MSE pour la prédiction de valeur</h3>
+                <h4>
+                    <span class="keyword">MSE - Mean Squared Error</span>
+                </h4>
                 <p>
-                    Pour orienter l’apprentissage vers
-                    <b>la prédiction de valeurs</b>
-                    à partir de données représentatives du jeu de données, on
-                    utilise le MSE.
+                    Pour éliminer les éventuels points aberrants
+                    <b>MSE éleve au carré les erreurs</b>, ce qui va pénaliser les
+                    grosses erreurs (et éliminer les signes négatifs):
+                    <br />
+                    Une erreur de 10 devient 100, une erreur de 100 devient 10
+                    000 — soit une pénalité 100 fois plus forte.
+                </p>
+                <p>
+                    On cherche par exemple à prédire le coût d'un logement selon
+                    différents critères en se basant sur un jeu de données issu
+                    d'un recensement préalable.
+                    <br />
+                    En apprenant à partir des données collectées, le réseau produit un modèle de calcul : prix (critères) 
                 </p>
 
+
+                <h4>Régression linéaire standard 2D 3D et n Dimensions</h4>
+                <p>
+                    C'est une approche classique déjà utilisée  bien avant les
+                    réseaux de neurones.
+                </p>
+                <div class="image-container">
+                   <img
+                        src="img/droiteCarre.png"
+                        width="400px"
+                        alt="Visualisation droite des moindres carrés"
+                    />
+                    <img
+                        src="img/planCarre.png"
+                        width="400px"
+                        .alt="plan des moindres carrés"
+                    />
+                    <em>
+                        <br />Une régression standard a 2 variables d'entrée et
+                        1 variable cible donne une droite dite 'des moindres
+                        carrés',<br />
+                        avec 3 entrées et une cible, on a un plan des moindres
+                        carrés.
+                    </em>
+                </div>
+                <p>
+                    Les calculs restent identiques pour n dimensions (mais on ne
+                    peut plus les visualiser au-delà de 3D).
+                    <br />
+                    L'exemple suivant représente l'équation d'un hyperplan à 5
+                    dimensions. Comme en 2D ou en 3D, cet hyperplan reste
+                    parfaitement linéaire : <br />c'est <b>une surface
+                    plane</b> généralisée à un espace multidimensionnel.
+                </p>
+
+                <div class="image-container">
+                    <img src="img/reseau_5_1.png" alt="direct" width="350" />
+<br>
+                    <em>
+                
+                        <i
+                            ><b
+                                >prix = a·surface + b·pièces + c.quartier +
+                                d.ensoleillement + e.indice énergétique
+                            </b>
+                        </i>
+<p>
+                    Le modèle est linéaire : toute variation d’une variable d’entrée entraîne une
+                    variation proportionnelle de la prédiction.
+                    <br />
+                    (si on augmente la surface de 10 m², le prix
+                    augmentera <i>toujours</i> de <code>a × 10</code>, quel que
+                    soit le nombre de pièces ou l’ensoleillement)
+                </p>
+                    </em>
+                </div>
+                
+
+                <h3>
+                    Apport d'un réseau de neurones avec couches cachées 
+                </h3>
+                <p>
+                    Avec le même jeu d'entraînement mais avec des couches cachées utilisant des fonctions non linéaires (comme ReLU), on autorise des courbes de séparation au lieu de droites. 
+                </p>
+
+    
+
+                <div class="image-container">
+                    <img
+                        src="img/reseau_regression_5_4_3_1.png"
+                        alt="Réseau de neurones pour la régression"
+                        width="680"
+                    />
+                    <br />
+                    <em>
+                        Architecture : 5 entrées → 2 couches cachées (ReLU) → 1
+                        sortie (prix).
+                        <br />
+                        <strong>Fonction de perte : la MSE</strong> mesure
+                        l’erreur et guide l’apprentissage.
+                    </em>
+                </div>
+                            <h4> Au lieu d'un espace plat, ce réseau fait émerger des zônes d'intérêt particulier</h4>
+                <div class="image-container">
+                    <img
+                        src="img/pli3D.png"
+                        width="500px"
+                        alt="Les neurones cachés créent des plis"
+                    />
+
+                    <br />
+                    <em
+                        >Le réseau
+                        <b>apprend des combinaisons complexes</b> qui vont créer
+                        des "plis" dans le plan
+                        <br />
+                        Exemple ici:<b>
+                            "quartier premium + ensoleillé = pic +15% de
+                            prix".</b
+                        >
+                    </em>
+                </div>
                 <!-- WARNING -->
                 <div class="warning-box">
                     <strong>⚠️ Limite fondamentale :</strong>
@@ -227,100 +376,80 @@
                     <br />"Garbage in, garbage out" : un jeu de données bruité
                     ou biaisé produira des prédictions peu fiables.
                 </div>
-
-                <p>
-                    <b>MSE</b> est la fonction de perte la plus courante en
-                    régression. <br />Elle mesure l'écart moyen entre la
-                    prédiction et la valeur réelle, mais
-                    <b>en élevant au carré les erreurs</b>, ce qui pénalise les
-                    grosses erreurs et élimine les signes négatifs.
-                </p>
-                <p>
-                    Une erreur de 10 € (ou de -10 €) est transformée en 100,
-                    tandis qu’une erreur de 100 € devient 10 000 — soit une
-                    pénalité 100 fois plus forte. <br />Ainsi, le modèle apprend
-                    à écarter les points aberrants dont l’erreur est trop
-                    importante.
-                </p>
-
-                <b>La régression linéaire s'applique pour toute dimension</b>
-
-                <h4>
-                    2D - prédire y (ex: un prix) en fonction de x (ex: la
-                    surface)
-                </h4>
-                <div class="image-container">
-                    <img
-                        src="img/droiteCarre.png"
-                        width="500px"
-                        alt="Visualisation droite des moindres carrés"
-                    />
-                    <br /><em
-                        >avec deux variables (surface, prix) on obtient une
-                        droite de prédiction</em
-                    >
-                </div>
-                <h4>
-                    3D - prédire z (ex: un prix) en fonction de x (ex: la
-                    surface) et de y (ex: le nombre de pièces)
-                </h4>
-                <div class="image-container">
-                    <img
-                        src="img/planCarre.png"
-                        width="500px"
-                        .alt="plan des moindres carrés"
-                    />
-                    <br /><em
-                        >Avec trois variables (surface, nombre de pièces, prix)
-                        on aura un plan de prédiction</em
-                    >
-                </div>
-                <h4>n D - prédire un prix en fonction de n critères</h4>
-                <p>
-                    Les calculs restent les mêmes pour n dimensions (sans
-                    représentation visuelle possible).
-                    <br />Avec des caractéristiques (surface, nombre de pièces,
-                    quartier, ensoleillement, indice énergétique), on construit
-                    un hyperespace à <b>5 dimensions</b> (les
-                    <i>variables d’entrée</i>). <br />Le <b>prix</b> lui, est la
-                    <b>6ᵉ dimension</b> : c’est la <b>variable cible</b> que le
-                    modèle cherche à prédire en croisant ces données.
-                </p>
-
-                <h3>
-                    Pourquoi un réseau de neurones avec couches cachées en
-                    régression
-                </h3>
-
-                <div class="image-container">
-                    <img
-                        src="img/reseau_regression_5_4_3_1.png"
-                        alt="Réseau de neurones pour la régression"
-                        width="800"
-                    />
-                    <br />
-                    <em>
-                        Architecture : 5 entrées → 2 couches cachées (ReLU) → 1
-                        sortie (prix).
-                        <br />
-                        <strong>Fonction de perte : MSE</strong> (Erreur
-                        Quadratique Moyenne) → Compare le
-                        <i>prix prédit</i> avec le <i>prix réel</i> pour ajuster
-                        les poids.
-                    </em>
-                </div>
-
-                <p>
-                    Sans couches cachées, le réseau linéaire serait limité à un
-                    modèle trop simple :
-                    <i>prix = a·surface + b·pièces + ... </i>
-
-                    <br>Avec des couches cachées à activation non linéaires (ReLU), Le réseau apprend des combinaisons
-                    complexes (ex : "quartier premium + ensoleillé = +15% de
-                    prix"). 
-                    <br>Le MSE : Mesure l’erreur et guide l’apprentissage.
-                </p>
             </div>
+        
+            <!-- section-->
+
+<div class="section">
+    <h3>
+        Renforcement avec la fonction de perte
+        <i>récompense cumulative</i>
+    </h3>
+    <p>
+        En apprentissage par renforcement, <b>le réseau de neurones</b> prend l'état de l'environnement en entrée
+        et produit une <b>politique</b> (action à exécuter) ou une <b>valeur Q</b> (estimation de la récompense future).
+        <br />
+        La <b>récompense cumulative</b> guide l'ajustement des poids : plus la récompense finale est élevée,
+        plus les actions qui y ont conduit sont renforcées dans le réseau.
+    </p>
+
+    <table class="table-equal">
+        <thead>
+            <tr>
+                <th><h4>Objectif</h4></th>
+                <th>Architecture du réseau</th>
+                <th>Entrée (État)</th>
+                <th>Sortie du réseau</th>
+                <th>Action choisie</th>
+                <th>Récompense finale / Mise à jour</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Exemple 1 : Réseau pour les échecs -->
+            <tr>
+                <td rowspan="2"><b><i>Échecs (AlphaZero)</i></b></td>
+                <td rowspan="2">
+                    Réseau convolutif<br/>(20 couches)<br/>→ Tête de politique<br/>→ Tête de valeur
+                </td>
+                <td rowspan="2">
+                    Position échiquéenne<br/>(tableau 8×8×12)
+                </td>
+                <td rowspan="2">
+                    Politique : probabilités pour<br/>
+                    chaque coup possible (1982 actions)<br/>
+                    Valeur : estimation du résultat
+                </td>
+                <td><span style="color: yellowgreen">&#10003;</span> e4 (meilleur coup)</td>
+                <td>+1.0 (victoire) → Renforcement fort des poids pour cette politique</td>
+            </tr>
+            <tr>
+                <td><span style="color: red">✗</span> d4 (mauvais coup)</td>
+                <td>-1.0 (défaite) → Affaiblissement des poids pour cette politique, renforcement de e4</td>
+            </tr>
+
+            <!-- Exemple 2 : Réseau pour labyrinthe -->
+            <tr>
+                <td rowspan="2"><b><i>Labyrinthe (DQN)</i></b></td>
+                <td rowspan="2">
+                    Réseau convolutif<br/>(3 couches)<br/>→ 4 neurones de sortie
+                </td>
+                <td rowspan="2">
+                    Image 84×84 du labyrinthe
+                </td>
+                <td rowspan="2">
+                    Q-values pour :<br/>
+                    ↑ Haut, ↓ Bas, ← Gauche, → Droite
+                </td>
+                <td><span style="color: yellowgreen">&#10003;</span> → (droite, vers la sortie)</td>
+                <td>+10.0 → Mise à jour des poids : Q(→) augmente fortement</td>
+            </tr>
+            <tr>
+                <td><span style="color: red">✗</span> ↑ (haut, dans un mur)</td>
+                <td>-5.0 → Mise à jour : Q(↑) diminue, Q(→) augmente</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
 
             <hr />
 
@@ -401,6 +530,9 @@
             </table>
 
             <hr />
+
+            
+   
 
             <!-- ======================================================== -->
             <!-- CONCLUSION -->
