@@ -123,6 +123,20 @@
             font-size: 0.9em;
             cursor: pointer;
         }
+        
+        #speed-select {
+            padding: 8px;
+            border-radius: var(--border-radius-sm);
+            border: 2px solid var(--color-gray);
+            background: var(--bg-color-white) !important;
+            font-family: var(--font-primary) !important;
+            font-size: 1em !important;
+            cursor: pointer;
+            min-width: 200px;
+            color: var(--color-primary) !important;
+            height: auto;
+            line-height: normal;
+        }
     </style>
 </head>
 
@@ -195,12 +209,11 @@
             <strong>Taux d'exploration (ε):</strong> <span id="epsilon-value">20%</span>
         </div>
 
-        <!-- ==== NOUVELLE DIV POUR AFFICHER L'ACTION ET LA RÉCOMPENSE ==== -->
         <div id="action-info">
             <strong>Dernière action :</strong> <span id="last-action">Aucune</span> |
             <strong>Dernière récompense :</strong> <span id="last-reward">0</span> |
             <strong>Vitesse :</strong>
-            <select id="speed-select" class="secondary">
+            <select id="speed-select">
                 <option value="100">Très rapide</option>
                 <option value="250">Rapide</option>
                 <option value="500" selected>Normale (2 coups/s)</option>
@@ -208,17 +221,15 @@
                 <option value="2000">Très lente</option>
             </select>
         </div>
+        
+        <div class="note" style="text-align: center; margin: 10px 0;">
+            💡 <strong>Astuce :</strong> Après un premier succès, plus vous relancerez l'apprentissage avec "Améliorer" sans réinitialiser, <br>plus l'agent améliorera ses coefficients et trouvera un chemin optimal !
+        </div>
 
-        <!-- ============================================ -->
-        <!-- ANIMATION DU LABYRINTHE -->
-        <!-- ============================================ -->
         <div id="maze-container">
             <canvas id="maze-canvas" width="420" height="420"></canvas>
         </div>
 
-        <!-- ============================================ -->
-        <!-- TABLE Q (VALEURS APPRISES) -->
-        <!-- ============================================ -->
         <div class="section">
             <h2>📊 Table Q : Valeurs apprises par l'agent</h2>
             <p>
@@ -244,9 +255,6 @@
             </div>
         </div>
 
-        <!-- ============================================ -->
-        <!-- EXPLICATIONS -->
-        <!-- ============================================ -->
         <div class="section">
             <h2>📚 Comment ça marche ?</h2>
             <p>
@@ -292,9 +300,6 @@
             </p>
         </div>
 
-        <!-- ============================================ -->
-        <!-- LIEN DE RETOUR -->
-        <!-- ============================================ -->
         <footer>
             <p>
                 <a href="chapitre4.html">← Retour au Chapitre 4 : Une même mécanique, des objectifs différents</a>
@@ -302,14 +307,10 @@
         </footer>
     </div>
 
-    <!-- ============================================ -->
-    <!-- SCRIPT : ALGORITHME Q-LEARNING -->
-    <!-- ============================================ -->
     <script>
         // ==========================================
         // 1. CONFIGURATION DU LABYRINTHE
         // ==========================================
-        // 0 = vide, 1 = mur, 2 = sortie
         const maze = [
             [0, 0, 0, 0, 0],
             [1, 1, 0, 1, 0],
@@ -329,27 +330,24 @@
         // ==========================================
         // 2. PARAMÈTRES Q-LEARNING
         // ==========================================
-        const ALPHA = 0.1;   // Taux d'apprentissage
-        const GAMMA = 0.9;   // Facteur d'actualisation
-        let EPSILON = 0.2;  // Taux d'exploration (décroît progressivement)
+        const ALPHA = 0.1;
+        const GAMMA = 0.9;
+        let EPSILON = 0.2;
 
-        // Récompenses
         const REWARDS = {
             'exit': 10,
             'step': -1,
             'wall': -10
         };
 
-        // Actions possibles
         const ACTIONS = ['UP', 'DOWN', 'LEFT', 'RIGHT'];
         const ACTION_DELTAS = {
-            'UP':    {x: 0, y: -1},
-            'DOWN':  {x: 0, y: 1},
-            'LEFT':  {x: -1, y: 0},
+            'UP': {x: 0, y: -1},
+            'DOWN': {x: 0, y: 1},
+            'LEFT': {x: -1, y: 0},
             'RIGHT': {x: 1, y: 0}
         };
 
-        // Actions en français pour l'affichage
         const ACTION_NAMES = {
             'UP': '↑ Haut',
             'DOWN': '↓ Bas',
@@ -360,17 +358,15 @@
         // ==========================================
         // 3. ÉTAT INITIAL
         // ==========================================
-        let agent = {x: 0, y: 0};  // Position de départ
-        let qTable = {};           // Table Q
-        let episode = 0;           // Compteur d'épisodes
-        let step = 0;              // Compteur d'étapes
-        let totalReward = 0;      // Récompense cumulative
-        let path = [];             // Chemin parcouru
-        let isLearning = false;    // Apprentissage en cours ?
-        let canvas, ctx;           // Canvas et contexte
-
-        // ==== NOUVELLES VARIABLES ====
-        let stepDelay = 500; // Délai entre les étapes (500ms = 2 coups/seconde)
+        let agent = {x: 0, y: 0};
+        let qTable = {};
+        let episode = 0;
+        let step = 0;
+        let totalReward = 0;
+        let path = [];
+        let isLearning = false;
+        let canvas, ctx;
+        let stepDelay = 500;
         let lastAction = null;
         let lastReward = 0;
 
@@ -381,10 +377,9 @@
             canvas = document.getElementById('maze-canvas');
             ctx = canvas.getContext('2d');
 
-            // Initialiser la table Q pour tous les états accessibles
             for (let y = 0; y < MAZE_SIZE; y++) {
                 for (let x = 0; x < MAZE_SIZE; x++) {
-                    if (maze[y][x] !== 1) {  // Sauter les murs
+                    if (maze[y][x] !== 1) {
                         const state = `${x},${y}`;
                         qTable[state] = {
                             'UP': 0,
@@ -407,13 +402,11 @@
         function drawMaze() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-            // Dessiner les cellules
             for (let y = 0; y < MAZE_SIZE; y++) {
                 for (let x = 0; x < MAZE_SIZE; x++) {
                     const cellX = x * CELL_SIZE;
                     const cellY = y * CELL_SIZE;
 
-                    // Couleur de la cellule
                     if (maze[y][x] === 1) {
                         ctx.fillStyle = WALL_COLOR;
                     } else if (maze[y][x] === 2) {
@@ -428,12 +421,11 @@
                 }
             }
 
-            // Dessiner le chemin appris (en transparence)
             if (path.length > 0) {
                 ctx.globalAlpha = 0.3;
                 ctx.fillStyle = PATH_COLOR;
                 for (const p of path) {
-                    if (maze[p.y][p.x] !== 2) {  // Ne pas colorier la sortie
+                    if (maze[p.y][p.x] !== 2) {
                         ctx.fillRect(
                             p.x * CELL_SIZE + 5,
                             p.y * CELL_SIZE + 5,
@@ -445,7 +437,6 @@
                 ctx.globalAlpha = 1;
             }
 
-            // Dessiner l'agent
             ctx.fillStyle = AGENT_COLOR;
             ctx.fillRect(
                 agent.x * CELL_SIZE + 15,
@@ -454,7 +445,6 @@
                 CELL_SIZE - 30
             );
 
-            // Dessiner l'action en cours au-dessus de l'agent
             if (lastAction) {
                 ctx.fillStyle = 'white';
                 ctx.strokeStyle = 'black';
@@ -539,7 +529,7 @@
         }
 
         // ==========================================
-        // 9. EXÉCUTER UN ÉPISODE COMPLET
+        // 9. EXÉCUTER UN ÉPISODE COMPLET (CORRIGÉ)
         // ==========================================
         function runEpisode() {
             if (!isLearning) return;
@@ -550,6 +540,7 @@
             path = [{...agent}];
             document.getElementById('last-action').textContent = 'Aucune';
             document.getElementById('last-reward').textContent = '0';
+            document.getElementById('last-reward').style.color = 'black';
 
             EPSILON = Math.max(0.01, EPSILON * 0.995);
             updateEpsilonDisplay();
@@ -590,7 +581,25 @@
                 updateStats();
                 updateQTableDisplay();
 
-                if (maze[agent.y][agent.x] === 2 || step >= 100) {
+                // 🎯 CORRECTION : ARRÊT APRES SUCCÈS + CONSERVATION DE LA TABLE Q
+                if (maze[agent.y][agent.x] === 2) {
+                    clearInterval(intervalId);
+                    document.getElementById('last-action').textContent = '🎉 SUCCÈS !';
+                    document.getElementById('last-reward').textContent = '+10';
+                    document.getElementById('last-reward').style.color = 'var(--color-green)';
+                    document.getElementById('last-reward').style.fontWeight = 'bold';
+                    isLearning = false;
+                    document.getElementById('start-btn').textContent = '🔥 Améliorer l\'apprentissage';
+                    setTimeout(() => {
+                        if (!isLearning) {
+                            agent = {x: 0, y: 0};
+                            drawMaze();
+                        }
+                    }, 2000);
+                    return;
+                }
+
+                if (step >= 100) {
                     clearInterval(intervalId);
                     if (isLearning) {
                         setTimeout(() => {
@@ -603,12 +612,12 @@
         }
 
         // ==========================================
-        // 10. EXÉCUTER UNE SEULE ÉTAPE
+        // 10. EXÉCUTER UNE SEULE ÉTAPE (CORRIGÉE)
         // ==========================================
         function runStep() {
             if (!isLearning) {
                 isLearning = true;
-                episode = 0;
+                episode++;
                 step = 0;
                 totalReward = 0;
                 path = [{...agent}];
@@ -644,7 +653,10 @@
 
             if (maze[agent.y][agent.x] === 2) {
                 isLearning = false;
-                document.getElementById('start-btn').textContent = '🔥 Démarrer l\'apprentissage';
+                document.getElementById('start-btn').textContent = '🔥 Améliorer l\'apprentissage';
+                document.getElementById('last-action').textContent = '🎉 SUCCÈS !';
+                document.getElementById('last-reward').textContent = '+10';
+                document.getElementById('last-reward').style.color = 'var(--color-green)';
             }
 
             drawMaze();
@@ -737,15 +749,16 @@
         }
 
         // ==========================================
-        // 14. GESTION DES BOUTONS
+        // 14. GESTION DES BOUTONS (MODIFIÉ)
         // ==========================================
         document.getElementById('start-btn').addEventListener('click', function() {
             if (isLearning) {
                 isLearning = false;
-                this.textContent = '🔥 Démarrer l\'apprentissage';
+                this.textContent = '🔥 Améliorer l\'apprentissage';
             } else {
                 isLearning = true;
                 this.textContent = '🛑 Arrêter';
+                agent = {x: 0, y: 0};
                 runEpisode();
             }
         });
