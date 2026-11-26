@@ -495,6 +495,25 @@ table tr:nth-child(even) {
   border-bottom: none !important; /* Évite les doublons */
 }
 
+/* ==== CORRECTION POUR LES BORDURES DU BAS DES TABLEAUX ==== */
+    .table-equal tr:last-child td,
+    .table-equal tr:last-child th {
+        border-bottom: 1px solid var(--color-gray) !important;
+    }
+
+/* ==== CORRECTION : BORDURE DU BAS POUR TOUS LES TABLEAUX ==== */
+    .table-equal {
+        border: 1px solid var(--color-gray);
+        border-bottom: 1px solid var(--color-gray) !important;
+    }
+    
+    /* Réactiver la bordure pour la dernière ligne, même si c'est un séparateur */
+    .table-equal tr:last-child td {
+        border-bottom: 1px solid var(--color-gray) !important;
+    }
+
+
+
 th,
 td {
     border: 1px solid var(--color-gray);

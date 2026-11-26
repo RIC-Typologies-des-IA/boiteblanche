@@ -19,6 +19,9 @@
             border: 3px solid var(--color-primary);
             background: var(--bg-color-white);
             box-shadow: var(--shadow-md);
+            width: 100%;
+            max-width: 600px;
+            height: auto;
         }
 
         .controls {
@@ -227,7 +230,7 @@
         </div>
 
         <div id="maze-container">
-            <canvas id="maze-canvas" width="420" height="420"></canvas>
+            <canvas id="maze-canvas"></canvas>
         </div>
 
         <div class="section">
@@ -320,7 +323,9 @@
         ];
 
         const MAZE_SIZE = 5;
-        const CELL_SIZE = 80;
+        let CELL_SIZE = 80;
+        let canvasWidth = 420;
+        let canvasHeight = 420;
         const AGENT_COLOR = '#2196F3';
         const WALL_COLOR = '#333';
         const EXIT_COLOR = '#4CAF50';
@@ -371,7 +376,32 @@
         let lastReward = 0;
 
         // ==========================================
-        // 4. INITIALISATION
+        // 4. GESTION DU REDIMENSIONNEMENT
+        // ==========================================
+        let resizeTimeout;
+        
+        function resizeCanvas() {
+            const container = document.getElementById('maze-container');
+            const containerWidth = container.clientWidth;
+            
+            canvasWidth = Math.min(containerWidth, 600);
+            canvasHeight = canvasWidth;
+            
+            canvas.width = canvasWidth;
+            canvas.height = canvasHeight;
+            
+            CELL_SIZE = canvasWidth / MAZE_SIZE;
+            
+            drawMaze();
+        }
+        
+        function debouncedResize() {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(resizeCanvas, 100);
+        }
+
+        // ==========================================
+        // 5. INITIALISATION
         // ==========================================
         function init() {
             canvas = document.getElementById('maze-canvas');
@@ -391,9 +421,11 @@
                 }
             }
 
-            drawMaze();
+            resizeCanvas();
             updateQTableDisplay();
             updateEpsilonDisplay();
+            
+            window.addEventListener('resize', debouncedResize);
         }
 
         // ==========================================
@@ -424,49 +456,53 @@
             if (path.length > 0) {
                 ctx.globalAlpha = 0.3;
                 ctx.fillStyle = PATH_COLOR;
+                const pathPadding = CELL_SIZE * 0.06;
                 for (const p of path) {
                     if (maze[p.y][p.x] !== 2) {
                         ctx.fillRect(
-                            p.x * CELL_SIZE + 5,
-                            p.y * CELL_SIZE + 5,
-                            CELL_SIZE - 10,
-                            CELL_SIZE - 10
+                            p.x * CELL_SIZE + pathPadding,
+                            p.y * CELL_SIZE + pathPadding,
+                            CELL_SIZE - pathPadding * 2,
+                            CELL_SIZE - pathPadding * 2
                         );
                     }
                 }
                 ctx.globalAlpha = 1;
             }
 
+            const agentPadding = CELL_SIZE * 0.18;
             ctx.fillStyle = AGENT_COLOR;
             ctx.fillRect(
-                agent.x * CELL_SIZE + 15,
-                agent.y * CELL_SIZE + 15,
-                CELL_SIZE - 30,
-                CELL_SIZE - 30
+                agent.x * CELL_SIZE + agentPadding,
+                agent.y * CELL_SIZE + agentPadding,
+                CELL_SIZE - agentPadding * 2,
+                CELL_SIZE - agentPadding * 2
             );
 
             if (lastAction) {
+                const actionHeight = CELL_SIZE * 0.25;
+                const actionPadding = CELL_SIZE * 0.06;
                 ctx.fillStyle = 'white';
                 ctx.strokeStyle = 'black';
                 ctx.strokeRect(
-                    agent.x * CELL_SIZE + 5,
-                    agent.y * CELL_SIZE - 20,
-                    CELL_SIZE - 10,
-                    20
+                    agent.x * CELL_SIZE + actionPadding,
+                    agent.y * CELL_SIZE - actionHeight,
+                    CELL_SIZE - actionPadding * 2,
+                    actionHeight
                 );
                 ctx.fillRect(
-                    agent.x * CELL_SIZE + 5,
-                    agent.y * CELL_SIZE - 20,
-                    CELL_SIZE - 10,
-                    20
+                    agent.x * CELL_SIZE + actionPadding,
+                    agent.y * CELL_SIZE - actionHeight,
+                    CELL_SIZE - actionPadding * 2,
+                    actionHeight
                 );
                 ctx.fillStyle = 'black';
-                ctx.font = 'bold 12px Arial';
+                ctx.font = `bold ${Math.max(8, CELL_SIZE * 0.3)}px Arial`;
                 ctx.textAlign = 'center';
                 ctx.fillText(
                     ACTION_NAMES[lastAction].replace('Haut', '↑').replace('Bas', '↓').replace('Gauche', '←').replace('Droite', '→'),
                     agent.x * CELL_SIZE + CELL_SIZE/2,
-                    agent.y * CELL_SIZE - 5
+                    agent.y * CELL_SIZE - actionHeight/2
                 );
             }
         }
