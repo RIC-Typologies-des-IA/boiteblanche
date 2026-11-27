@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="fr">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Chapitre 5 : La mécanique propre au langage</title>
+        <link rel="stylesheet" href="../css/style.css" />
+    </head>
+
+    <body>
+        <div class="container">
+            <header>
+                <h1>Chapitre 5 : La mécanique propre au langage</h1>
+                <p class="subtitle">
+                    Comprendre comment les modèles de langage transforment le texte : de la tokenisation à la prédiction.
+                </p>
+            </header>
+
+            <!-- ======================================================== -->
+            <!-- INTRODUCTION -->
+            <!-- ======================================================== -->
+<div class="section">
+    <h2>Une chaîne de numérisation et de calculs géométriques</h2>
+    <p class="subtitle">
+        On ne demande plus <em>pour quel objectif</em> est fait le réseau de neurones (chapitre 4),
+        mais <em><b>comment</b></em> il saisit le langage.
+    </p>
+    <p>
+        Les modèles de langage modernes suivent une chaîne opérationnelle précise :
+    </p>
+    <p class="important-box">
+        <strong>
+            Tokenisation → Représentations vectorielles → Attention → Prédiction du token suivant
+        </strong>
+    </p>
+</div>
+
+            <hr />
+
+            <!-- ======================================================== -->
+            <!-- TOKENISATION -->
+            <!-- ======================================================== -->
+            <div class="section">
+                <h2>1. Tokenisation : Découper le texte en unités de base</h2>
+                <p>
+                    <strong>Ce qu'il faut savoir</strong> : La tokenisation est le processus de découpage du texte brut en <em>tokens</em> — 
+                    les plus petites unités de traitement que comprend le modèle.
+                </p>
+                <p>
+                    Un <span class = "keyword">token</span> peut être un mot, une partie de mot (sous-mot ou <em>subword</em>), un caractère, ou même un espace. 
+                    Les modèles modernes utilisent principalement des tokeniseurs par sous-mots (paire de caractères ou autre morceau de mots) qui permettent 
+                    de gérer efficacement les mots inconnus tout en limitant la taille du vocabulaire.
+                </p>
+                <p>
+                    <strong>Exemple</strong> : "Tokenisation" pourrait être découpé en ["Token", "##isation"] ou ["To", "ken", "##isa", "##tion"] 
+                    selon le vocabulaire du tokeniseur.
+                </p>
+            </div>
+
+            <hr />
+
+            <!-- ======================================================== -->
+            <!-- REPRÉSENTATIONS VECTORIELLES -->
+            <!-- ======================================================== -->
+            <div class="section">
+                <h2>2. Représentations vectorielles : Transformer les tokens en nombres</h2>
+                <p>
+                    <strong>Ce qu'il faut savoir</strong> : Chaque token est converti en un <em>vecteur numérique</em> (embedding) qui 
+                    capture son sens et ses relations avec d'autres tokens.
+                </p>
+                <p>
+                    Ces vecteurs sont appris pendant l'entraînement et placés dans un espace sémantique où les mots proches 
+                    ont des vecteurs similaires. Par exemple, le vecteur de "roi" est proche de celui de "reine", et l'opération 
+                    <code>roi - homme + femme ≈ reine</code> peut émerger.
+                </p>
+                <p>
+                    Les embeddings permettent au modèle de traiter le langage comme des calculs mathématiques sur des nombres, 
+                    ouvrant la voie aux opérations d'attention.
+                </p>
+            </div>
+
+            <hr />
+
+            <!-- ======================================================== -->
+            <!-- ATTENTION -->
+            <!-- ======================================================== -->
+            <div class="section">
+                <h2>3. Mécanisme d'attention : Capturer les relations contextuelles</h2>
+                <p>
+                    <strong>Ce qu'il faut savoir</strong> : L'attention est un mécanisme qui permet au modèle de <em>pondérer 
+                    l'importance</em> de chaque token par rapport aux autres dans une séquence.
+                </p>
+                <p>
+                    Au lieu de traiter les mots isolément, le mécanisme d'attention calcule pour chaque token des <em>scores d'attention</em> 
+                    qui déterminent combien chaque autre token de la séquence contribue à sa compréhension. Cela permet de capturer 
+                    des dépendances à longue portée et des relations contextuelles complexes.
+                </p>
+                <p>
+                    L'architecture Transformer, base des modèles de langage modernes, repose entièrement sur ce mécanisme 
+                    (<em>self-attention</em>), appliqué en parallèle à tous les tokens simultanément.
+                </p>
+            </div>
+
+            <hr />
+
+            <!-- ======================================================== -->
+            <!-- PRÉDICTION DU TOKEN SUIVANT -->
+            <!-- ======================================================== -->
+            <div class="section">
+                <h2>4. Prédiction du token suivant : L'objectif final</h2>
+                <p>
+                    <strong>Ce qu'il faut savoir</strong> : Le modèle est entraîné pour <em>prédire le token suivant</em> dans une séquence, 
+                    conditionnellement à tous les tokens précédents.
+                </p>
+                <p>
+                    Cette tâche simple en apparence (<em>language modeling</em>) est à la base de toutes les capacités des grands 
+                    modèles de langage. En apprenant à prédire le mot suivant dans des milliards de phrases, le modèle internalise 
+                    la grammaire, le vocabulaire, les faits, et même des formes de raisonnement.
+                </p>
+                <p>
+                    À l'inférence, le modèle génère du texte token par token, en utilisant ses propres prédictions comme contexte 
+                    pour les suivantes (génération <em>auto-régressive</em>).
+                </p>
+            </div>
+
+            <hr />
+
+            <!-- ======================================================== -->
+            <!-- CONCLUSION -->
+            <!-- ======================================================== -->
+            <div class="section">
+                <h2>🎯 Conclusion : La leçon du Chapitre 5</h2>
+                <p>
+                    Ce chapitre révèle que la compréhension du langage par les IA repose sur une chaîne de transformations 
+                    mathématiques simples mais puissantes :
+                </p>
+                <ul>
+                    <li><strong>Tokenisation</strong> : découper le texte en unités traitables</li>
+                    <li><strong>Représentations vectorielles</strong> : donner une forme numérique au sens</li>
+                    <li><strong>Attention</strong> : capturer les relations entre les éléments</li>
+                    <li><strong>Prédiction du token suivant</strong> : l'objectif unificateur qui émerge de l'apprentissage</li>
+                </ul>
+                <p>
+                    Dans le chapitre suivant, nous explorerons <em>ce que le modèle produit exactement</em> : des distributions de 
+                    probabilités conditionnées par le corpus d'entraînement.
+                </p>
+            </div>
+
+            <footer>
+                <p>
+                    <a href="../index.html">← Retour à l'index</a> |
+                    <a href="../chapitre4/chapitre4.html">Chapitre 4 : Une même mécanique, des objectifs différents</a>
+                    | 
+                    <a href="../chapitre6/chapitre6.html">Chapitre 6 : Données et probabilités →</a>
+                </p>
+            </footer>
+        </div>
+    </body>
+</html>

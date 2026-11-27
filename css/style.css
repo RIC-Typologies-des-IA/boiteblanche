@@ -554,6 +554,16 @@ th {
     /* Force chaque colonne à prendre la même largeur */
 }
 
+/* <table class = "centered"> */
+.centered {
+    margin-left: auto;
+    margin-right: auto;
+    width: fit-content; /* ou une largeur fixe comme 80% */
+}
+
+
+
+
 
 /* ===================================================================
    9. INSTRUCTION & INFO BOXES
